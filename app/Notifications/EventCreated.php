@@ -40,13 +40,8 @@ class EventCreated extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-        ->subject('New Event Created')
-        ->greeting('Hello!')
-        ->line('A new event has been created:')
-        ->line(new HtmlString('<strong>' . $this->event->name . '</strong>'))
-        ->action('View Event', url('/events/' . $this->event->id))
-        ->line('Thank you for using our application!')
-        ->view('event-created', [
+        ->subject('An event has been assigned to you!')
+        ->view('emails/event-created', [
             'event' => $this->event,
             'user' => $this->user,
         ]);

@@ -1,5 +1,6 @@
 import TableComponent from '@/components/datatable/TableComponent';
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
+import CreateEmployeeDialog from '@/components/dialogs/CreateEmployeeDialog';
 import PrimaryButton from '@/components/PrimaryButton';
 import {
     DropdownMenu,
@@ -57,14 +58,18 @@ const Employees = ({ employees }) => {
         delete: destroy,
     } = useForm({
         id: '',
-        name: '',
-        location: '',
-        date: '',
-        status: 'pending',
-        personnel: [],
-        notes: '',
+        first_name: '',
+        last_name: '',
+        middlename: '',
+        email: '',
+        password: '',
+        role: 'employee',
+        position: '',
+        department: '',
+        salary: '',
+        hire_date: '',
+        status: 'active',
         user_id: user.id,
-        notification_sent: false,
     });
 
     const onClose = () => {
@@ -73,15 +78,11 @@ const Employees = ({ employees }) => {
         setSelected(null);
     };
 
-    const onViewClose = () => {
-        setViewOpen(false);
-        setSelected(null);
-    };
-
     const handleConfirm = () => {
         const { formAction } = dialogConfig;
         if (formAction === 'update') {
-            patch(route('events.update', { id: selected }), {
+            // Existing update action (assuming similar to your event update logic)
+            patch(route('employees.update', { id: selected }), {
                 onSuccess: () => {
                     onClose();
                 },
@@ -90,22 +91,33 @@ const Employees = ({ employees }) => {
                 },
             });
         } else if (formAction === 'create') {
-            post(route('events.store'), {
-                onSuccess: () => {
+            post(route('register.store'), {
+                first_name: data.first_name,
+                last_name: data.last_name,
+                position: data.position,
+                department: data.department,
+                salary: data.salary,
+                hire_date: data.hire_date,
+                status: data.status,
+                email: data.email,
+                password: data.password,
+            })
+                .then((response) => {
+                    console.log('User and Employee created:', response.data);
                     onClose();
-                },
-                onError: (errors) => {
+                })
+                .catch((errors) => {
                     console.log('Submission failed with errors:', errors);
-                },
-            });
+                });
         } else if (formAction === 'delete') {
-            destroy(route('events.delete', { id: selected }), {
+            // Delete action for employees (if necessary)
+            destroy(route('employees.delete', { id: selected }), {
                 onSuccess: () => {
                     setSelected(null);
                     onClose();
                 },
                 onError: (errors) => {
-                    console.error('Error deleting event:', errors);
+                    console.error('Error deleting employee:', errors);
                 },
             });
         }
@@ -213,7 +225,7 @@ const Employees = ({ employees }) => {
                     <div className="flex w-full flex-wrap gap-1 px-2 py-3">
                         <div className="flex w-full">
                             <h1 className="text-base font-medium">
-                                {row.first_name} {row.last_name}
+                                {row.lastname}, {row.firstname} {row.middlename}
                             </h1>
                         </div>
                         <div className="flex w-full">
@@ -243,7 +255,7 @@ const Employees = ({ employees }) => {
                         <div className="flex w-full gap-2 text-xs text-zinc-600">
                             <p>
                                 {row.salary
-                                    ? `$${row.salary.toLocaleString()}`
+                                    ? `₱${row.salary.toLocaleString()}`
                                     : 'N/A'}
                             </p>
                         </div>
@@ -407,6 +419,24 @@ const Employees = ({ employees }) => {
                 <div className="flex w-full flex-wrap py-5">
                     <TableComponent columns={columns} data={employees} />
                 </div>
+                <CreateEmployeeDialog
+                    open={open}
+                    close={onClose}
+                    selected={selected}
+                    user={user}
+                    formData={{
+                        data,
+                        setData,
+                        post,
+                        errors,
+                        processing,
+                        reset,
+                        patch,
+                    }}
+                    setDialogConfig={setDialogConfig}
+                    setSelected={setSelected}
+                    setConfirmationDialogOpen={setConfirmationDialogOpen}
+                />
                 <ConfirmationDialog
                     open={isConfirmationDialogOpen}
                     onClose={() => setConfirmationDialogOpen(false)}

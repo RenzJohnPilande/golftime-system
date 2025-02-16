@@ -26,7 +26,6 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
     const [personnel, setPersonnel] = useState('');
     const [todoList, setTodoList] = useState([]);
     const [emptyToDoList, setEmptyToDoList] = useState(true);
-    const [emptyPersonnelList, setEmptyPersonnelList] = useState(true);
     const [editPersonnel, setEditPersonnel] = useState(false);
     const [isConfirmationDialogOpen, setConfirmationDialogOpen] =
         useState(false);
@@ -102,6 +101,7 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                 setEmptyToDoList(true);
             });
     };
+    console.log(todoList);
 
     useEffect(() => {
         if (selected && open) {

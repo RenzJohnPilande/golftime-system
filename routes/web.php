@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\EventsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\Auth\RegisterController;
 
 Route::get('/', function () {
     if (auth()->check()) { 
@@ -58,7 +59,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/tasks', [TaskController::class, 'store'])->name("tasks.store");
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.delete');
 
-    
+    //Users
+    Route::post('/register/store', [RegisterController::class, 'store'])->name('register.store');
 
 });
 
@@ -92,8 +94,32 @@ Route::get('/preview-email', function () {
         'date' => '2025-02-10',
         'id' => 123
     ];
-    return view('event-created', compact('event'));
+    $user = (object) [
+        'firstname' => 'Renz',
+    ];
+    return view('emails.event-created', compact('event', 'user'));
 });
+
+Route::get('/preview-task-email', function () {
+    $event = (object) [
+        'name' => 'Test Event',
+        'date' => '2025-02-10',
+        'id' => 123
+    ];
+    
+    $task = (object) [
+        'task_name' => 'Setup Venue',
+        'deadline' => '2025-02-09',
+        'id' => 456
+    ];
+
+    $user = (object) [
+        'firstname' => 'Renz',
+    ];
+
+    return view('emails.task-created', compact('event', 'task', 'user'));
+});
+
 
 
 

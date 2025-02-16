@@ -76,7 +76,11 @@ const AppSidebar = ({ user }) => {
             <SidebarHeader className="text-white">
                 <div className="flex items-center gap-2 px-2 py-4">
                     <Avatar>
-                        <AvatarImage src="https://github.com/shadcn.png" />
+                        <AvatarImage
+                            src="/images/GolfTimeLogo.png"
+                            alt="Golf Time Logo"
+                        />
+
                         <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                     <div className="capitalize">

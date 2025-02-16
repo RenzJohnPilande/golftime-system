@@ -43,15 +43,11 @@ class TaskCreated extends Notification
     {
         return (new MailMessage)
         ->subject('New Task Assigned: ' . $this->task->task_name)
-        ->greeting('Hello ' . $notifiable->name . ',')
-        ->line("A new task has been added to the event **" . $this->event->name . "** by **" . ($this->user ? $this->user->name : "Unknown") . "**.")
-        ->line('**Task:** ' . $this->task->task_name)
-        ->line('**Type:** ' . ucfirst($this->task->type))
-        ->line('**Deadline:** ' . ($this->task->deadline ? $this->task->deadline->format('F d, Y') : 'No deadline set'))
-        ->action('View Event', url('/events/' . $this->event->id))
-        ->line("This is just a notification. No action is required.")
-        ->salutation('Best regards,  
-        **Golf Time PH Team**');
+        ->view('emails/task-created', [
+            'user' => $this->user,
+            'event' => $this->event,
+            'task' => $this->task,
+        ]);
     }
 
     public function toDatabase(object $notifiable): array

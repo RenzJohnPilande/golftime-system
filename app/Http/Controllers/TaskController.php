@@ -55,16 +55,12 @@ class TaskController extends Controller
 
     public function show($eventId)
     {
-        // Query the tasks related to the event ID
         $tasks = Task::where('event_id', $eventId)->with('user')->get();
-    
-        // Check if tasks exist
+        
         if ($tasks->isEmpty()) {
-            // Return a 404 error if no tasks found
             return response()->json(['message' => 'No tasks found for this event.'], 404);
         }
     
-        // Return the tasks if found
         return response()->json($tasks);
     }
 
