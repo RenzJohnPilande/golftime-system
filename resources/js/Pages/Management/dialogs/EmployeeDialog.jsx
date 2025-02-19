@@ -5,12 +5,12 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { useEffect } from 'react';
-import InputError from '../InputError';
-import InputLabel from '../InputLabel';
-import PrimaryButton from '../PrimaryButton';
-import TextInput from '../TextInput';
+import InputError from '../../../components/InputError';
+import InputLabel from '../../../components/InputLabel';
+import PrimaryButton from '../../../components/PrimaryButton';
+import TextInput from '../../../components/TextInput';
 
-const CreateEmployeeDialog = ({
+const EmployeeDialog = ({
     open,
     close,
     selected,
@@ -25,16 +25,17 @@ const CreateEmployeeDialog = ({
             axios
                 .get(route('employees.show', { id: selected }))
                 .then((response) => {
-                    console.log('Fetched employee:', response.data.employee);
                     setData({
-                        first_name: response.data.employee.first_name,
-                        last_name: response.data.employee.last_name,
-                        department: response.data.employee.department,
-                        salary: response.data.employee.salary,
-                        hire_date:
-                            response.data.employee.hire_date.split(' ')[0],
-                        position: response.data.employee.position,
-                        status: response.data.employee.status,
+                        firstname: response.data.firstname,
+                        middlename: response.data.middlename,
+                        lastname: response.data.lastname,
+                        email: response.data.user.email,
+                        password: '',
+                        department: response.data.department,
+                        salary: response.data.salary,
+                        hire_date: response.data.hire_date.split(' ')[0],
+                        position: response.data.position,
+                        status: response.data.status,
                     });
                 })
                 .catch((error) => {
@@ -50,7 +51,7 @@ const CreateEmployeeDialog = ({
             message: selected
                 ? 'Are you done modifying this employee? The details can be modified again later.'
                 : 'Are you done creating this employee? The details can be modified later.',
-            formAction: selected ? 'update' : 'create',
+            formAction: selected ? 'update employee' : 'create employee',
         });
         setConfirmationDialogOpen(true);
     };
@@ -75,7 +76,7 @@ const CreateEmployeeDialog = ({
                                     id="firstname"
                                     name="firstname"
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.firstname}
+                                    value={data?.firstname || ''}
                                     onChange={(e) =>
                                         setData('firstname', e.target.value)
                                     }
@@ -96,7 +97,7 @@ const CreateEmployeeDialog = ({
                                     id="middlename"
                                     name="middlename"
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.middlename}
+                                    value={data?.middlename || ''}
                                     onChange={(e) =>
                                         setData('middlename', e.target.value)
                                     }
@@ -116,7 +117,7 @@ const CreateEmployeeDialog = ({
                                     id="lastname"
                                     name="lastname"
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.lastname}
+                                    value={data?.lastname || ''}
                                     onChange={(e) =>
                                         setData('lastname', e.target.value)
                                     }
@@ -130,48 +131,57 @@ const CreateEmployeeDialog = ({
                             </div>
                         </div>
                         <div className="flex w-full flex-wrap gap-4">
-                            <div className="w-full">
-                                <InputLabel htmlFor="email" value="Email" />
-                                <TextInput
-                                    id="email"
-                                    name="email"
-                                    type="email"
-                                    className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.email}
-                                    onChange={(e) =>
-                                        setData('email', e.target.value)
-                                    }
-                                    required
-                                />
-                                {errors.email && (
-                                    <InputError className="mt-2">
-                                        {errors.email}
-                                    </InputError>
-                                )}
-                            </div>
-
-                            <div className="w-full">
-                                <InputLabel
-                                    htmlFor="password"
-                                    value="Password"
-                                />
-                                <TextInput
-                                    id="password"
-                                    name="password"
-                                    type="password"
-                                    className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.password}
-                                    onChange={(e) =>
-                                        setData('password', e.target.value)
-                                    }
-                                    required
-                                />
-                                {errors.password && (
-                                    <InputError className="mt-2">
-                                        {errors.password}
-                                    </InputError>
-                                )}
-                            </div>
+                            {!selected && (
+                                <>
+                                    <div className="w-full">
+                                        <InputLabel
+                                            htmlFor="email"
+                                            value="Email"
+                                        />
+                                        <TextInput
+                                            id="email"
+                                            name="email"
+                                            type="email"
+                                            className="mt-1 block w-full border px-2 py-2 text-sm shadow"
+                                            value={data?.email || ''}
+                                            onChange={(e) =>
+                                                setData('email', e.target.value)
+                                            }
+                                            required
+                                        />
+                                        {errors.email && (
+                                            <InputError className="mt-2">
+                                                {errors.email}
+                                            </InputError>
+                                        )}
+                                    </div>
+                                    <div className="w-full">
+                                        <InputLabel
+                                            htmlFor="password"
+                                            value="Password"
+                                        />
+                                        <TextInput
+                                            id="password"
+                                            name="password"
+                                            type="password"
+                                            className="mt-1 block w-full border px-2 py-2 text-sm shadow"
+                                            value={data?.password || ''}
+                                            onChange={(e) =>
+                                                setData(
+                                                    'password',
+                                                    e.target.value,
+                                                )
+                                            }
+                                            required
+                                        />
+                                        {errors.password && (
+                                            <InputError className="mt-2">
+                                                {errors.password}
+                                            </InputError>
+                                        )}
+                                    </div>
+                                </>
+                            )}
                             <div className="w-full">
                                 <InputLabel
                                     htmlFor="department"
@@ -181,7 +191,7 @@ const CreateEmployeeDialog = ({
                                     id="department"
                                     name="department"
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.department}
+                                    value={data?.department || ''}
                                     onChange={(e) =>
                                         setData('department', e.target.value)
                                     }
@@ -202,7 +212,7 @@ const CreateEmployeeDialog = ({
                                     id="position"
                                     name="position"
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.position}
+                                    value={data?.position || ''}
                                     onChange={(e) =>
                                         setData('position', e.target.value)
                                     }
@@ -223,7 +233,7 @@ const CreateEmployeeDialog = ({
                                     name="salary"
                                     type="number"
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.salary}
+                                    value={data?.salary || ''}
                                     onChange={(e) =>
                                         setData('salary', e.target.value)
                                     }
@@ -242,7 +252,7 @@ const CreateEmployeeDialog = ({
                                     id="role"
                                     name="role"
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.role}
+                                    value={data?.role || ''}
                                     onChange={(e) =>
                                         setData('role', e.target.value)
                                     }
@@ -268,7 +278,7 @@ const CreateEmployeeDialog = ({
                                     name="hire_date"
                                     type="date"
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.hire_date}
+                                    value={data?.hire_date || ''}
                                     onChange={(e) =>
                                         setData('hire_date', e.target.value)
                                     }
@@ -284,6 +294,7 @@ const CreateEmployeeDialog = ({
                         <div className="flex w-full flex-wrap justify-end gap-2">
                             <PrimaryButton
                                 text="Cancel"
+                                type="button"
                                 style={{
                                     wrapper:
                                         'border text-zinc-800 hover:bg-zinc-500 hover:text-white',
@@ -311,4 +322,4 @@ const CreateEmployeeDialog = ({
     );
 };
 
-export default CreateEmployeeDialog;
+export default EmployeeDialog;

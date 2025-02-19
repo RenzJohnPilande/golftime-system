@@ -20,12 +20,14 @@ import { Link, router } from '@inertiajs/react';
 import { Separator } from '@/components/ui/separator';
 import { useState } from 'react';
 import {
+    MdBusiness,
     MdDashboard,
     MdEvent,
     MdKeyboardArrowUp,
     MdLogout,
     MdManageAccounts,
     MdMoney,
+    MdOutlineCases,
     MdPeople,
     MdPerson2,
 } from 'react-icons/md';
@@ -52,9 +54,19 @@ const items = [
 
 const management = [
     {
-        title: 'Users',
+        title: 'Employees',
         url: '/employees',
         icon: MdPeople,
+    },
+    {
+        title: 'Jobs',
+        url: '/roles',
+        icon: MdOutlineCases,
+    },
+    {
+        title: 'Departments',
+        url: '/departments',
+        icon: MdBusiness,
     },
 ];
 

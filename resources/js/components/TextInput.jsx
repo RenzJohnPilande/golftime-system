@@ -16,6 +16,19 @@ export default forwardRef(function TextInput(
         }
     }, [isFocused]);
 
+    if (type === 'textarea') {
+        return (
+            <textarea
+                {...props}
+                className={
+                    'min-h-[80px] rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500' +
+                    className
+                }
+                ref={localRef}
+            />
+        );
+    }
+
     return (
         <input
             {...props}

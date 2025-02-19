@@ -14,7 +14,7 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        return Inertia::render('Management/Employees', [
+        return Inertia::render('Management/Employee', [
             'employees' => Employee::all(),
         ]);
     }
@@ -49,9 +49,10 @@ class EmployeeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Employee $employee)
+    public function show($id)
     {
-        //
+        $employee = Employee::with('user')->findOrFail($id);
+        return response()->json($employee);
     }
 
     /**
@@ -65,11 +66,12 @@ class EmployeeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Employee $employee)
+    public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+        $request->validate([
+            'firstname' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'middlename' => 'required|string|max:255',
             'position' => 'required|string|max:255',
             'department' => 'required|string|max:255',
             'salary' => 'nullable|numeric',
@@ -77,7 +79,8 @@ class EmployeeController extends Controller
             'status' => 'required|in:active,inactive,terminated',
         ]);
 
-        $employee->update($validated);
+        $employee = Employee::findOrFail($id);
+        $employee->update($request->all());
 
         return redirect()->route('employees.index')->with('success', 'Employee updated successfully!');
     }

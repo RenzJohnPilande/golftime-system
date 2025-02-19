@@ -14,6 +14,7 @@ class Employee extends Model
         'firstname',
         'middlename',
         'lastname',
+        'email',
         'position',
         'department',
         'salary',

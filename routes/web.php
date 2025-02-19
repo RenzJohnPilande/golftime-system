@@ -8,6 +8,8 @@ use App\Http\Controllers\EventsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\RoleController;
 
 Route::get('/', function () {
     if (auth()->check()) { 
@@ -33,6 +35,8 @@ Route::get('/events', [EventsController::class, 'index'])
 Route::get('/employees', [EmployeeController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('employees.index');
+
+Route::get('/roles', [RoleController::class, 'index'])->middleware(['auth', 'verified'])->name('roles.index');
 
 
 Route::get('/sales', function () {
@@ -61,6 +65,26 @@ Route::middleware('auth')->group(function () {
 
     //Users
     Route::post('/register/store', [RegisterController::class, 'store'])->name('register.store');
+    Route::patch('/register/update/{id}', [RegisterController::class, 'update'])->name('register.update');
+    Route::get('/employees/{employees}', [EmployeeController::class, 'show'])->name('employees.show');
+    Route::patch('/employees/update/{id}', [EmployeeController::class, 'update'])->name('employees.update');
+    
+
+    // Department Routes
+    Route::get('/departments', [DepartmentController::class, 'index'])->name('departments.index');
+    Route::get('/departments/{department}', [DepartmentController::class, 'show'])->name('departments.show');
+    Route::post('/departments', [DepartmentController::class, 'store'])->name('departments.store');
+    Route::patch('/departments/{department}', [DepartmentController::class, 'update'])->name('departments.update');
+    Route::put('/departments/{department}', [DepartmentController::class, 'update'])->name('departments.update'); 
+    Route::delete('/departments/{department}', [DepartmentController::class, 'destroy'])->name('departments.delete');
+
+    // Role Routes
+    Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
+    Route::get('/roles/{role}', [RoleController::class, 'show'])->name('roles.show');
+    Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
+    Route::patch('/roles/update/{id}', [RoleController::class, 'update'])->name('roles.update');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.delete');
+
 
 });
 

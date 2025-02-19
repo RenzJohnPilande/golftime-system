@@ -15,7 +15,7 @@ const TableComponent = ({ data = [], caption, columns = [] }) => {
             <TableHeader>
                 <TableRow
                     key={'header'}
-                    className="bg-zinc-700 hover:bg-zinc-700"
+                    className="bg-zinc-800 hover:bg-zinc-800"
                 >
                     {columns.map((column, index) => (
                         <TableHead
