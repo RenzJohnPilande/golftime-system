@@ -3,47 +3,24 @@ import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
 import PrimaryButton from '@/components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm, usePage } from '@inertiajs/react';
-import axios from 'axios';
 import { useEffect, useMemo, useState } from 'react';
 import EmployeeColumns from './columns/EmployeeColumns';
 import EmployeeDialog from './dialogs/EmployeeDialog';
+import ViewEmployeeDialog from './dialogs/ViewEmployeeDialog';
 
-const Employee = ({ employees }) => {
+const Employee = ({ employees, departments, roles }) => {
     const [employeeDialogOpen, setEmployeeDialogOpen] = useState(false);
     const [viewOpen, setViewOpen] = useState(false);
     const [selected, setSelected] = useState(null);
     const [isConfirmationDialogOpen, setConfirmationDialogOpen] =
         useState(false);
     const [activeTab, setActiveTab] = useState('users');
-    const [departments, setDepartments] = useState([]);
-    const [roles, setRoles] = useState([]);
 
     const [dialogConfig, setDialogConfig] = useState({
         title: '',
         formAction: '',
     });
-
     const user = usePage().props.auth.user;
-
-    useEffect(() => {
-        axios
-            .get(route('departments.index'))
-            .then((response) => {
-                setDepartments(response.data);
-            })
-            .catch((error) => {
-                console.error('Error fetching departments:', error);
-            });
-
-        axios
-            .get(route('roles.index'))
-            .then((response) => {
-                setRoles(response.data);
-            })
-            .catch((error) => {
-                console.error('Error fetching roles:', error);
-            });
-    }, []);
 
     const useIsMobile = () => {
         const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
@@ -69,15 +46,17 @@ const Employee = ({ employees }) => {
         delete: destroy,
     } = useForm({
         id: '',
+        user_id: '',
         first_name: '',
         last_name: '',
         middlename: '',
         email: '',
         password: '',
-        role: 'employee',
+        role: '',
         position: '',
         department: '',
         salary: '',
+        role: '',
         hire_date: '',
         status: 'active',
         user_id: user.id,
@@ -86,6 +65,7 @@ const Employee = ({ employees }) => {
     const onClose = () => {
         setEmployeeDialogOpen(false);
         setConfirmationDialogOpen(false);
+        setViewOpen(false);
         reset();
         setSelected(null);
     };
@@ -94,10 +74,9 @@ const Employee = ({ employees }) => {
         const { formAction } = dialogConfig;
 
         if (formAction === 'update employee' && selected) {
-            patch(route('employees.update', { id: selected }), {
+            patch(route('register.update', { id: selected }), {
                 ...data,
                 onSuccess: (response) => {
-                    console.log('Updated employee:', response);
                     onClose();
                 },
                 onError: (errors) => {
@@ -125,7 +104,6 @@ const Employee = ({ employees }) => {
             });
         }
     };
-
     const columns = useMemo(() => {
         return EmployeeColumns(
             isMobile,
@@ -170,7 +148,11 @@ const Employee = ({ employees }) => {
                     </div>
                 </div>
                 <div className="flex w-full flex-wrap py-5">
-                    <TableComponent columns={columns} data={employees} />
+                    <TableComponent
+                        columns={columns}
+                        data={employees}
+                        rowsPerPage={10}
+                    />
                 </div>
                 <EmployeeDialog
                     open={employeeDialogOpen}
@@ -186,9 +168,18 @@ const Employee = ({ employees }) => {
                         reset,
                         patch,
                     }}
+                    departments={departments}
+                    roles={roles}
                     setDialogConfig={setDialogConfig}
                     setSelected={setSelected}
                     setConfirmationDialogOpen={setConfirmationDialogOpen}
+                />
+                <ViewEmployeeDialog
+                    open={viewOpen}
+                    close={onClose}
+                    selected={selected}
+                    user={user}
+                    setSelected={setSelected}
                 />
                 <ConfirmationDialog
                     open={isConfirmationDialogOpen}

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\LogHelper;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,6 +22,7 @@ class RegisterController extends Controller
             'lastname' => 'required|string|max:255',
             'position' => 'required|string|max:255',
             'department' => 'required|string|max:255',
+            'role' => 'required|in:admin,manager,employee',
             'salary' => 'required|numeric',
             'hire_date' => 'required|date',
             'status' => 'required|in:active,inactive,terminated',
@@ -37,7 +40,7 @@ class RegisterController extends Controller
             'middlename' => $request->middlename,
             'lastname' => $request->lastname,
             'email' => $request->email,
-            'role' => 'employee', 
+            'role' => $request->role,
             'password' => Hash::make($request->password),
         ]);
 
@@ -55,12 +58,19 @@ class RegisterController extends Controller
             'status' => $request->status,
         ]);
 
+        $user = Auth::user();
+        $username = $user ? $user->firstname . " " . $user->lastname : "System";
+        LogHelper::logAction('Created a new employee', "A new employee named {$employee->firstname} {$employee->lastname} has been added by {$username}.");
+
         return redirect()->route('employees.index')->with('success', 'User
          created successfully.');
     }
 
     public function update(Request $request, $id)
     {
+        
+        $employee = Employee::findOrFail($id);
+        $user = User::findOrFail($employee->user_id);
         // Validate incoming data
         $validator = Validator::make($request->all(), [
             'firstname' => 'required|string|max:255',
@@ -68,33 +78,27 @@ class RegisterController extends Controller
             'lastname' => 'required|string|max:255',
             'position' => 'required|string|max:255',
             'department' => 'required|string|max:255',
+            'role' => 'required|in:admin,manager,employee',
             'salary' => 'required|numeric',
             'hire_date' => 'required|date',
             'status' => 'required|in:active,inactive,terminated',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8',
         ]);
 
-        // If validation fails, return errors
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        // Find the employee and user by ID
-        $employee = Employee::findOrFail($id);
-        $user = $employee->user;
-
-        // Update the user (optional: update password if provided)
         $user->update([
             'firstname' => $request->firstname,
-            'middlename' => $request->middlename,
             'lastname' => $request->lastname,
+            'middlename' => $request->middlename,
             'email' => $request->email,
-            'role' => 'employee',
-            'password' => $request->password ? Hash::make($request->password) : $user->password, // Only update password if provided
+            'role' => $request->role,
+            'password' => $request->password ? Hash::make($request->password) : $user->password, 
         ]);
 
-        // Update the employee record
         $employee->update([
             'firstname' => $request->firstname,
             'middlename' => $request->middlename,
@@ -106,11 +110,15 @@ class RegisterController extends Controller
             'status' => $request->status,
         ]);
 
-        // For Inertia.js, return the updated employee data as a response
-        return response()->json([
-            'message' => 'Employee updated successfully.',
-            'employee' => $employee,
-            'user' => $user,
-        ]);
+
+        $loggedUser = Auth::user();
+        $username = $loggedUser ? "{$loggedUser->firstname} {$loggedUser->lastname}" : "System";
+        LogHelper::logAction(
+            'Employee has been updated',
+            "Employee \"{$employee->firstname} {$employee->lastname}\" was updated by {$username}."
+        );
+
+        return redirect()->route('employees.index')->with('success', 'User
+         updated successfully.');
     }
 }

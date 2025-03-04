@@ -26,8 +26,8 @@ const RoleDialog = ({
                 .get(route('roles.show', { id: selected }))
                 .then((response) => {
                     setData({
-                        job_title: response.data.job_title,
-                        job_description: response.data.job_description,
+                        job_title: response.data.job_title ?? '',
+                        job_description: response.data.job_description ?? '',
                     });
                 })
                 .catch((error) => {

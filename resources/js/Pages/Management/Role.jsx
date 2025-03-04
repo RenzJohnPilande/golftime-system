@@ -33,16 +33,25 @@ const Role = ({ roles }) => {
     };
     const isMobile = useIsMobile();
 
-    const { data, setData, post, errors, processing, reset, patch } = useForm({
+    const {
+        data,
+        setData,
+        post,
+        errors,
+        processing,
+        reset,
+        patch,
+        delete: destroy,
+    } = useForm({
         job_title: '',
         job_description: '',
     });
 
     const onClose = () => {
-        setRoleDialogOpen(false);
         setConfirmationDialogOpen(false);
         reset();
         setSelected(null);
+        setRoleDialogOpen(false);
     };
 
     const handleConfirm = () => {
@@ -51,7 +60,6 @@ const Role = ({ roles }) => {
         if (formAction === 'create role') {
             post(route('roles.store'), {
                 onSuccess: () => {
-                    console.log('Created Role:', response);
                     onClose();
                 },
                 onError: (errors) => {
@@ -61,11 +69,20 @@ const Role = ({ roles }) => {
         } else if (formAction === 'update role') {
             patch(route('roles.update', { id: selected }), {
                 ...data,
-                onSuccess: (response) => {
+                onSuccess: () => {
                     onClose();
                 },
                 onError: (errors) => {
                     console.log('Submission failed with errors:', errors);
+                },
+            });
+        } else if (formAction === 'delete role') {
+            destroy(route('roles.delete', { id: selected }), {
+                onSuccess: () => {
+                    onClose();
+                },
+                onError: (errors) => {
+                    console.error('Error deleting event:', errors);
                 },
             });
         }
@@ -113,7 +130,11 @@ const Role = ({ roles }) => {
                     </div>
                 </div>
                 <div className="flex w-full flex-wrap py-5">
-                    <TableComponent columns={columns} data={roles} />
+                    <TableComponent
+                        columns={columns}
+                        data={roles}
+                        rowsPerPage={10}
+                    />
                 </div>
 
                 <RoleDialog

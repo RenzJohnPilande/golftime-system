@@ -7,6 +7,7 @@ use App\Http\Requests\StoreEventsRequest;
 use App\Http\Requests\UpdateEventsRequest;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Helpers\LogHelper;
 
 class EventsController extends Controller
 {
@@ -47,7 +48,9 @@ class EventsController extends Controller
 
         $validated['personnel'] = json_encode($validated['personnel']);
 
-        Events::create($validated);
+        $event = Events::create($validated);
+
+        LogHelper::logAction('Event Created', "Event ID: {$event->id}, Name: {$event->name}");
 
         return redirect()->route('events.index')->with('success', 'Event created successfully.');
     }
@@ -90,6 +93,9 @@ class EventsController extends Controller
 
         $validated['personnel'] = json_encode($validated['personnel']);
         $event->update($validated);
+
+        LogHelper::logAction('Event Updated', "Event ID: {$event->id}, Name: {$event->name}");
+
         return redirect()->route('events.index')->with('success', 'Event updated successfully.');
     }
 
@@ -100,6 +106,8 @@ class EventsController extends Controller
     {
         $event = Events::findOrFail($id);
         $event->delete();
+
+        LogHelper::logAction('Event Deleted', "Event ID: {$id}");
         return redirect()->route('events.index')->with('success', 'Event deleted successfully.');
     }
 }

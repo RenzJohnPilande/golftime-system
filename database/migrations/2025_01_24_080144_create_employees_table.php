@@ -15,9 +15,13 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('firstname');
-            $table->string('middlename');
-            $table->string('email')->unique();
+            $table->string('middlename')->nullable();
             $table->string('lastname');
+            $table->string('email')->unique();
+            $table->string('sex')->nullable();
+            $table->date('birthdate')->nullable();
+            $table->string('contact_number')->nullable();
+            $table->text('address')->nullable();
             $table->string('position');
             $table->string('department');
             $table->decimal('salary', 10, 2)->nullable();

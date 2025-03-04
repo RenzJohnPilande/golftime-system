@@ -79,6 +79,7 @@ const Events = ({ events }) => {
 
     const onViewClose = () => {
         setViewOpen(false);
+        reset();
         setSelected(null);
     };
 
@@ -405,7 +406,11 @@ const Events = ({ events }) => {
                     </div>
                 </div>
                 <div className="flex w-full flex-wrap py-5">
-                    <TableComponent columns={columns} data={events} />
+                    <TableComponent
+                        columns={columns}
+                        data={events}
+                        rowsPerPage={10}
+                    />
                 </div>
                 <EventDialog
                     open={open}

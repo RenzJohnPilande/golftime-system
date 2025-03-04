@@ -16,6 +16,7 @@ class Task extends Model
         'task_name',
         'deadline',
         'type',
+        'status',
         'event_id', 
     ];
 

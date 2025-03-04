@@ -25,6 +25,7 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
     const [showForm, setShowForm] = useState({ todo: false, personnel: false });
     const [personnel, setPersonnel] = useState('');
     const [todoList, setTodoList] = useState([]);
+    const [selectedTask, setSelectedTask] = useState(null);
     const [emptyToDoList, setEmptyToDoList] = useState(true);
     const [editPersonnel, setEditPersonnel] = useState(false);
     const [isConfirmationDialogOpen, setConfirmationDialogOpen] =
@@ -43,11 +44,13 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
         data: taskData,
         setData: setTaskData,
         post,
+        patch: taskPatch,
         delete: destroy,
     } = useForm({
         task_name: '',
         deadline: '',
         type: 'event',
+        status: 'pending',
         event_id: eventData.id || null,
     });
 
@@ -73,12 +76,6 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                     ...prev,
                     event_id: eventId,
                 }));
-
-                if (eventData.personnel.length > 0) {
-                    setEmptyPersonnelList(false);
-                } else {
-                    setEmptyPersonnelList(true);
-                }
             })
             .catch((error) => {
                 console.error('Error fetching event details:', error);
@@ -101,7 +98,6 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                 setEmptyToDoList(true);
             });
     };
-    console.log(todoList);
 
     useEffect(() => {
         if (selected && open) {
@@ -174,6 +170,23 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
         setConfirmationDialogOpen(true);
     };
 
+    const handleTaskComplete = (task) => {
+        setTaskData({
+            task_name: task.task_name ?? '',
+            deadline: task.deadline ?? '',
+            type: task.type ?? '',
+            status: 'complete',
+        });
+
+        setDialogConfig({
+            id: task.id,
+            title: 'Task done?',
+            message: 'Are you sure this task is complete?',
+            formAction: 'complete task',
+        });
+        setConfirmationDialogOpen(true);
+    };
+
     const handleConfirm = () => {
         const { formAction } = dialogConfig;
         if (formAction === 'add task') {
@@ -183,6 +196,7 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                     setTaskData({
                         task_name: '',
                         deadline: '',
+                        status: '',
                         event_id: taskData.event_id,
                     });
                     setShowForm((prev) => ({ ...prev, todo: false }));
@@ -192,12 +206,32 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                 onError: console.error,
             });
         } else if (formAction === 'remove task') {
-            destroy(route('tasks.delete', { id: dialogConfig.id }), {
+            destroy(route('tasks.delete', { id: selectedTask }), {
                 onSuccess: () => {
                     fetchTasks(selected, setTodoList);
                 },
                 onError: (errors) => {
                     console.error('Error deleting task:', errors);
+                    setConfirmationDialogOpen(false);
+                },
+            });
+        } else if (formAction === 'complete task') {
+            taskPatch(route('tasks.complete', { id: selectedTask }), {
+                ...taskData,
+                onSuccess: () => {
+                    console.log('Task marked as completed', taskData);
+                    fetchTasks(selected, setTodoList);
+                    setTaskData({
+                        task_name: '',
+                        deadline: '',
+                        type: 'event',
+                        status: 'pending',
+                        event_id: eventData.id || null,
+                    });
+                    setConfirmationDialogOpen(false);
+                },
+                onError: (errors) => {
+                    console.error('Error updating task:', errors);
                     setConfirmationDialogOpen(false);
                 },
             });
@@ -266,14 +300,17 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                                 <div className="w-full rounded border">
                                     <div className="flex flex-col">
                                         {/* Header */}
-                                        <div className="flex items-center justify-start gap-2 rounded-t bg-zinc-900 p-2">
-                                            <div className="w-[200px] font-bold text-white">
+                                        <div className="flex items-center justify-start gap-4 rounded-t bg-zinc-900 p-2">
+                                            <div className="w-40 text-sm font-semibold text-white">
                                                 Task
                                             </div>
-                                            <div className="w-[50px] font-bold text-white">
+                                            <div className="w-20 text-sm font-semibold text-white">
                                                 Deadline
                                             </div>
-                                            <div className="font-bold text-white"></div>
+                                            <div className="text-sm font-semibold text-white">
+                                                Status
+                                            </div>
+                                            <div className="text-sm font-semibold text-white"></div>
                                         </div>
 
                                         <div className="max-h-[200px] w-full overflow-y-auto">
@@ -285,60 +322,73 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                                                 todoList.map((task, index) => (
                                                     <div
                                                         key={index}
-                                                        className="flex w-full items-center justify-start gap-2 border-b px-2 py-3 text-xs hover:bg-gray-100"
+                                                        className="flex w-full grid-cols-4 items-center justify-start gap-4 border-b px-2 py-3 text-xs hover:bg-gray-100"
                                                     >
-                                                        <div className="w-[120px] md:w-[200px]">
+                                                        <div className="w-40">
                                                             {task.task_name}
                                                         </div>
-                                                        <div className="min-w-[100px] proportional-nums">
+                                                        <div className="w-20 proportional-nums">
                                                             {formatDate(
                                                                 task.deadline,
                                                             )}
                                                         </div>
-                                                        <div className="flex justify-center gap-1">
-                                                            <DropdownMenu>
-                                                                <DropdownMenuTrigger>
-                                                                    <MdMoreHoriz
-                                                                        size={
-                                                                            16
-                                                                        }
-                                                                    />
-                                                                </DropdownMenuTrigger>
-                                                                <DropdownMenuContent className="flex min-w-[50px] flex-col gap-1">
-                                                                    <DropdownMenuItem
-                                                                        onClick={() =>
-                                                                            handleRemoveTask(
-                                                                                task.id,
-                                                                            )
-                                                                        }
-                                                                        className="flex w-full cursor-pointer gap-2 text-center text-red-500 hover:text-red-700"
-                                                                    >
-                                                                        <MdOutlineDelete
-                                                                            size={
-                                                                                20
-                                                                            }
-                                                                        />
-                                                                        Delete
-                                                                    </DropdownMenuItem>
-                                                                    <DropdownMenuItem
-                                                                        onClick={() =>
-                                                                            handleRemove(
-                                                                                'todoList',
-                                                                                index,
-                                                                            )
-                                                                        }
-                                                                        className="flex w-full cursor-pointer gap-2 text-center text-blue-500 hover:text-blue-700"
-                                                                    >
-                                                                        <MdOutlineDone
-                                                                            size={
-                                                                                20
-                                                                            }
-                                                                        />
-                                                                        Done
-                                                                    </DropdownMenuItem>
-                                                                </DropdownMenuContent>
-                                                            </DropdownMenu>
+                                                        <div
+                                                            className={`${task.status === 'pending' ? 'text-yellow-600' : 'text-green-600'} capitalize`}
+                                                        >
+                                                            {task.status}
                                                         </div>
+                                                        {task.status ===
+                                                        'pending' ? (
+                                                            <div className="flex justify-center gap-1">
+                                                                <DropdownMenu>
+                                                                    <DropdownMenuTrigger>
+                                                                        <MdMoreHoriz
+                                                                            size={
+                                                                                16
+                                                                            }
+                                                                        />
+                                                                    </DropdownMenuTrigger>
+                                                                    <DropdownMenuContent className="flex min-w-[50px] flex-col gap-1">
+                                                                        <DropdownMenuItem
+                                                                            onClick={() => {
+                                                                                setSelectedTask(
+                                                                                    task.id,
+                                                                                );
+                                                                                handleRemoveTask(
+                                                                                    task.id,
+                                                                                );
+                                                                            }}
+                                                                            className="flex w-full cursor-pointer gap-2 text-center text-red-500 hover:text-red-700"
+                                                                        >
+                                                                            <MdOutlineDelete
+                                                                                size={
+                                                                                    20
+                                                                                }
+                                                                            />
+                                                                            Delete
+                                                                        </DropdownMenuItem>
+                                                                        <DropdownMenuItem
+                                                                            onClick={() => {
+                                                                                setSelectedTask(
+                                                                                    task.id,
+                                                                                );
+                                                                                handleTaskComplete(
+                                                                                    task,
+                                                                                );
+                                                                            }}
+                                                                            className="flex w-full cursor-pointer gap-2 text-center text-blue-500 hover:text-blue-700"
+                                                                        >
+                                                                            <MdOutlineDone
+                                                                                size={
+                                                                                    20
+                                                                                }
+                                                                            />
+                                                                            Done
+                                                                        </DropdownMenuItem>
+                                                                    </DropdownMenuContent>
+                                                                </DropdownMenu>
+                                                            </div>
+                                                        ) : null}
                                                     </div>
                                                 ))
                                             )}
@@ -484,6 +534,7 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                                                 </div>
                                                 <div className="flex w-full gap-2 py-2">
                                                     <Button
+                                                        type="button"
                                                         className="w-full bg-zinc-600 capitalize hover:bg-zinc-400"
                                                         onClick={() => {
                                                             setShowForm(false);
@@ -503,7 +554,8 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                                         )}
                                         <div className="grid w-full grid-cols-2 gap-2">
                                             <Button
-                                                className="w-full capitalize"
+                                                type="button"
+                                                className="w-full bg-zinc-600 capitalize hover:bg-zinc-400"
                                                 onClick={() => {
                                                     setEditPersonnel(false);
                                                     setShowForm(false);

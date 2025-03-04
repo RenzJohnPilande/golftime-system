@@ -11,15 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('tasks', function (Blueprint $table) {
+        Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->string('task_name');
-            $table->date('deadline')->nullable();
-            $table->string('type');
-            $table->string('status');
-            $table->unsignedBigInteger('event_id'); 
-            $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
+            $table->string('action');
+            $table->unsignedBigInteger('action_by');
+            $table->string('details')->nullable();
             $table->timestamps();
+            $table->foreign('action_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('tasks');
+        Schema::dropIfExists('logs');
     }
 };

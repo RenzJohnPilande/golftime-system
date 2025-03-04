@@ -1,5 +1,6 @@
 import AppSidebar from '@/components/app-sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { Toaster } from '@/components/ui/sonner';
 import { usePage } from '@inertiajs/react';
 
 export default function AuthenticatedLayout({ header, children }) {
@@ -14,6 +15,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 </div>
                 {children}
             </main>
+            <Toaster richColors />
         </SidebarProvider>
     );
 }

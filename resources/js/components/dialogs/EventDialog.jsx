@@ -28,19 +28,18 @@ const EventDialog = ({
                 .then((response) => {
                     const formattedDate =
                         response.data.event.date.split(' ')[0];
-                    console.log('Fetched event:', response.data.event);
                     setData({
-                        name: response.data.event.name,
-                        location: response.data.event.location,
-                        date: formattedDate,
-                        status: response.data.event.status,
+                        name: response.data.event.name ?? '',
+                        location: response.data.event.location ?? '',
+                        date: formattedDate ?? '',
+                        status: response.data.event.status ?? '',
                         personnel: Array.isArray(response.data.event.personnel)
                             ? response.data.event.personnel
                             : [],
-                        notes: response.data.event.notes,
-                        user_id: response.data.event.user_id,
+                        notes: response.data.event.notes ?? '',
+                        user_id: response.data.event.user_id ?? '',
                         notification_sent:
-                            response.data.event.notification_sent,
+                            response.data.event.notification_sent ?? '',
                     });
                 })
                 .catch((error) => {
@@ -71,7 +70,7 @@ const EventDialog = ({
                 </DialogHeader>
                 <form onSubmit={submit}>
                     <div className="flex w-full flex-wrap gap-2">
-                        <div className="grid w-full grid-cols-2 gap-4">
+                        <div className="flex w-full gap-4">
                             <div className="w-full">
                                 <InputLabel htmlFor="name" value="Event Name" />
                                 <TextInput
@@ -90,6 +89,8 @@ const EventDialog = ({
                                     </InputError>
                                 )}
                             </div>
+                        </div>
+                        <div className="flex w-full gap-4">
                             <div className="w-full">
                                 <InputLabel
                                     htmlFor="location"
@@ -112,6 +113,7 @@ const EventDialog = ({
                                 )}
                             </div>
                         </div>
+
                         <div className="flex w-full flex-col flex-wrap">
                             <InputLabel htmlFor="date" value="Event Date" />
                             <TextInput
@@ -150,6 +152,7 @@ const EventDialog = ({
                         </div>
                         <div className="flex w-full flex-wrap justify-end gap-2">
                             <PrimaryButton
+                                type="button"
                                 text="Cancel"
                                 style={{
                                     wrapper:

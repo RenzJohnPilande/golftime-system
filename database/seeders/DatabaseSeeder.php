@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             'firstname' => 'Renz',
             'lastname' => 'Pilande',
             'middlename' => 'Ora', 
-            'email' => 'renz@golftime.ph',
+            'email' => 'admin@golftime.ph',
             'role' => 'admin',
             'password' => Hash::make('password'),
         ]);

@@ -28,7 +28,7 @@ const EmployeeColumns = (
                   accessorKey: 'employee',
                   header: 'Employee',
                   cell: (row) => (
-                      <div className="flex w-full flex-wrap gap-1 px-2 py-3">
+                      <div className="flex w-full flex-wrap gap-1 px-2">
                           <div className="flex w-full flex-col">
                               <h1 className="text-sm font-medium text-zinc-900">
                                   {row.lastname}, {row.firstname}{' '}
@@ -118,7 +118,7 @@ const EmployeeColumns = (
                   accessorKey: 'employee',
                   header: 'Employee',
                   cell: (row) => (
-                      <div className="flex w-full flex-wrap gap-1 px-2 py-3">
+                      <div className="flex w-full flex-wrap gap-1 px-2">
                           <div className="flex w-full">
                               <h1 className="text-base font-medium">
                                   {row.lastname}, {row.firstname}{' '}
@@ -137,7 +137,7 @@ const EmployeeColumns = (
                   accessorKey: 'department',
                   header: 'Department',
                   cell: (row) => (
-                      <div className="flex w-full flex-wrap gap-1 px-2 py-3">
+                      <div className="flex w-full flex-wrap gap-1 px-2">
                           <p className="text-xs capitalize text-zinc-600">
                               {row.department}
                           </p>
@@ -148,7 +148,7 @@ const EmployeeColumns = (
                   accessorKey: 'salary',
                   header: 'Salary',
                   cell: (row) => (
-                      <div className="flex w-full flex-wrap gap-1 px-2 py-3">
+                      <div className="flex w-full flex-wrap gap-1 px-2">
                           <p className="text-xs text-zinc-600">
                               {row.salary
                                   ? `₱${row.salary.toLocaleString()}`
@@ -169,7 +169,7 @@ const EmployeeColumns = (
                           day: 'numeric',
                       });
                       return (
-                          <div className="flex w-full flex-wrap gap-1 px-2 py-3">
+                          <div className="flex w-full flex-wrap gap-1 px-2">
                               <p className="text-xs text-zinc-600">
                                   {formattedDate}
                               </p>
@@ -181,7 +181,7 @@ const EmployeeColumns = (
                   accessorKey: 'status',
                   header: 'Status',
                   cell: (row) => (
-                      <div className="flex w-full flex-wrap gap-1 px-2 py-3">
+                      <div className="flex w-full flex-wrap gap-1 px-2">
                           <p
                               className={`min-w-[80px] rounded border p-1 text-center font-semibold capitalize ${
                                   {

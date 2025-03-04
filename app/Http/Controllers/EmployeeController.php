@@ -6,6 +6,12 @@ use App\Models\Employee;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use App\Helpers\LogHelper;
+use App\Models\Department;
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class EmployeeController extends Controller
 {
@@ -14,8 +20,11 @@ class EmployeeController extends Controller
      */
     public function index()
     {
+
         return Inertia::render('Management/Employee', [
             'employees' => Employee::all(),
+            'departments' => Department::all(),
+            'roles' => Role::all(),
         ]);
     }
 
@@ -24,26 +33,6 @@ class EmployeeController extends Controller
      */
     public function create()
     {
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'position' => 'required|string|max:255',
-            'department' => 'required|string|max:255',
-            'salary' => 'nullable|numeric',
-            'hire_date' => 'required|date',
-            'status' => 'required|in:active,inactive,terminated',
-        ]);
-
-        Employee::create($validated);
-
-        return redirect()->route('employees.index')->with('success', 'Employee created successfully!');
     }
 
     /**
@@ -80,7 +69,27 @@ class EmployeeController extends Controller
         ]);
 
         $employee = Employee::findOrFail($id);
+        $oldData = $employee->getOriginal();
         $employee->update($request->all());
+        $newData = $employee->toArray();
+
+        $user = Auth::user();
+        $username = $user ? $user->firstname . " " . $user->lastname : "System";
+
+        $excludedFields = ['created_at', 'updated_at'];
+        $changes = [];
+        foreach ($newData as $key => $value) {
+            if (!in_array($key, $excludedFields) && $oldData[$key] != $value) {
+                $oldValue = $oldData[$key] ?? "None";
+                $newValue = $value ?? "None";
+                $changes[] = ucfirst(str_replace('_', ' ', $key)) . " updated";
+            }
+        }
+
+        if (!empty($changes)) {
+            $changeSummary = implode(', ', $changes);
+            LogHelper::logAction('An Employee has been updated', "Employee {$employee->firstname} {$employee->lastname}  was updated by {$username}. Changes: {$changeSummary}.");
+        }
 
         return redirect()->route('employees.index')->with('success', 'Employee updated successfully!');
     }
@@ -88,9 +97,25 @@ class EmployeeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Employee $employee)
+    public function destroy($id)
     {
-        $employee->delete();
+        $employee = Employee::findOrFail($id);
+        $employeeName = $employee->firstname . " " . $employee->lastname;
+
+        $user = Auth::user();
+        $username = $user ? $user->firstname . " " . $user->lastname : "System";
+
+        DB::transaction(function () use ($employee, $employeeName, $username) {
+            if ($employee->user_id) {
+                User::where('id', $employee->user_id)->delete();
+            }
+    
+            $employee->delete();
+    
+            LogHelper::logAction('an employee has been deleted', "Employee {$employeeName} and their associated user account were deleted by {$username}.");
+        });
+
+
 
         return redirect()->route('employees.index')->with('success', 'Employee deleted successfully!');
     }

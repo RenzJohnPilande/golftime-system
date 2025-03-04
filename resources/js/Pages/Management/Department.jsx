@@ -7,7 +7,7 @@ import { useEffect, useMemo, useState } from 'react';
 import DepartmentColumns from './columns/DepartmentColumn';
 import DepartmentDialog from './dialogs/DepartmentDialog';
 
-const Department = ({ departments }) => {
+const Department = ({ departments, employees }) => {
     const [departmentDialogOpen, setDepartmentDialogOpen] = useState(false);
     const [viewOpen, setViewOpen] = useState(false);
     const [selected, setSelected] = useState(null);
@@ -34,10 +34,19 @@ const Department = ({ departments }) => {
     };
     const isMobile = useIsMobile();
 
-    const { data, setData, post, errors, processing, reset, patch } = useForm({
+    const {
+        data,
+        setData,
+        post,
+        errors,
+        processing,
+        reset,
+        patch,
+        delete: destroy,
+    } = useForm({
         id: '',
         name: '',
-        description: '',
+        supervisor: '',
     });
 
     const onClose = () => {
@@ -50,30 +59,34 @@ const Department = ({ departments }) => {
     const handleConfirm = () => {
         const { formAction } = dialogConfig;
 
-        if (formAction === 'create_department') {
+        if (formAction === 'create department') {
             post(route('departments.store'), {
-                name: data.name,
-                description: data.description,
-            })
-                .then((response) => {
-                    console.log('Department created:', response.data);
+                onSuccess: () => {
                     onClose();
-                })
-                .catch((errors) => {
-                    console.log('Error creating department:', errors);
-                });
-        } else if (formAction === 'update_department') {
+                },
+                onError: (errors) => {
+                    console.log('Submission failed with errors:', errors);
+                },
+            });
+        } else if (formAction === 'update department') {
             patch(route('departments.update', { id: selected }), {
-                name: data.name,
-                description: data.description,
-            })
-                .then((response) => {
-                    console.log('Department updated:', response.data);
+                ...data,
+                onSuccess: () => {
                     onClose();
-                })
-                .catch((errors) => {
-                    console.log('Error updating department:', errors);
-                });
+                },
+                onError: (errors) => {
+                    console.log('Submission failed with errors:', errors);
+                },
+            });
+        } else if (formAction === 'delete department') {
+            destroy(route('departments.delete', { id: selected }), {
+                onSuccess: () => {
+                    onClose();
+                },
+                onError: (errors) => {
+                    console.error('Error deleting event:', errors);
+                },
+            });
         }
     };
 
@@ -85,6 +98,7 @@ const Department = ({ departments }) => {
             setDepartmentDialogOpen,
             setDialogConfig,
             setConfirmationDialogOpen,
+            employees,
         );
     }, [isMobile]);
 
@@ -121,7 +135,11 @@ const Department = ({ departments }) => {
                     </div>
                 </div>
                 <div className="flex w-full flex-wrap py-5">
-                    <TableComponent columns={columns} data={departments} />
+                    <TableComponent
+                        columns={columns}
+                        data={departments}
+                        rowsPerPage={10}
+                    />
                 </div>
 
                 <DepartmentDialog
@@ -136,6 +154,7 @@ const Department = ({ departments }) => {
                         processing: processing,
                         reset: reset,
                     }}
+                    employees={employees}
                     setDialogConfig={setDialogConfig}
                     setSelected={setSelected}
                     setConfirmationDialogOpen={setConfirmationDialogOpen}

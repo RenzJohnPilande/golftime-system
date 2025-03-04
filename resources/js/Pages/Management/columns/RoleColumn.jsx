@@ -56,7 +56,7 @@ const RoleColumns = (
                                                   title: 'Update Role',
                                                   message:
                                                       'Are you sure you want to update this role?',
-                                                  formAction: 'update',
+                                                  formAction: 'update role',
                                               });
                                               setSelected(row.id);
                                               setOpen(true);
@@ -76,7 +76,7 @@ const RoleColumns = (
                                                   title: 'Delete Role',
                                                   message:
                                                       'Are you sure you want to delete this role?',
-                                                  formAction: 'delete',
+                                                  formAction: 'delete role',
                                               });
                                               setSelected(row.id);
                                               setConfirmationDialogOpen(true);
@@ -161,7 +161,7 @@ const RoleColumns = (
                                                   title: 'Delete Role',
                                                   message:
                                                       'Are you sure you want to delete this role?',
-                                                  formAction: 'delete',
+                                                  formAction: 'delete role',
                                               });
                                               setSelected(row.id);
                                               setConfirmationDialogOpen(true);

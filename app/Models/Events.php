@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
 use App\Notifications\EventCreated;
+use App\Notifications\EventUpdated;
 
 class Events extends Model
 {
@@ -61,6 +62,12 @@ class Events extends Model
         static::created(function ($event) {
             if ($event->user) {
                 $event->user->notify(new EventCreated($event));
+            }
+        });
+
+        static::updated(function ($event) {
+            if ($event->user) {
+                $event->user->notify(new EventUpdated($event));
             }
         });
     }

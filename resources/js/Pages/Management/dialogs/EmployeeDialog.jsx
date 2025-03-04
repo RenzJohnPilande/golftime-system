@@ -1,3 +1,4 @@
+import SelectInput from '@/components/SelectInput';
 import {
     Dialog,
     DialogContent,
@@ -17,6 +18,8 @@ const EmployeeDialog = ({
     formData,
     setDialogConfig,
     setConfirmationDialogOpen,
+    departments,
+    roles,
 }) => {
     const { data, setData, errors, reset } = formData;
 
@@ -25,21 +28,31 @@ const EmployeeDialog = ({
             axios
                 .get(route('employees.show', { id: selected }))
                 .then((response) => {
-                    setData({
+                    setData((prevData) => ({
+                        ...prevData,
+                        user_id: response.data.user_id,
                         firstname: response.data.firstname,
                         middlename: response.data.middlename,
                         lastname: response.data.lastname,
                         email: response.data.user.email,
-                        password: '',
                         department: response.data.department,
                         salary: response.data.salary,
                         hire_date: response.data.hire_date.split(' ')[0],
                         position: response.data.position,
                         status: response.data.status,
-                    });
+                    }));
+                    return axios.get(
+                        route('users.show', { id: response.data.user_id }),
+                    );
+                })
+                .then((response) => {
+                    setData((prevData) => ({
+                        ...prevData,
+                        role: response.data.role,
+                    }));
                 })
                 .catch((error) => {
-                    console.error('Error fetching employee:', error);
+                    console.error('Error fetching data:', error);
                 });
         }
     }, [selected, open]);
@@ -187,9 +200,15 @@ const EmployeeDialog = ({
                                     htmlFor="department"
                                     value="Department"
                                 />
-                                <TextInput
+                                <SelectInput
                                     id="department"
                                     name="department"
+                                    options={[
+                                        ...departments.map((department) => ({
+                                            value: department.name,
+                                            label: department.name,
+                                        })),
+                                    ]}
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
                                     value={data?.department || ''}
                                     onChange={(e) =>
@@ -203,14 +222,21 @@ const EmployeeDialog = ({
                                     </InputError>
                                 )}
                             </div>
+
                             <div className="w-full">
                                 <InputLabel
                                     htmlFor="position"
                                     value="Position"
                                 />
-                                <TextInput
+                                <SelectInput
                                     id="position"
                                     name="position"
+                                    options={[
+                                        ...roles.map((role) => ({
+                                            value: role.job_title,
+                                            label: role.job_title,
+                                        })),
+                                    ]}
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
                                     value={data?.position || ''}
                                     onChange={(e) =>
@@ -258,6 +284,9 @@ const EmployeeDialog = ({
                                     }
                                     required
                                 >
+                                    <option value="" disabled>
+                                        Select a Role
+                                    </option>
                                     <option value="admin">Admin</option>
                                     <option value="manager">Manager</option>
                                     <option value="employee">Employee</option>
@@ -268,6 +297,7 @@ const EmployeeDialog = ({
                                     </InputError>
                                 )}
                             </div>
+
                             <div className="w-full">
                                 <InputLabel
                                     htmlFor="hire_date"

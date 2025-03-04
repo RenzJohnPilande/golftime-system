@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Employee;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,8 +31,29 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
-
         $request->session()->regenerate();
+
+        $user = Auth::user();
+        $employee = Employee::where('user_id', $user->id)->first();
+
+        if ($employee) {
+            $incompleteFields = collect([
+                'firstname' => $employee->firstname,
+                'lastname' => $employee->lastname,
+                'department' => $employee->department,
+                'position' => $employee->position,
+                'salary' => $employee->salary,
+                'hire_date' => $employee->hire_date,
+            ])->filter(fn($value) => empty($value));
+    
+            if ($employee && collect([
+                'firstname', 'lastname', 'email', 'sex', 'birthdate', 
+                'contact_number', 'address', 'position', 'department', 
+                'salary', 'hire_date', 'status'
+            ])->contains(fn($field) => is_null($employee->$field))) {
+                return redirect()->route('account.index')->with('warning', 'Please complete your profile information.');
+            }
+        }
 
         return redirect()->intended(route('dashboard', absolute: false));
     }

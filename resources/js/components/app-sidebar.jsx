@@ -24,6 +24,7 @@ import {
     MdDashboard,
     MdEvent,
     MdKeyboardArrowUp,
+    MdListAlt,
     MdLogout,
     MdManageAccounts,
     MdMoney,
@@ -67,6 +68,11 @@ const management = [
         title: 'Departments',
         url: '/departments',
         icon: MdBusiness,
+    },
+    {
+        title: 'Logs',
+        url: '/logs',
+        icon: MdListAlt,
     },
 ];
 

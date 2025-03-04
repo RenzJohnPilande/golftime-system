@@ -9,7 +9,9 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\LogController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     if (auth()->check()) { 
@@ -36,6 +38,10 @@ Route::get('/employees', [EmployeeController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('employees.index');
 
+Route::delete('/employees/{id}', [EmployeeController::class, 'destroy'])
+    ->middleware(['auth', 'verified'])
+    ->name('employees.delete');
+
 Route::get('/roles', [RoleController::class, 'index'])->middleware(['auth', 'verified'])->name('roles.index');
 
 
@@ -61,13 +67,17 @@ Route::middleware('auth')->group(function () {
     Route::get('/tasks', [TaskController::class, 'index'])->name("tasks.index");
     Route::get('/tasks/{eventId}', [TaskController::class, 'show'])->name('tasks.show');
     Route::post('/tasks', [TaskController::class, 'store'])->name("tasks.store");
+    Route::patch('/tasks/{id}', [TaskController::class, 'update'])->name('tasks.update');
+    Route::patch('/tasks/complete/{id}', [TaskController::class, 'complete'])->name('tasks.complete');
     Route::delete('/tasks/{id}', [TaskController::class, 'destroy'])->name('tasks.delete');
 
     //Users
+    Route::get('/account', [UserController::class, 'index'])->name("account.index");
     Route::post('/register/store', [RegisterController::class, 'store'])->name('register.store');
     Route::patch('/register/update/{id}', [RegisterController::class, 'update'])->name('register.update');
-    Route::get('/employees/{employees}', [EmployeeController::class, 'show'])->name('employees.show');
+    Route::get('/employees/{id}', [EmployeeController::class, 'show'])->name('employees.show');
     Route::patch('/employees/update/{id}', [EmployeeController::class, 'update'])->name('employees.update');
+    Route::get('/users/{id}', [UserController::class, 'show'])->name('users.show');
     
 
     // Department Routes
@@ -83,8 +93,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/roles/{role}', [RoleController::class, 'show'])->name('roles.show');
     Route::post('/roles', [RoleController::class, 'store'])->name('roles.store');
     Route::patch('/roles/update/{id}', [RoleController::class, 'update'])->name('roles.update');
-    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('roles.delete');
+    Route::delete('/roles/delete/{id}', [RoleController::class, 'destroy'])->name('roles.delete');
 
+    Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 
 });
 
