@@ -12,12 +12,12 @@ const ConfirmationDialog = ({ open, onClose, onConfirm, config }) => {
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent className="max-w-sm">
                 <DialogHeader>
-                    <DialogTitle className="flex items-center justify-between">
+                    <DialogTitle className="flex items-center justify-between p-1 capitalize">
                         {title}
                     </DialogTitle>
                 </DialogHeader>
-                <div className="p-2">
-                    <p className="text-gray-600">{message}</p>
+                <div className="p-1">
+                    <p className="text-sm text-gray-600">{message}</p>
                     <div className="mt-4 flex justify-end gap-3">
                         <button
                             onClick={() => {
