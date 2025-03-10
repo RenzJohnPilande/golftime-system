@@ -35,7 +35,7 @@ class SendEventReminders extends Command
         $events = Events::whereDate('date', $tomorrow)->get();
 
         foreach ($events as $event) {
-            $user = User::find($event->user_id);
+            $user = User::find($event->assigned_to);
 
             if ($user) {
                 $user->notify(new EventReminder($event));

@@ -21,13 +21,13 @@ import { Separator } from '@/components/ui/separator';
 import { useState } from 'react';
 import {
     MdBusiness,
+    MdChecklist,
     MdDashboard,
     MdEvent,
     MdKeyboardArrowUp,
     MdListAlt,
     MdLogout,
     MdManageAccounts,
-    MdMoney,
     MdOutlineCases,
     MdPeople,
     MdPerson2,
@@ -42,14 +42,14 @@ const items = [
         icon: MdDashboard,
     },
     {
-        title: 'Events',
+        title: 'My Events',
         url: '/events',
         icon: MdEvent,
     },
     {
-        title: 'Sales',
-        url: '/sales',
-        icon: MdMoney,
+        title: 'My Tasks',
+        url: '/tasks',
+        icon: MdChecklist,
     },
 ];
 

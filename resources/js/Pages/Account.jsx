@@ -27,34 +27,34 @@ const Account = ({ user }) => {
         lastname: user.lastname || '',
         sex: user.sex || '',
         birthdate: user.birthdate || '',
-        contact_number: user.contact_number || '',
         address: user.address || '',
     });
 
     const {
-        data: emailData,
-        setData: setEmailData,
-        patch: patchEmail,
-        errors: emailErrors,
-        reset: resetEmail,
+        data: contactData,
+        setData: setContactData,
+        patch: patchContact,
+        errors: contactErrors,
+        reset: resetContact,
     } = useForm({
         email: user.email || '',
+        contact_number: user.contact_number || '',
     });
 
     const {
         data: passwordData,
         setData: setPasswordData,
-        patch: patchPassword,
+        put: putPassword,
         errors: passwordErrors,
         reset: resetPassword,
     } = useForm({
         current_password: '',
-        new_password: '',
-        confirm_password: '',
+        password: '',
+        password_confirmation: '',
     });
 
     const [editPersonalInfo, setEditPersonalInfo] = useState(false);
-    const [editEmailAddress, setEditEmailAddress] = useState(false);
+    const [editContactInfo, setEditContactInfo] = useState(false);
     const [editPassword, setEditPassword] = useState(false);
     const [isConfirmationDialogOpen, setConfirmationDialogOpen] =
         useState(false);
@@ -68,8 +68,13 @@ const Account = ({ user }) => {
 
     useEffect(() => {
         if (flash?.warning) {
-            toast.warning('Personal Information Missing', {
+            toast.warning('Warning', {
                 description: flash.warning,
+                duration: 5000,
+            });
+        } else if (flash?.success) {
+            toast.success('Success', {
+                description: flash.success,
                 duration: 5000,
             });
         }
@@ -81,18 +86,18 @@ const Account = ({ user }) => {
             title: 'Update personal Info?',
             message:
                 'Are you sure you want to update your personal information? Please review the changes before proceeding.',
-            formAction: 'update Info',
+            formAction: 'update info',
         });
         setConfirmationDialogOpen(true);
     };
 
-    const updateEmailAddress = (e) => {
+    const updateContact = (e) => {
         e.preventDefault();
         setDialogConfig({
-            title: 'Update Email Address?',
+            title: 'Update Contact Information?',
             message:
-                'Updating your email address will change how you receive notifications. Please ensure you enter a valid and accessible email.',
-            formAction: 'update email',
+                'Updating your contact information will change how you receive notifications. Please ensure your email address and contact number are valid and accessible.',
+            formAction: 'update contact_info',
         });
         setConfirmationDialogOpen(true);
     };
@@ -110,9 +115,42 @@ const Account = ({ user }) => {
 
     const handleConfirm = () => {
         const { formAction } = dialogConfig;
+        if (formAction === 'update info') {
+            patchPersonalInfo(
+                route('account.update_info', { id: user.employee_id }),
+                {
+                    onSuccess: () => {
+                        setEditPersonalInfo(false);
+                    },
+                    onError: (errors) => {
+                        console.log('Submission failed with errors:', errors);
+                    },
+                },
+            );
+        } else if (formAction === 'update contact_info') {
+            patchContact(
+                route('account.update_contact_info', { id: user.employee_id }),
+                {
+                    onSuccess: () => {
+                        setEditContactInfo(false);
+                    },
+                    onError: (errors) => {
+                        console.log('Submission failed with errors:', errors);
+                    },
+                },
+            );
+        } else if (formAction === 'update password') {
+            console.log('updating password');
+            putPassword(route('password.update'), {
+                onSuccess: () => {
+                    setEditPassword(false);
+                    resetPassword();
+                },
+                onError: (errors) =>
+                    console.log('Submission failed with errors:', errors),
+            });
+        }
     };
-
-    console.log(user);
 
     return (
         <AuthenticatedLayout>
@@ -412,29 +450,34 @@ const Account = ({ user }) => {
                                     </div>
                                 </div>
                             </form>
-                            <form onSubmit={updateEmailAddress}>
+                            <form onSubmit={updateContact}>
                                 <div className="flex w-full flex-wrap rounded border bg-white px-4 py-1 shadow">
+                                    {/* Header */}
                                     <div className="flex w-full items-center justify-between border-b py-1">
                                         <p className="text-sm font-bold">
-                                            Email Address
+                                            Email & Contact Number
                                         </p>
                                         <button
                                             type="button"
                                             className="rounded text-sm text-zinc-800 hover:text-zinc-800/80"
                                             onClick={() => {
-                                                setEditEmailAddress(true);
+                                                setEditContactInfo(true);
                                             }}
                                         >
                                             <MdModeEditOutline />
                                         </button>
                                     </div>
+
+                                    {/* Description */}
                                     <div className="grid w-full grid-cols-1 gap-4 py-4 lg:grid-cols-2">
                                         <div className="flex text-sm font-medium">
-                                            Your email address is used for
-                                            account-related notifications and
-                                            password recovery. Please ensure it
-                                            is valid and accessible.
+                                            Your email address and contact
+                                            number are used for account-related
+                                            notifications and password recovery.
+                                            Please ensure they are valid and
+                                            accessible.
                                         </div>
+
                                         <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
                                             <div className="flex flex-col gap-4">
                                                 <div>
@@ -447,35 +490,90 @@ const Account = ({ user }) => {
                                                         name="email"
                                                         type="email"
                                                         disabled={
-                                                            !editEmailAddress
+                                                            !editContactInfo
                                                         }
-                                                        className={`mt-1 block w-full border px-2 py-2 text-sm shadow transition-all ${editEmailAddress && 'border-zinc-900'}`}
-                                                        value={emailData.email}
+                                                        className={`mt-1 block w-full border px-2 py-2 text-sm shadow transition-all ${editContactInfo && 'border-zinc-900'}`}
+                                                        value={
+                                                            contactData.email
+                                                        }
                                                         onChange={(e) =>
-                                                            setEmailData(
+                                                            setContactData(
                                                                 'email',
                                                                 e.target.value,
                                                             )
                                                         }
                                                         required
                                                     />
-                                                    {emailErrors.email && (
+                                                    {contactErrors.email && (
                                                         <InputError className="mt-2">
-                                                            {emailErrors.email}
+                                                            {
+                                                                contactErrors.email
+                                                            }
                                                         </InputError>
                                                     )}
                                                 </div>
 
-                                                {editEmailAddress && (
+                                                <div>
+                                                    <InputLabel
+                                                        htmlFor="contact_number"
+                                                        value="Contact Number"
+                                                    />
+                                                    <TextInput
+                                                        id="contact_number"
+                                                        name="contact_number"
+                                                        type="tel"
+                                                        disabled={
+                                                            !editContactInfo
+                                                        }
+                                                        className={`mt-1 block w-full border px-2 py-2 text-sm shadow transition-all ${editContactInfo && 'border-zinc-900'}`}
+                                                        value={
+                                                            contactData.contact_number
+                                                        }
+                                                        onChange={(e) => {
+                                                            const value =
+                                                                e.target.value;
+                                                            if (
+                                                                /^\+?[0-9]*$/.test(
+                                                                    value,
+                                                                )
+                                                            ) {
+                                                                setContactData(
+                                                                    'contact_number',
+                                                                    value,
+                                                                );
+                                                            }
+                                                        }}
+                                                        pattern="^\+?[0-9]{8,15}$"
+                                                        required
+                                                    />
+                                                    {!contactData.contact_number && (
+                                                        <p className="text-xs text-yellow-600">
+                                                            Your contact number
+                                                            is missing. Please
+                                                            update it to
+                                                            complete your
+                                                            profile.
+                                                        </p>
+                                                    )}
+                                                    {contactErrors.contact_number && (
+                                                        <InputError className="mt-2">
+                                                            {
+                                                                contactErrors.contact_number
+                                                            }
+                                                        </InputError>
+                                                    )}
+                                                </div>
+
+                                                {editContactInfo && (
                                                     <div className="flex h-fit w-full flex-wrap justify-end gap-4">
                                                         <button
                                                             type="button"
                                                             className="w-[100px] rounded bg-zinc-600 p-1 text-sm capitalize text-white"
                                                             onClick={() => {
-                                                                setEditEmailAddress(
+                                                                setEditContactInfo(
                                                                     false,
                                                                 );
-                                                                resetEmail();
+                                                                resetContact();
                                                             }}
                                                         >
                                                             cancel
@@ -493,6 +591,7 @@ const Account = ({ user }) => {
                                     </div>
                                 </div>
                             </form>
+
                             <form onSubmit={updatePassword}>
                                 <div className="flex w-full flex-wrap rounded border bg-white px-4 py-1 shadow">
                                     <div className="flex w-full items-center justify-between border-b py-1">
@@ -551,69 +650,69 @@ const Account = ({ user }) => {
                                                 </div>
                                                 <div>
                                                     <InputLabel
-                                                        htmlFor="new_password"
+                                                        htmlFor="password"
                                                         value="New Password"
                                                     />
                                                     <TextInput
-                                                        id="new_password"
-                                                        name="new_password"
+                                                        id="password"
+                                                        name="password"
                                                         type="password"
                                                         disabled={!editPassword}
                                                         className={`mt-1 block w-full border px-2 py-2 text-sm shadow transition-all ${editPassword && 'border-zinc-900'}`}
                                                         value={
-                                                            passwordData.new_password
+                                                            passwordData.password
                                                         }
                                                         onChange={(e) =>
                                                             setPasswordData(
-                                                                'new_password',
+                                                                'password',
                                                                 e.target.value,
                                                             )
                                                         }
                                                         required
                                                     />
-                                                    {passwordErrors.new_password && (
+                                                    {passwordErrors.password && (
                                                         <InputError className="mt-2">
                                                             {
-                                                                passwordErrors.new_password
+                                                                passwordErrors.password
                                                             }
                                                         </InputError>
                                                     )}
                                                 </div>
                                                 <div>
                                                     <InputLabel
-                                                        htmlFor="confirm_password"
+                                                        htmlFor="password_confirmation"
                                                         value="Confirm New Password"
                                                     />
                                                     <TextInput
-                                                        id="confirm_password"
-                                                        name="confirm_password"
+                                                        id="password_confirmation"
+                                                        name="password_confirmation"
                                                         type="password"
                                                         disabled={!editPassword}
                                                         className={`mt-1 block w-full border px-2 py-2 text-sm shadow transition-all ${editPassword && 'border-zinc-900'}`}
                                                         value={
-                                                            passwordData.confirm_password
+                                                            passwordData.password_confirmation
                                                         }
                                                         onChange={(e) =>
                                                             setPasswordData(
-                                                                'confirm_password',
+                                                                'password_confirmation',
                                                                 e.target.value,
                                                             )
                                                         }
                                                         required
                                                     />
-                                                    {passwordData.confirm_password &&
-                                                        passwordData.new_password !==
-                                                            passwordData.confirm_password && (
+                                                    {passwordData.password_confirmation &&
+                                                        passwordData.password !==
+                                                            passwordData.password_confirmation && (
                                                             <p className="text-xs text-yellow-600">
                                                                 Passwords do not
                                                                 match. Please
                                                                 re-enter.
                                                             </p>
                                                         )}
-                                                    {passwordErrors.confirm_password && (
+                                                    {passwordErrors.password_confirmation && (
                                                         <InputError className="mt-2">
                                                             {
-                                                                passwordErrors.confirm_password
+                                                                passwordErrors.password_confirmation
                                                             }
                                                         </InputError>
                                                     )}

@@ -19,8 +19,10 @@ return new class extends Migration
             $table->string('status');
             $table->unsignedBigInteger('event_id'); 
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
+            $table->foreign('assigned_to')->references('id')->on('users')->onDelete('set null');
             $table->timestamps();
         });
+        
     }
 
     /**

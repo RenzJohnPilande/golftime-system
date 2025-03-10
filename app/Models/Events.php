@@ -19,7 +19,7 @@ class Events extends Model
 		"date",
 		"status",
 		"personnel",
-		"user_id",
+		"assigned_to",
 		"notification_sent",
 		"notes",
 	];
@@ -38,7 +38,7 @@ class Events extends Model
     ];
 
     public function user(){
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'assigned_to');
     }
 
     public function tasks()

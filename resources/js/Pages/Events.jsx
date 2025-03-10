@@ -21,7 +21,7 @@ import {
 } from 'react-icons/md';
 import AuthenticatedLayout from '../Layouts/AuthenticatedLayout';
 
-const Events = ({ events }) => {
+const Events = ({ events, employees }) => {
     const [open, setOpen] = useState(false);
     const [viewOpen, setViewOpen] = useState(false);
     const [selected, setSelected] = useState(null);
@@ -67,7 +67,7 @@ const Events = ({ events }) => {
         status: 'pending',
         personnel: [],
         notes: '',
-        user_id: user.id,
+        assigned_to: '',
         notification_sent: false,
     });
 
@@ -378,7 +378,7 @@ const Events = ({ events }) => {
                 <div className="flex h-fit w-full flex-wrap items-center justify-between gap-2">
                     <div className="w-full md:w-auto">
                         <h1 className="text-3xl font-bold md:text-2xl">
-                            Event Management
+                            My Events
                         </h1>
                         <h2 className="text-base md:text-sm">
                             Manage your events and stay organized with all the
@@ -417,6 +417,7 @@ const Events = ({ events }) => {
                     close={onClose}
                     selected={selected}
                     user={user}
+                    employees={employees}
                     formData={{
                         data,
                         setData,

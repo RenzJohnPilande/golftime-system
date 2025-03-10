@@ -18,7 +18,7 @@ return new class extends Migration
             $table->dateTime('date'); 
             $table->string('status');
             $table->json('personnel');
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('assigned_to')->constrained('users')->onDelete('cascade');
             $table->boolean('notification_sent')->default(false);
             $table->text('notes')->nullable();
             $table->timestamps();

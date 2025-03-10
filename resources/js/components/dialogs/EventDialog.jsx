@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import InputError from '../InputError';
 import InputLabel from '../InputLabel';
 import PrimaryButton from '../PrimaryButton';
+import SelectInput from '../SelectInput';
 import TextInput from '../TextInput';
 import { Textarea } from '../ui/textarea';
 
@@ -18,6 +19,7 @@ const EventDialog = ({
     formData,
     setDialogConfig,
     setConfirmationDialogOpen,
+    employees,
 }) => {
     const { data, setData, errors, reset } = formData;
 
@@ -37,7 +39,7 @@ const EventDialog = ({
                             ? response.data.event.personnel
                             : [],
                         notes: response.data.event.notes ?? '',
-                        user_id: response.data.event.user_id ?? '',
+                        assigned_to: response.data.event.assigned_to ?? '',
                         notification_sent:
                             response.data.event.notification_sent ?? '',
                     });
@@ -113,6 +115,36 @@ const EventDialog = ({
                                 )}
                             </div>
                         </div>
+                        <div className="flex w-full flex-col flex-wrap">
+                            <InputLabel
+                                htmlFor="assigned_to"
+                                value="Assign to"
+                            />
+                            <SelectInput
+                                id="assigned_to"
+                                name="assigned_to"
+                                options={employees.map((employee) => ({
+                                    value: employee.user_id,
+                                    label:
+                                        employee.firstname +
+                                        ' ' +
+                                        employee.middlename +
+                                        ' ' +
+                                        employee.lastname,
+                                }))}
+                                className="mt-1 block w-full border px-2 py-2 text-sm text-zinc-900 shadow"
+                                value={data?.assigned_to || ''}
+                                onChange={(e) =>
+                                    setData('assigned_to', e.target.value)
+                                }
+                                required
+                            />
+                            {errors.assigned_to && (
+                                <InputError className="mt-2">
+                                    {errors.assigned_to}
+                                </InputError>
+                            )}
+                        </div>
 
                         <div className="flex w-full flex-col flex-wrap">
                             <InputLabel htmlFor="date" value="Event Date" />
@@ -133,6 +165,7 @@ const EventDialog = ({
                                 </InputError>
                             )}
                         </div>
+
                         <div className="flex w-full flex-wrap">
                             <InputLabel htmlFor="notes" value="Notes" />
                             <Textarea

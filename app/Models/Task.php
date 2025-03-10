@@ -18,6 +18,7 @@ class Task extends Model
         'type',
         'status',
         'event_id', 
+        'assigned_to',
     ];
 
     protected $casts = [

@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateEventsRequest;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Helpers\LogHelper;
+use App\Models\Employee;
+use Illuminate\Support\Facades\Auth;
 
 class EventsController extends Controller
 {
@@ -16,8 +18,16 @@ class EventsController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+        if ($user->role === 'employee') {
+            $events = Events::with('user')->where('assigned_to', $user->id)->get();
+        } else {
+            $events = Events::with('user')->get();
+        }
+    
         return Inertia::render('Events', [
-            'events' => Events::with('user')->get(),
+            'events' => $events,
+            'employees' => Employee::all(),
             'success' => session('success'), 
         ]);
     }
@@ -41,7 +51,7 @@ class EventsController extends Controller
             'date' => 'required|date',
             'status' => 'required|string|in:pending,preparation,in-progress,post-event,completed,cancelled',
             'personnel' => 'nullable|array',
-            'user_id' => 'required|exists:users,id',
+            'assigned_to' => 'required|exists:users,id',
             'notification_sent' => 'required|boolean',
             'notes' => 'nullable|string',
         ]);
@@ -86,7 +96,7 @@ class EventsController extends Controller
             'date' => 'required|date',
             'status' => 'required|string|max:255',
             'personnel' => 'nullable|array',
-            'user_id' => 'required|exists:users,id',
+            'assigned_to' => 'required|exists:users,id',
             'notification_sent' => 'required|boolean',
             'notes' => 'nullable|string',
         ]);

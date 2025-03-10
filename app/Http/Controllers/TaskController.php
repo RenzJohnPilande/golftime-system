@@ -9,6 +9,8 @@ use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 use App\Helpers\LogHelper;
+use App\Models\Employee;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -17,8 +19,20 @@ class TaskController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
+
+        if ($user->role === 'employee') {
+            $tasks = Task::with('user')
+            ->where('assigned_to', $user->id)
+            ->get();
+        } else {
+            $tasks = Task::with('user')->get();
+        }
+
         return Inertia::render('Tasks', [
-            'tasks' => Task::with('user')->get(),
+            'tasks' => $tasks,
+            'employees' => Employee::all(),
+            'events' => Events::all(),
             'success' => session('success'), 
         ]);
     }
@@ -39,15 +53,21 @@ class TaskController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'task_name' => 'required|string|max:255',
-            'deadline' => 'required|date',
-            'type' => 'required|string',
-            'status' => 'required|string|max:255',
-            'event_id' => 'required|exists:events,id',
+            'task_name'   => 'required|string|max:255',
+            'deadline'    => 'required|date',
+            'type'        => 'required|string|in:event,individual',
+            'status'      => 'required|string|in:pending,ongoing,complete',
+            'event_id'    => 'nullable|exists:events,id',
+            'assigned_to' => 'required|exists:users,id',
         ]);
     
         $task = Task::create($validated);
-        LogHelper::logAction('Task Created', "Task ID: {$task->id}, Name: {$task->task_name}, Event ID: {$task->event_id}");
+        
+        if ($task->type === 'event') {
+            LogHelper::logAction('Event Task Created', "Task ID: {$task->id}, Name: {$task->task_name}, Event ID: {$task->event_id}");
+        } else {
+            LogHelper::logAction('Individual Task Created', "Task ID: {$task->id}, Name: {$task->task_name}, Assigned To: {$task->assigned_to}");
+        }
 
     
         return back()->with('success', 'Task created successfully!');
@@ -63,6 +83,17 @@ class TaskController extends Controller
         
         if ($tasks->isEmpty()) {
             return response()->json(['message' => 'No tasks found for this event.'], 404);
+        }
+    
+        return response()->json($tasks);
+    }
+
+    public function show_task($id)
+    {
+        $tasks = Task::where('id', $id)->with('user')->get();
+        
+        if ($tasks->isEmpty()) {
+            return response()->json(['message' => 'Task not found.'], 404);
         }
     
         return response()->json($tasks);
@@ -85,15 +116,22 @@ class TaskController extends Controller
         
         $task = Task::findOrFail($id);
 
-        // Validate input data
         $validated = $request->validate([
-            'task_name' => 'required|string|max:255',
-            'deadline' => 'required|date',
-            'type' => 'required|in:project,miscellaneous,admin',
-            'status' => 'required|string|max:255',
+            'task_name'   => 'required|string|max:255',
+            'deadline'    => 'required|date',
+            'type'        => 'required|string|in:event,individual',
+            'status'      => 'required|string|in:pending,ongoing,complete',
+            'event_id'    => 'nullable|exists:events,id', 
+            'assigned_to' => 'nullable|exists:users,id',
         ]);
+
         $task->update($validated);
-        LogHelper::logAction('Task Updated', "Task ID: {$task->id}, Name: {$task->task_name}, Status: {$task->status}");
+        
+        if ($task->type === 'event') {
+            LogHelper::logAction('Task Updated', "Task ID: {$task->id}, Name: {$task->task_name}, Event ID: {$task->event_id}, Status: {$task->status}");
+        } else {
+            LogHelper::logAction('Task Updated', "Task ID: {$task->id}, Name: {$task->task_name}, Assigned To: {$task->assigned_to}, Status: {$task->status}");
+        }
 
 
         return back()->with('success', 'Task deleted successfully!');

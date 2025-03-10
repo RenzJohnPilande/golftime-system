@@ -1,31 +1,17 @@
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import {
-    MdClose,
-    MdMoreHoriz,
-    MdOutlineAdd,
-    MdOutlineDelete,
-    MdOutlineDone,
-} from 'react-icons/md';
+import { MdClose, MdOutlineAdd } from 'react-icons/md';
 import TextInput from '../TextInput';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
 import ConfirmationDialog from './ConfirmationDialog';
 
 const EventDetailsDialog = ({ open, close, selected, formData }) => {
-    const [showForm, setShowForm] = useState({ todo: false, personnel: false });
+    const [showForm, setShowForm] = useState({ personnel: false });
     const [personnel, setPersonnel] = useState('');
     const [todoList, setTodoList] = useState([]);
-    const [selectedTask, setSelectedTask] = useState(null);
     const [emptyToDoList, setEmptyToDoList] = useState(true);
     const [editPersonnel, setEditPersonnel] = useState(false);
     const [isConfirmationDialogOpen, setConfirmationDialogOpen] =
@@ -39,20 +25,6 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
     });
 
     const { data: eventData, setData: setEventData, patch, put } = formData;
-
-    const {
-        data: taskData,
-        setData: setTaskData,
-        post,
-        patch: taskPatch,
-        delete: destroy,
-    } = useForm({
-        task_name: '',
-        deadline: '',
-        type: 'event',
-        status: 'pending',
-        event_id: eventData.id || null,
-    });
 
     function formatDate(date) {
         return new Date(date).toLocaleDateString('en-US', {
@@ -101,7 +73,7 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
 
     useEffect(() => {
         if (selected && open) {
-            fetchEventDetails(selected, setEventData, setTaskData);
+            fetchEventDetails(selected, setEventData);
             fetchTasks(selected, setTodoList);
         }
     }, [selected, open]);
@@ -142,100 +114,9 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
         setConfirmationDialogOpen(true);
     };
 
-    const handleAddTask = (e) => {
-        e.preventDefault();
-
-        if (!taskData.task_name || !taskData.deadline) {
-            console.error('Task name and deadline are required');
-            return;
-        }
-
-        setDialogConfig({
-            title: 'Add Task?',
-            message: `Are you sure you want to add this task?`,
-            formAction: 'add task',
-        });
-
-        setConfirmationDialogOpen(true);
-    };
-
-    const handleRemoveTask = (taskId) => {
-        setDialogConfig({
-            id: taskId,
-            title: 'Remove Task?',
-            message: `Are you sure you want to remove this task?`,
-            formAction: 'remove task',
-        });
-
-        setConfirmationDialogOpen(true);
-    };
-
-    const handleTaskComplete = (task) => {
-        setTaskData({
-            task_name: task.task_name ?? '',
-            deadline: task.deadline ?? '',
-            type: task.type ?? '',
-            status: 'complete',
-        });
-
-        setDialogConfig({
-            id: task.id,
-            title: 'Task done?',
-            message: 'Are you sure this task is complete?',
-            formAction: 'complete task',
-        });
-        setConfirmationDialogOpen(true);
-    };
-
     const handleConfirm = () => {
         const { formAction } = dialogConfig;
-        if (formAction === 'add task') {
-            post(route('tasks.store'), {
-                onSuccess: () => {
-                    fetchTasks(selected, setTodoList);
-                    setTaskData({
-                        task_name: '',
-                        deadline: '',
-                        status: '',
-                        event_id: taskData.event_id,
-                    });
-                    setShowForm((prev) => ({ ...prev, todo: false }));
-                    setEmptyToDoList(false);
-                    setConfirmationDialogOpen(false);
-                },
-                onError: console.error,
-            });
-        } else if (formAction === 'remove task') {
-            destroy(route('tasks.delete', { id: selectedTask }), {
-                onSuccess: () => {
-                    fetchTasks(selected, setTodoList);
-                },
-                onError: (errors) => {
-                    console.error('Error deleting task:', errors);
-                    setConfirmationDialogOpen(false);
-                },
-            });
-        } else if (formAction === 'complete task') {
-            taskPatch(route('tasks.complete', { id: selectedTask }), {
-                ...taskData,
-                onSuccess: () => {
-                    console.log('Task marked as completed', taskData);
-                    fetchTasks(selected, setTodoList);
-                    setTaskData({
-                        task_name: '',
-                        deadline: '',
-                        type: 'event',
-                        status: 'pending',
-                        event_id: eventData.id || null,
-                    });
-                    setConfirmationDialogOpen(false);
-                },
-                onError: (errors) => {
-                    console.error('Error updating task:', errors);
-                    setConfirmationDialogOpen(false);
-                },
-            });
-        } else if (formAction === 'update personnel') {
+        if (formAction === 'update personnel') {
             patch(route('events.update', { id: selected }), {
                 onSuccess: () => {
                     setEditPersonnel(false);
@@ -251,8 +132,8 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
     return (
         <Dialog open={open} onOpenChange={close}>
             <DialogTitle />
-            <DialogContent className="max-w-sm overflow-y-auto rounded-lg md:max-w-md">
-                <div className="flex flex-col gap-4 py-3">
+            <DialogContent className="max-w-sm overflow-y-auto rounded-lg px-3 md:max-w-md">
+                <div className="flex flex-col gap-4">
                     <div className="capitalize">
                         <div className="py-1">
                             <p className="w-full text-xl font-bold">
@@ -333,136 +214,27 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                                                             )}
                                                         </div>
                                                         <div
-                                                            className={`${task.status === 'pending' ? 'text-yellow-600' : 'text-green-600'} capitalize`}
+                                                            className={`capitalize ${
+                                                                task.status ===
+                                                                'pending'
+                                                                    ? 'text-yellow-500'
+                                                                    : task.status ===
+                                                                        'ongoing'
+                                                                      ? 'text-blue-500'
+                                                                      : task.status ===
+                                                                          'complete'
+                                                                        ? 'text-green-500'
+                                                                        : 'text-gray-500'
+                                                            }`}
                                                         >
                                                             {task.status}
                                                         </div>
-                                                        {task.status ===
-                                                        'pending' ? (
-                                                            <div className="flex justify-center gap-1">
-                                                                <DropdownMenu>
-                                                                    <DropdownMenuTrigger>
-                                                                        <MdMoreHoriz
-                                                                            size={
-                                                                                16
-                                                                            }
-                                                                        />
-                                                                    </DropdownMenuTrigger>
-                                                                    <DropdownMenuContent className="flex min-w-[50px] flex-col gap-1">
-                                                                        <DropdownMenuItem
-                                                                            onClick={() => {
-                                                                                setSelectedTask(
-                                                                                    task.id,
-                                                                                );
-                                                                                handleRemoveTask(
-                                                                                    task.id,
-                                                                                );
-                                                                            }}
-                                                                            className="flex w-full cursor-pointer gap-2 text-center text-red-500 hover:text-red-700"
-                                                                        >
-                                                                            <MdOutlineDelete
-                                                                                size={
-                                                                                    20
-                                                                                }
-                                                                            />
-                                                                            Delete
-                                                                        </DropdownMenuItem>
-                                                                        <DropdownMenuItem
-                                                                            onClick={() => {
-                                                                                setSelectedTask(
-                                                                                    task.id,
-                                                                                );
-                                                                                handleTaskComplete(
-                                                                                    task,
-                                                                                );
-                                                                            }}
-                                                                            className="flex w-full cursor-pointer gap-2 text-center text-blue-500 hover:text-blue-700"
-                                                                        >
-                                                                            <MdOutlineDone
-                                                                                size={
-                                                                                    20
-                                                                                }
-                                                                            />
-                                                                            Done
-                                                                        </DropdownMenuItem>
-                                                                    </DropdownMenuContent>
-                                                                </DropdownMenu>
-                                                            </div>
-                                                        ) : null}
                                                     </div>
                                                 ))
                                             )}
                                         </div>
                                     </div>
                                 </div>
-
-                                {!showForm.todo && (
-                                    <Button
-                                        className="w-full text-xs"
-                                        onClick={() =>
-                                            setShowForm((prev) => ({
-                                                ...prev,
-                                                todo: true,
-                                            }))
-                                        }
-                                    >
-                                        <MdOutlineAdd /> Add Task
-                                    </Button>
-                                )}
-                                {showForm.todo && (
-                                    <form
-                                        onSubmit={handleAddTask}
-                                        className="w-full"
-                                    >
-                                        <div className="flex w-full gap-2">
-                                            <TextInput
-                                                label="Task Name"
-                                                name="task_name"
-                                                className="w-full border border-zinc-300 p-1 text-sm shadow"
-                                                value={taskData.task_name}
-                                                onChange={(e) =>
-                                                    setTaskData((prev) => ({
-                                                        ...prev,
-                                                        task_name:
-                                                            e.target.value,
-                                                    }))
-                                                }
-                                                required
-                                            />
-                                            <TextInput
-                                                label="Deadline"
-                                                name="deadline"
-                                                className="w-full border border-zinc-300 p-1 text-sm shadow"
-                                                type="date"
-                                                value={taskData.deadline}
-                                                onChange={(e) =>
-                                                    setTaskData((prev) => ({
-                                                        ...prev,
-                                                        deadline:
-                                                            e.target.value,
-                                                    }))
-                                                }
-                                                required
-                                            />
-                                        </div>
-                                        <div className="flex gap-2 py-2">
-                                            <Button
-                                                className="w-full bg-zinc-600 capitalize hover:bg-zinc-400"
-                                                onClick={() => {
-                                                    setShowForm(false);
-                                                }}
-                                            >
-                                                cancel
-                                            </Button>
-                                            <Button
-                                                type="submit"
-                                                className="w-full capitalize"
-                                            >
-                                                Add Task
-                                            </Button>
-                                        </div>
-                                    </form>
-                                )}
                             </div>
                         </TabsContent>
                         <TabsContent value="personnel">

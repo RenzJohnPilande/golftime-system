@@ -1,8 +1,7 @@
-import Checkbox from '@/Components/Checkbox';
 import InputError from '@/Components/InputError';
 import InputLabel from '@/Components/InputLabel';
-import PrimaryButton from '@/Components/PrimaryButton';
 import TextInput from '@/Components/TextInput';
+import { Button } from '@/components/ui/button';
 import GuestLayout from '@/Layouts/GuestLayout';
 import { Head, Link, useForm } from '@inertiajs/react';
 
@@ -10,7 +9,6 @@ export default function Login({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
-        remember: false,
     });
 
     const submit = (e) => {
@@ -32,7 +30,13 @@ export default function Login({ status, canResetPassword }) {
             )}
 
             <form onSubmit={submit}>
-                <div className="flex flex-wrap gap-4">
+                <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-col text-xl">
+                        <p className="font-semibold">Login</p>
+                        <p className="text-sm text-gray-600">
+                            Enter your email and password to sign in.
+                        </p>
+                    </div>
                     <div className="flex w-full flex-wrap gap-2">
                         <InputLabel htmlFor="email" value="Email" />
 
@@ -71,21 +75,6 @@ export default function Login({ status, canResetPassword }) {
                         />
                     </div>
 
-                    <div className="flex w-full">
-                        <label className="flex items-center">
-                            <Checkbox
-                                name="remember"
-                                checked={data.remember}
-                                onChange={(e) =>
-                                    setData('remember', e.target.checked)
-                                }
-                            />
-                            <span className="ms-2 text-sm text-gray-600">
-                                Remember me
-                            </span>
-                        </label>
-                    </div>
-
                     <div className="flex w-full items-center justify-end gap-2">
                         {canResetPassword && (
                             <Link
@@ -95,14 +84,12 @@ export default function Login({ status, canResetPassword }) {
                                 Forgot your password?
                             </Link>
                         )}
-
-                        <PrimaryButton
-                            text={'Login'}
-                            style={{
-                                wrapper: 'bg-zinc-800 border hover:bg-zinc-900',
-                                text: 'text-white',
-                            }}
-                        />
+                        <Button
+                            type="submit"
+                            className="w-[80px] border bg-zinc-800 p-1 text-center text-sm text-white hover:bg-zinc-900"
+                        >
+                            Login
+                        </Button>
                     </div>
                 </div>
             </form>

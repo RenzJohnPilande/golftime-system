@@ -1,17 +1,22 @@
-import ApplicationLogo from '@/Components/ApplicationLogo';
-import { Link } from '@inertiajs/react';
-
 export default function GuestLayout({ children }) {
     return (
-        <div className="flex min-h-screen flex-col items-center bg-gray-100 pt-6 sm:justify-center sm:pt-0">
-            <div>
-                <Link href="/">
-                    <ApplicationLogo className="h-20 w-20 fill-current text-gray-500" />
-                </Link>
+        <div className="flex min-h-screen w-full flex-col items-center justify-between bg-gray-100">
+            <div className="flex w-full flex-grow flex-wrap items-center justify-center px-4">
+                <div className="flex w-full max-w-[500px] flex-col items-center justify-center gap-5 rounded border bg-white px-10 pb-5 pt-10">
+                    {children}
+                    <div className="flex w-full justify-end">
+                        <img
+                            src="/images/GolfTimeLogo.png"
+                            className="max-w-[50px]"
+                            alt="Golftime Logo"
+                        />
+                    </div>
+                </div>
             </div>
-
-            <div className="mt-6 w-full overflow-hidden bg-white px-6 py-4 shadow-md sm:max-w-md sm:rounded-lg">
-                {children}
+            <div className="w-full py-2 text-center">
+                <p className="text-sm font-medium">
+                    Copyright © Golf Time Corporation. All rights reserved.
+                </p>
             </div>
         </div>
     );
