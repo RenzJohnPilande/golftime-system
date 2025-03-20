@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MdMoreHoriz, MdOutlineDelete, MdOutlineEdit } from 'react-icons/md';
 
-const RoleColumns = (
+const JobColumns = (
     isMobile,
     setSelected,
     setOpen,
@@ -53,10 +53,10 @@ const RoleColumns = (
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
-                                                  title: 'Update Role',
+                                                  title: 'Update Job',
                                                   message:
-                                                      'Are you sure you want to update this role?',
-                                                  formAction: 'update role',
+                                                      'Are you sure you want to update this job?',
+                                                  formAction: 'update job',
                                               });
                                               setSelected(row.id);
                                               setOpen(true);
@@ -73,10 +73,10 @@ const RoleColumns = (
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
-                                                  title: 'Delete Role',
+                                                  title: 'Delete Job',
                                                   message:
-                                                      'Are you sure you want to delete this role?',
-                                                  formAction: 'delete role',
+                                                      'Are you sure you want to delete this job?',
+                                                  formAction: 'delete job',
                                               });
                                               setSelected(row.id);
                                               setConfirmationDialogOpen(true);
@@ -138,9 +138,9 @@ const RoleColumns = (
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
-                                                  title: 'Update Role',
+                                                  title: 'Update job',
                                                   message:
-                                                      'Are you sure you want to update this role?',
+                                                      'Are you sure you want to update this job?',
                                                   formAction: 'update',
                                               });
                                               setSelected(row.id);
@@ -158,10 +158,10 @@ const RoleColumns = (
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
-                                                  title: 'Delete Role',
+                                                  title: 'Delete job',
                                                   message:
-                                                      'Are you sure you want to delete this role?',
-                                                  formAction: 'delete role',
+                                                      'Are you sure you want to delete this job?',
+                                                  formAction: 'delete job',
                                               });
                                               setSelected(row.id);
                                               setConfirmationDialogOpen(true);
@@ -178,4 +178,4 @@ const RoleColumns = (
     return columns;
 };
 
-export default RoleColumns;
+export default JobColumns;

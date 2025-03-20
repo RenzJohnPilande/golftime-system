@@ -24,11 +24,11 @@ class EventsController extends Controller
         } else {
             $events = Events::with('user')->get();
         }
-    
+
         return Inertia::render('Events', [
             'events' => $events,
             'employees' => Employee::all(),
-            'success' => session('success'), 
+            'success' => session('success'),
         ]);
     }
 
@@ -49,7 +49,7 @@ class EventsController extends Controller
             'name' => 'required|string|max:255',
             'location' => 'required|string|max:255',
             'date' => 'required|date',
-            'status' => 'required|string|in:pending,preparation,in-progress,post-event,completed,cancelled',
+            'status' => 'required|string|in:pending,preparation,ongoing,completed,cancelled',
             'personnel' => 'nullable|array',
             'assigned_to' => 'required|exists:users,id',
             'notification_sent' => 'required|boolean',

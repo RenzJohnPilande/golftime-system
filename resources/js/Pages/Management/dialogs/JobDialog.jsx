@@ -10,7 +10,7 @@ import InputLabel from '../../../components/InputLabel';
 import PrimaryButton from '../../../components/PrimaryButton';
 import TextInput from '../../../components/TextInput';
 
-const RoleDialog = ({
+const JobDialog = ({
     open,
     close,
     selected,
@@ -23,15 +23,16 @@ const RoleDialog = ({
     useEffect(() => {
         if (selected && open) {
             axios
-                .get(route('roles.show', { id: selected }))
+                .get(route('jobs.show', { id: selected }))
                 .then((response) => {
                     setData({
                         job_title: response.data.job_title ?? '',
+                        permission: response.data.permission ?? '',
                         job_description: response.data.job_description ?? '',
                     });
                 })
                 .catch((error) => {
-                    console.error('Error fetching role:', error);
+                    console.error('Error fetching job:', error);
                 });
         }
     }, [selected, open]);
@@ -39,11 +40,11 @@ const RoleDialog = ({
     const submit = (e) => {
         e.preventDefault();
         setDialogConfig({
-            title: selected ? 'Update Role' : 'Create New Role',
+            title: selected ? 'Update Job' : 'Create New Job',
             message: selected
-                ? 'Are you done modifying this role? The details can be modified again later.'
-                : 'Are you done creating this role? The details can be modified later.',
-            formAction: selected ? 'update role' : 'create role',
+                ? 'Are you done modifying this job? The details can be modified again later.'
+                : 'Are you done creating this job? The details can be modified later.',
+            formAction: selected ? 'update job' : 'create job',
         });
         setConfirmationDialogOpen(true);
     };
@@ -128,4 +129,4 @@ const RoleDialog = ({
     );
 };
 
-export default RoleDialog;
+export default JobDialog;

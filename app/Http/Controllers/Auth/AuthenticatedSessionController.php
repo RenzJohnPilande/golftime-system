@@ -36,6 +36,14 @@ class AuthenticatedSessionController extends Controller
         $user = Auth::user();
         $employee = Employee::where('user_id', $user->id)->first();
 
+        if(!$user->hasPermission('admin') && $employee && $employee->status !== 'active') {
+            Auth::logout();
+            return redirect()->route('login')->withErrors([
+                'email' => 'Your account has been deactivated. Please contact the administrator for assistance.',
+            ]);
+        }
+
+
         if ($employee) {
             $incompleteFields = collect([
                 'firstname' => $employee->firstname,

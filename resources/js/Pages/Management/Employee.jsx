@@ -8,7 +8,7 @@ import EmployeeColumns from './columns/EmployeeColumns';
 import EmployeeDialog from './dialogs/EmployeeDialog';
 import ViewEmployeeDialog from './dialogs/ViewEmployeeDialog';
 
-const Employee = ({ employees, departments, roles }) => {
+const Employee = ({ employees, departments, jobs, permissions }) => {
     const [employeeDialogOpen, setEmployeeDialogOpen] = useState(false);
     const [viewOpen, setViewOpen] = useState(false);
     const [selected, setSelected] = useState(null);
@@ -21,7 +21,6 @@ const Employee = ({ employees, departments, roles }) => {
         formAction: '',
     });
     const user = usePage().props.auth.user;
-
     const useIsMobile = () => {
         const [isMobile, setIsMobile] = useState(window.innerWidth < 640);
 
@@ -45,18 +44,16 @@ const Employee = ({ employees, departments, roles }) => {
         patch,
         delete: destroy,
     } = useForm({
-        id: '',
         user_id: '',
-        first_name: '',
-        last_name: '',
+        firstname: '',
+        lastname: '',
         middlename: '',
         email: '',
         password: '',
-        role: '',
         position: '',
         department: '',
         salary: '',
-        role: '',
+        permissions: [],
         hire_date: '',
         status: 'active',
         user_id: user.id,
@@ -169,7 +166,8 @@ const Employee = ({ employees, departments, roles }) => {
                         patch,
                     }}
                     departments={departments}
-                    roles={roles}
+                    jobs={jobs}
+                    permissions={permissions}
                     setDialogConfig={setDialogConfig}
                     setSelected={setSelected}
                     setConfirmationDialogOpen={setConfirmationDialogOpen}

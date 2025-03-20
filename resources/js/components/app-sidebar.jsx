@@ -45,11 +45,13 @@ const items = [
         title: 'My Events',
         url: '/events',
         icon: MdEvent,
+        requiredPermission: 'event_management',
     },
     {
         title: 'My Tasks',
         url: '/tasks',
         icon: MdChecklist,
+        requiredPermission: 'task_management',
     },
 ];
 
@@ -58,25 +60,29 @@ const management = [
         title: 'Employees',
         url: '/employees',
         icon: MdPeople,
+        requiredPermission: 'employee_management',
     },
     {
         title: 'Jobs',
-        url: '/roles',
+        url: '/jobs',
         icon: MdOutlineCases,
+        requiredPermission: 'job_management',
     },
     {
         title: 'Departments',
         url: '/departments',
         icon: MdBusiness,
+        requiredPermission: 'department_management',
     },
     {
         title: 'Logs',
         url: '/logs',
         icon: MdListAlt,
+        requiredPermission: 'admin',
     },
 ];
 
-const AppSidebar = ({ user }) => {
+const AppSidebar = ({ user, permissions }) => {
     const [isConfirmationDialogOpen, setConfirmationDialogOpen] =
         useState(false);
 
@@ -89,6 +95,14 @@ const AppSidebar = ({ user }) => {
     const handleConfirm = () => {
         router.post('logout');
     };
+
+    const hasPermission = (permission) => {
+        if (!permission) return true;
+        return (
+            permissions.includes(permission) || permissions.includes('admin')
+        );
+    };
+
     return (
         <Sidebar className="bg-zinc-800 text-white">
             <SidebarHeader className="text-white">
@@ -113,33 +127,51 @@ const AppSidebar = ({ user }) => {
                     <SidebarGroupLabel>Navigation</SidebarGroupLabel>
                     <SidebarGroupContent className="pb-5">
                         <SidebarMenu>
-                            {items.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <Link href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
+                            {items
+                                .filter((item) =>
+                                    hasPermission(item.requiredPermission),
+                                )
+                                .map((item) => (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton asChild>
+                                            <Link href={item.url}>
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                ))}
                         </SidebarMenu>
                     </SidebarGroupContent>
-                    <SidebarGroupLabel>Management</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {management.map((item) => (
-                                <SidebarMenuItem key={item.title}>
-                                    <SidebarMenuButton asChild>
-                                        <Link href={item.url}>
-                                            <item.icon />
-                                            <span>{item.title}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
+                    {management.some((item) =>
+                        hasPermission(item.requiredPermission),
+                    ) && (
+                        <>
+                            <SidebarGroupLabel>Management</SidebarGroupLabel>
+                            <SidebarGroupContent>
+                                <SidebarMenu>
+                                    {management
+                                        .filter((item) =>
+                                            hasPermission(
+                                                item.requiredPermission,
+                                            ),
+                                        )
+                                        .map((item) => (
+                                            <SidebarMenuItem key={item.title}>
+                                                <SidebarMenuButton asChild>
+                                                    <Link href={item.url}>
+                                                        <item.icon />
+                                                        <span>
+                                                            {item.title}
+                                                        </span>
+                                                    </Link>
+                                                </SidebarMenuButton>
+                                            </SidebarMenuItem>
+                                        ))}
+                                </SidebarMenu>
+                            </SidebarGroupContent>
+                        </>
+                    )}
                 </SidebarGroup>
             </SidebarContent>
             <SidebarFooter className="text-white">

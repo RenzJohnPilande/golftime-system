@@ -270,22 +270,14 @@ const Events = ({ events, employees }) => {
                         <div className="flex w-full flex-wrap gap-1 px-2 py-3">
                             <div className="flex w-full gap-2 text-xs capitalize text-zinc-600">
                                 <p
-                                    className={`rounded border p-2 font-semibold capitalize ${
+                                    className={`w-[80px] rounded px-2 py-1 text-center font-semibold capitalize text-white ${
                                         {
-                                            pending:
-                                                'border-yellow-400 bg-yellow-50 text-yellow-400',
-                                            preparation:
-                                                'border-blue-400 bg-blue-50 text-blue-400',
-                                            'in-progress':
-                                                'border-purple-400 bg-purple-50 text-purple-400',
-                                            'post-event':
-                                                'border-gray-400 bg-gray-50 text-gray-400',
-                                            completed:
-                                                'border-green-400 bg-green-50 text-green-400',
-                                            cancelled:
-                                                'border-red-400 bg-red-50 text-red-400',
-                                        }[row.status] ||
-                                        'border-red-400 text-red-400'
+                                            pending: 'bg-yellow-400',
+                                            preparation: 'bg-blue-400',
+                                            ongoing: 'bg-purple-400',
+                                            completed: 'bg-green-400',
+                                            cancelled: 'bg-red-400',
+                                        }[row.status] || ''
                                     }`}
                                 >
                                     {row.status}

@@ -9,12 +9,15 @@ import { MdModeEditOutline } from 'react-icons/md';
 import { toast } from 'sonner';
 
 const Account = ({ user }) => {
+    const safeUser = user || {};
+
     const { data: jobDetailsData } = useForm({
-        position: user.position || '',
-        department: user.department || '',
-        salary: user.salary || '',
-        hire_date: user.hire_date || '',
+        position: safeUser.position || '',
+        department: safeUser.department || '',
+        salary: safeUser.salary || '',
+        hire_date: safeUser.hire_date || '',
     });
+
     const {
         data: personalInfoData,
         setData: setPersonalInfoData,
@@ -22,12 +25,12 @@ const Account = ({ user }) => {
         errors: personalInfoErrors,
         reset: resetPersonalInfo,
     } = useForm({
-        firstname: user.firstname || '',
-        middlename: user.middlename || '',
-        lastname: user.lastname || '',
-        sex: user.sex || '',
-        birthdate: user.birthdate || '',
-        address: user.address || '',
+        firstname: safeUser.firstname || '',
+        middlename: safeUser.middlename || '',
+        lastname: safeUser.lastname || '',
+        sex: safeUser.sex || '',
+        birthdate: safeUser.birthdate || '',
+        address: safeUser.address || '',
     });
 
     const {
@@ -37,8 +40,8 @@ const Account = ({ user }) => {
         errors: contactErrors,
         reset: resetContact,
     } = useForm({
-        email: user.email || '',
-        contact_number: user.contact_number || '',
+        email: safeUser.email || '',
+        contact_number: safeUser.contact_number || '',
     });
 
     const {
@@ -97,7 +100,7 @@ const Account = ({ user }) => {
             title: 'Update Contact Information?',
             message:
                 'Updating your contact information will change how you receive notifications. Please ensure your email address and contact number are valid and accessible.',
-            formAction: 'update contact_info',
+            formAction: 'update contact info',
         });
         setConfirmationDialogOpen(true);
     };
@@ -127,7 +130,7 @@ const Account = ({ user }) => {
                     },
                 },
             );
-        } else if (formAction === 'update contact_info') {
+        } else if (formAction === 'update contact info') {
             patchContact(
                 route('account.update_contact_info', { id: user.employee_id }),
                 {
@@ -766,7 +769,9 @@ const Account = ({ user }) => {
                                                 Job Title
                                             </p>
                                             <p className="rounded border border-zinc-300 bg-white p-2 text-xs font-light text-zinc-500 shadow-sm">
-                                                {jobDetailsData.position}
+                                                {jobDetailsData.position
+                                                    ? jobDetailsData.position
+                                                    : 'n/a'}
                                             </p>
                                         </div>
                                         <div className="flex flex-col gap-1">
@@ -774,7 +779,9 @@ const Account = ({ user }) => {
                                                 Department
                                             </p>
                                             <p className="rounded border border-zinc-300 bg-white p-2 text-xs font-light text-zinc-500 shadow-sm">
-                                                {jobDetailsData.department}
+                                                {jobDetailsData?.department
+                                                    ? jobDetailsData.department
+                                                    : 'n/a'}
                                             </p>
                                         </div>
                                         <div className="flex flex-col gap-1">
@@ -782,7 +789,10 @@ const Account = ({ user }) => {
                                                 Salary
                                             </p>
                                             <p className="rounded border border-zinc-300 bg-white p-2 text-xs font-light text-zinc-500 shadow-sm">
-                                                {jobDetailsData.salary}
+                                                ₱
+                                                {jobDetailsData?.salary
+                                                    ? jobDetailsData.salary
+                                                    : 'n/a'}
                                             </p>
                                         </div>
                                         <div className="flex flex-col gap-1">
@@ -790,7 +800,9 @@ const Account = ({ user }) => {
                                                 Date Hired
                                             </p>
                                             <p className="rounded border border-zinc-300 bg-white p-2 text-xs font-light text-zinc-500 shadow-sm">
-                                                {jobDetailsData.hire_date}
+                                                {jobDetailsData?.hire_date
+                                                    ? jobDetailsData.hire_date
+                                                    : 'n/a'}
                                             </p>
                                         </div>
                                     </div>

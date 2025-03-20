@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>New Task Assigned</title>
+    <title>Task Reminder</title>
     <style>
         body { 
           font-family: Arial, sans-serif; 
@@ -81,25 +81,21 @@
             </div>
 
             <div class="content">
-                <p>Hello {{ $user->firstname ?? 'there' }},</p>
+                <p>Hello {{ $user->firstname ?? 'User' }},</p>
 
                 @if ($event)
-                    <p>A new task has been assigned to you for the event "<strong>{{ $event->name }}</strong>." Please review the task details below:</p>
+                    <p>This is a reminder that your task "<strong>{{ $task->task_name }}</strong>" for the event "<strong>{{ $event->name }}</strong>" is due tomorrow.</p>
                 @else
-                    <p>A new task has been assigned to you. Please review the task details below:</p>
+                    <p>This is a reminder that your task "<strong>{{ $task->task_name }}</strong>" is due tomorrow.</p>
                 @endif
 
-                <p><strong>Task:</strong> {{ $task->task_name }}</p>
-                <p><strong>Deadline:</strong> {{ $task->deadline ? Carbon::parse($task->deadline)->format('F j, Y') : 'No deadline specified' }}</p>
-
-                @if ($event && $event->date)
-                    <p><strong>Event Date:</strong> {{ Carbon::parse($event->date)->format('F j, Y') }}</p>
-                @endif
+                <p>Please ensure it is completed on time.</p>
+                <p><strong>Due Date:</strong> {{ \Carbon\Carbon::parse($task->deadline)->format('F j, Y') }}</p>
             </div>
 
             <div class="footer">
                 <p class="notification">
-                    This email is for notification purposes only. No action is required if you have already acknowledged this task.
+                    This email is for notification purposes only. No action is required on your part.
                 </p>
                 <p>Best regards,</p>
                 <p><strong>Golf Time PH</strong></p>

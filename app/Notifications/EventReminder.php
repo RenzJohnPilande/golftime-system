@@ -5,7 +5,10 @@ namespace App\Notifications;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\View;
 
 class EventReminder extends Notification
 {
@@ -38,9 +41,10 @@ class EventReminder extends Notification
     {
         return (new MailMessage)
             ->subject('Reminder: Upcoming Event Tomorrow')
-            ->greeting('Hello ' . $notifiable->name . '!')
-            ->line('This is a reminder that your event "' . $this->event->name . '" is happening tomorrow.')
-            ->line('Make sure you are prepared!');
+            ->view('emails.event-reminder', [
+                'user' => $notifiable,
+                'event' => $this->event
+            ]);
     }
 
     /**
@@ -51,7 +55,9 @@ class EventReminder extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            //
+            'event_id' => $this->event->id,
+            'event_name' => $this->event->name,
+            'event_date' => $this->event->date,
         ];
     }
 }

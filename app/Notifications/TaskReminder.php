@@ -21,8 +21,8 @@ class TaskReminder extends Notification
     public function __construct($task)
     {
         $this->task = $task;
-        $this->event = $task->event;
-        $this->user = $task->event->user;
+        $this->event = $task->event ?? null; // Handle tasks without events
+        $this->user = $this->event ? $this->event->user : $task->assignedUser ?? null; // Use task's assigned user if no event
     }
 
     /**
@@ -32,7 +32,7 @@ class TaskReminder extends Notification
      */
     public function via(object $notifiable): array
     {
-        return ['mail', 'database']; // Add database notifications
+        return ['mail', 'database'];
     }
 
     /**
@@ -42,10 +42,11 @@ class TaskReminder extends Notification
     {
         return (new MailMessage)
             ->subject('Reminder: Task "' . $this->task->task_name . '" Due Tomorrow')
-            ->greeting('Hello ' . $this->user->name . '!')
-            ->line('This is a reminder that your task "' . $this->task->task_name . '" for the event "' . $this->event->name . '" is due tomorrow.')
-            ->line('Make sure to complete it on time!')
-            ->line('Thank you for staying on top of your tasks!');
+            ->view('emails.task-reminder', [
+                'user' => $this->user,
+                'task' => $this->task,
+                'event' => $this->event,
+            ]);
     }
 
     /**
@@ -56,10 +57,12 @@ class TaskReminder extends Notification
         return [
             'task_id' => $this->task->id,
             'task_name' => $this->task->task_name,
-            'event_id' => $this->event->id,
-            'event_name' => $this->event->name,
+            'event_id' => $this->event ? $this->event->id : null,
+            'event_name' => $this->event ? $this->event->name : null,
             'assigned_to' => $this->user ? $this->user->name : 'Unknown',
-            'message' => 'Reminder: Your task "' . $this->task->task_name . '" for event "' . $this->event->name . '" is due tomorrow.',
+            'message' => $this->event
+                ? 'Reminder: Your task "' . $this->task->task_name . '" for event "' . $this->event->name . '" is due tomorrow.'
+                : 'Reminder: Your task "' . $this->task->task_name . '" is due tomorrow.',
         ];
     }
 
@@ -73,8 +76,8 @@ class TaskReminder extends Notification
         return [
             'task_id' => $this->task->id,
             'task_name' => $this->task->task_name,
-            'event_id' => $this->event->id,
-            'event_name' => $this->event->name,
+            'event_id' => $this->event ? $this->event->id : null,
+            'event_name' => $this->event ? $this->event->name : null,
             'due_date' => $this->task->deadline,
         ];
     }

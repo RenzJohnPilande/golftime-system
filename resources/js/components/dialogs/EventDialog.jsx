@@ -166,6 +166,35 @@ const EventDialog = ({
                             )}
                         </div>
 
+                        <div className="flex w-full flex-col flex-wrap">
+                            <InputLabel htmlFor="status" value="Status" />
+                            <SelectInput
+                                id="status"
+                                name="status"
+                                options={[
+                                    { label: 'pending', value: 'pending' },
+                                    {
+                                        label: 'preparation',
+                                        value: 'preparation',
+                                    },
+                                    { label: 'ongoing', value: 'ongoing' },
+                                    { label: 'complete', value: 'complete' },
+                                    { label: 'cancelled', value: 'cancelled' },
+                                ]}
+                                className="mt-1 block w-full border px-2 py-2 text-sm capitalize text-zinc-900 shadow"
+                                value={data?.status || ''}
+                                onChange={(e) =>
+                                    setData('status', e.target.value)
+                                }
+                                required
+                            />
+                            {errors.status && (
+                                <InputError className="mt-2">
+                                    {errors.status}
+                                </InputError>
+                            )}
+                        </div>
+
                         <div className="flex w-full flex-wrap">
                             <InputLabel htmlFor="notes" value="Notes" />
                             <Textarea

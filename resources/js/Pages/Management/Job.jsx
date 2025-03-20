@@ -4,11 +4,11 @@ import PrimaryButton from '@/components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useMemo, useState } from 'react';
-import RoleColumns from './columns/RoleColumn';
-import RoleDialog from './dialogs/RoleDialog';
+import jobColumns from './columns/JobColumn';
+import JobDialog from './dialogs/JobDialog';
 
-const Role = ({ roles }) => {
-    const [roleDialogOpen, setRoleDialogOpen] = useState(false);
+const Job = ({ jobs }) => {
+    const [jobDialogOpen, setJobDialogOpen] = useState(false);
     const [selected, setSelected] = useState(null);
     const [isConfirmationDialogOpen, setConfirmationDialogOpen] =
         useState(false);
@@ -51,14 +51,14 @@ const Role = ({ roles }) => {
         setConfirmationDialogOpen(false);
         reset();
         setSelected(null);
-        setRoleDialogOpen(false);
+        setJobDialogOpen(false);
     };
 
     const handleConfirm = () => {
         const { formAction } = dialogConfig;
 
-        if (formAction === 'create role') {
-            post(route('roles.store'), {
+        if (formAction === 'create job') {
+            post(route('jobs.store'), {
                 onSuccess: () => {
                     onClose();
                 },
@@ -66,8 +66,8 @@ const Role = ({ roles }) => {
                     console.log('Submission failed with errors:', errors);
                 },
             });
-        } else if (formAction === 'update role') {
-            patch(route('roles.update', { id: selected }), {
+        } else if (formAction === 'update job') {
+            patch(route('jobs.update', { id: selected }), {
                 ...data,
                 onSuccess: () => {
                     onClose();
@@ -76,8 +76,8 @@ const Role = ({ roles }) => {
                     console.log('Submission failed with errors:', errors);
                 },
             });
-        } else if (formAction === 'delete role') {
-            destroy(route('roles.delete', { id: selected }), {
+        } else if (formAction === 'delete job') {
+            destroy(route('jobs.delete', { id: selected }), {
                 onSuccess: () => {
                     onClose();
                 },
@@ -89,10 +89,10 @@ const Role = ({ roles }) => {
     };
 
     const columns = useMemo(() => {
-        return RoleColumns(
+        return jobColumns(
             isMobile,
             setSelected,
-            setRoleDialogOpen,
+            setJobDialogOpen,
             setDialogConfig,
             setConfirmationDialogOpen,
         );
@@ -100,7 +100,7 @@ const Role = ({ roles }) => {
 
     return (
         <AuthenticatedLayout>
-            <Head title="Roles" />
+            <Head title="jobs" />
             <div className="flex min-h-screen w-full flex-col flex-wrap bg-zinc-50 p-5">
                 <div className="flex h-fit w-full flex-wrap items-end justify-between gap-2">
                     <div className="w-full md:w-auto">
@@ -108,7 +108,7 @@ const Role = ({ roles }) => {
                             Jobs Management
                         </h1>
                         <h2 className="text-base md:text-sm">
-                            Manage roles for employees here
+                            Manage jobs for employees here
                         </h2>
                     </div>
                     <div className="w-full md:w-auto">
@@ -121,10 +121,10 @@ const Role = ({ roles }) => {
                             }}
                             onClick={() => {
                                 setDialogConfig({
-                                    title: 'Create New Role',
-                                    formAction: 'create role',
+                                    title: 'Create New job',
+                                    formAction: 'create job',
                                 });
-                                setRoleDialogOpen(true);
+                                setJobDialogOpen(true);
                             }}
                         />
                     </div>
@@ -132,13 +132,13 @@ const Role = ({ roles }) => {
                 <div className="flex w-full flex-wrap py-5">
                     <TableComponent
                         columns={columns}
-                        data={roles}
+                        data={jobs}
                         rowsPerPage={10}
                     />
                 </div>
 
-                <RoleDialog
-                    open={roleDialogOpen}
+                <JobDialog
+                    open={jobDialogOpen}
                     close={onClose}
                     selected={selected}
                     user={user}
@@ -166,4 +166,4 @@ const Role = ({ roles }) => {
     );
 };
 
-export default Role;
+export default Job;

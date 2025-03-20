@@ -1,5 +1,6 @@
 import TableComponent from '@/components/datatable/TableComponent';
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
+import TaskDetailsDialog from '@/components/dialogs/TaskDetailsDialog';
 import TaskDialog from '@/components/dialogs/TaskDialog';
 import PrimaryButton from '@/components/PrimaryButton';
 import {
@@ -21,6 +22,7 @@ import {
 
 const Tasks = ({ tasks, employees, events }) => {
     const [open, setOpen] = useState(false);
+    const [viewOpen, setViewOpen] = useState(false);
     const [selected, setSelected] = useState(null);
     const [isConfirmationDialogOpen, setConfirmationDialogOpen] =
         useState(false);
@@ -59,8 +61,9 @@ const Tasks = ({ tasks, employees, events }) => {
     } = useForm({
         id: '',
         task_name: '',
+        task_description: '',
         deadline: '',
-        type: '',
+        type: 'individual',
         status: 'pending',
         event_id: '',
         assigned_to: '',
@@ -73,9 +76,9 @@ const Tasks = ({ tasks, employees, events }) => {
                     accessorKey: 'task_name',
                     header: 'Task Name',
                     cell: (row) => (
-                        <div className="flex w-full flex-wrap gap-1 px-2 py-3">
+                        <div className="flex w-full flex-wrap gap-1 p-2">
                             <div className="flex w-full">
-                                <h1 className="text-base font-medium capitalize">
+                                <h1 className="text-sm font-medium capitalize">
                                     {row.task_name}
                                 </h1>
                             </div>
@@ -123,10 +126,23 @@ const Tasks = ({ tasks, employees, events }) => {
                 accessorKey: 'task_name',
                 header: 'Task Name',
                 cell: (row) => (
-                    <div className="flex w-full flex-wrap gap-1 px-2 py-3">
+                    <div className="flex w-full flex-wrap gap-1 p-2">
                         <div className="flex w-full">
-                            <h1 className="text-base font-medium capitalize">
+                            <h1 className="text-sm font-medium capitalize">
                                 {row.task_name}
+                            </h1>
+                        </div>
+                    </div>
+                ),
+            },
+            {
+                accessorKey: 'task_description',
+                header: 'Task Overview',
+                cell: (row) => (
+                    <div className="flex w-full flex-wrap gap-1 p-2">
+                        <div className="flex w-full">
+                            <h1 className="text-pretty text-sm capitalize">
+                                {row.task_description}
                             </h1>
                         </div>
                     </div>
@@ -143,13 +159,29 @@ const Tasks = ({ tasks, employees, events }) => {
                               day: 'numeric',
                           })
                         : 'N/A';
-                    return <p>{formattedDate}</p>;
+                    return (
+                        <div className="flex w-full flex-wrap gap-1 p-2">
+                            <div className="flex w-full">
+                                <h1 className="text-sm font-medium capitalize">
+                                    {formattedDate}
+                                </h1>
+                            </div>
+                        </div>
+                    );
                 },
             },
             {
                 accessorKey: 'type',
                 header: 'Type',
-                cell: (row) => <p className="p-2 capitalize">{row.type}</p>,
+                cell: (row) => (
+                    <div className="flex w-full flex-wrap gap-1 p-2">
+                        <div className="flex w-full">
+                            <h1 className="text-sm font-medium capitalize">
+                                {row.type}
+                            </h1>
+                        </div>
+                    </div>
+                ),
             },
             {
                 accessorKey: 'event',
@@ -158,26 +190,38 @@ const Tasks = ({ tasks, employees, events }) => {
                     const event = events.find(
                         (event) => event.id === row.event_id,
                     );
-                    return <p className="px-2">{event ? event.name : 'N/A'}</p>;
+                    return (
+                        <div className="flex w-full flex-wrap gap-1 p-2">
+                            <div className="flex w-full">
+                                <h1 className="text-sm font-medium capitalize">
+                                    {event ? event.name : 'N/A'}
+                                </h1>
+                            </div>
+                        </div>
+                    );
                 },
             },
             {
                 accessorKey: 'status',
                 header: 'Status',
                 cell: (row) => (
-                    <p
-                        className={`w-fit rounded px-2 py-1 text-center text-xs uppercase text-white ${
-                            row.status === 'pending'
-                                ? 'bg-yellow-500'
-                                : row.status === 'ongoing'
-                                  ? 'bg-blue-500'
-                                  : row.status === 'complete'
-                                    ? 'bg-green-500'
-                                    : 'bg-gray-500'
-                        }`}
-                    >
-                        {row.status}
-                    </p>
+                    <div className="flex w-full flex-wrap gap-1 p-2">
+                        <div className="flex w-full">
+                            <p
+                                className={`w-fit rounded px-2 py-1 text-center text-xs capitalize text-white ${
+                                    row.status === 'pending'
+                                        ? 'bg-yellow-500'
+                                        : row.status === 'ongoing'
+                                          ? 'bg-blue-500'
+                                          : row.status === 'complete'
+                                            ? 'bg-green-500'
+                                            : 'bg-gray-500'
+                                }`}
+                            >
+                                {row.status}
+                            </p>
+                        </div>
+                    </div>
                 ),
             },
             {
@@ -250,6 +294,7 @@ const Tasks = ({ tasks, employees, events }) => {
 
     const onClose = () => {
         setOpen(false);
+        setViewOpen(false);
         reset();
         setSelected(null);
     };
@@ -296,7 +341,7 @@ const Tasks = ({ tasks, employees, events }) => {
                         <h1 className="text-3xl font-bold md:text-2xl">
                             My Tasks
                         </h1>
-                        <h2 className="text-base md:text-sm">
+                        <h2 className="text-xs md:text-sm">
                             Keep track of all tasks, deadlines, and statuses
                             efficiently.
                         </h2>
@@ -348,6 +393,15 @@ const Tasks = ({ tasks, employees, events }) => {
                     setDialogConfig={setDialogConfig}
                     setSelected={setSelected}
                     setConfirmationDialogOpen={setConfirmationDialogOpen}
+                />
+                <TaskDetailsDialog
+                    open={viewOpen}
+                    close={onClose}
+                    selected={selected}
+                    user={user}
+                    employees={employees}
+                    events={events}
+                    setSelected={setSelected}
                 />
                 <ConfirmationDialog
                     open={isConfirmationDialogOpen}

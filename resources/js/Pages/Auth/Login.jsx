@@ -30,15 +30,19 @@ export default function Login({ status, canResetPassword }) {
             )}
 
             <form onSubmit={submit}>
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-4">
                     <div className="flex flex-col text-xl">
                         <p className="font-semibold">Login</p>
                         <p className="text-sm text-gray-600">
                             Enter your email and password to sign in.
                         </p>
                     </div>
-                    <div className="flex w-full flex-wrap gap-2">
-                        <InputLabel htmlFor="email" value="Email" />
+                    <div className="flex w-full flex-wrap gap-1">
+                        <InputLabel
+                            htmlFor="email"
+                            value="Email"
+                            className="text-xs"
+                        />
 
                         <TextInput
                             id="email"
@@ -53,9 +57,12 @@ export default function Login({ status, canResetPassword }) {
 
                         <InputError message={errors.email} className="mt-2" />
                     </div>
-
-                    <div className="flex w-full flex-wrap gap-2">
-                        <InputLabel htmlFor="password" value="Password" />
+                    <div className="flex w-full flex-wrap gap-1">
+                        <InputLabel
+                            htmlFor="password"
+                            value="Password"
+                            className="text-xs"
+                        />
 
                         <TextInput
                             id="password"

@@ -8,6 +8,8 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Helpers\LogHelper;
 use App\Models\Department;
+use App\Models\Job;
+use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -23,8 +25,9 @@ class EmployeeController extends Controller
 
         return Inertia::render('Management/Employee', [
             'employees' => Employee::all(),
+            "jobs" => Job::all(),
             'departments' => Department::all(),
-            'roles' => Role::all(),
+            'permissions'=> Permission::all(),
         ]);
     }
 
@@ -41,7 +44,10 @@ class EmployeeController extends Controller
     public function show($id)
     {
         $employee = Employee::with('user')->findOrFail($id);
-        return response()->json($employee);
+        return response()->json([
+            'employee' => $employee,
+            'permissions' => $employee->user ? $employee->user->permissions : [],
+        ]);
     }
 
     /**

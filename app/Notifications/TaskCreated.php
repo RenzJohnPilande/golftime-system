@@ -22,7 +22,7 @@ class TaskCreated extends Notification
     {
         $this->task = $task;
         $this->event = $task->event;
-        $this->user = $task->event->user;
+        $this->user = $task->user;
 
     }
 
@@ -55,10 +55,12 @@ class TaskCreated extends Notification
         return [
             'task_id' => $this->task->id,
             'task_name' => $this->task->task_name,
-            'event_id' => $this->event->id,
-            'event_name' => $this->event->name,
+            'event_id' => $this->event->id ?? null,
+            'event_name' => $this->event->name ?? 'No event assigned',
             'created_by' => $this->user ? $this->user->name : 'Unknown',
-            'message' => 'A new task "' . $this->task->task_name . '" has been added to event "' . $this->event->name . '" by ' . ($this->user ? $this->user->name : 'someone') . '.',
+            'message' => 'A new task "' . $this->task->task_name . '" has been added'
+                . ($this->event ? ' to event "' . $this->event->name . '"' : '')
+                . ' by ' . ($this->user ? $this->user->name : 'someone') . '.',
         ];
     }
 

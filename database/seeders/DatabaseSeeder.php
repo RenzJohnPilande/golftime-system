@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Employee;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -21,7 +22,6 @@ class DatabaseSeeder extends Seeder
             'lastname' => 'Pilande',
             'middlename' => 'Ora', 
             'email' => 'admin@golftime.ph',
-            'role' => 'admin',
             'password' => Hash::make('password'),
         ]);
     }

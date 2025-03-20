@@ -4,11 +4,13 @@ import { Toaster } from '@/components/ui/sonner';
 import { usePage } from '@inertiajs/react';
 
 export default function AuthenticatedLayout({ header, children }) {
-    const user = usePage().props.auth.user;
+    const { auth } = usePage().props;
+    const user = auth.user;
+    const permissions = auth.permissions || [];
 
     return (
         <SidebarProvider>
-            <AppSidebar user={user} />
+            <AppSidebar user={user} permissions={permissions} />
             <main className="w-full">
                 <div className="flex w-full flex-wrap justify-end bg-zinc-700 px-2 py-3 lg:hidden">
                     <SidebarTrigger className="align-right bg-white text-zinc-900 shadow-lg" />

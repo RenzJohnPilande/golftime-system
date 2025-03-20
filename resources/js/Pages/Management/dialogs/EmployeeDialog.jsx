@@ -1,3 +1,5 @@
+import CheckBoxGroup from '@/components/CheckBoxGroup';
+import CheckBoxInput from '@/components/CheckBoxInput';
 import SelectInput from '@/components/SelectInput';
 import {
     Dialog,
@@ -19,7 +21,8 @@ const EmployeeDialog = ({
     setDialogConfig,
     setConfirmationDialogOpen,
     departments,
-    roles,
+    jobs,
+    permissions,
 }) => {
     const { data, setData, errors, reset } = formData;
 
@@ -30,19 +33,24 @@ const EmployeeDialog = ({
                 .then((response) => {
                     setData((prevData) => ({
                         ...prevData,
-                        user_id: response.data.user_id,
-                        firstname: response.data.firstname,
-                        middlename: response.data.middlename,
-                        lastname: response.data.lastname,
-                        email: response.data.user.email,
-                        department: response.data.department,
-                        salary: response.data.salary,
-                        hire_date: response.data.hire_date.split(' ')[0],
-                        position: response.data.position,
-                        status: response.data.status,
+                        user_id: response.data.employee.user_id,
+                        firstname: response.data.employee.firstname,
+                        middlename: response.data.employee.middlename,
+                        lastname: response.data.employee.lastname,
+                        email: response.data.employee.user.email,
+                        department: response.data.employee.department,
+                        salary: response.data.employee.salary,
+                        hire_date:
+                            response.data.employee.hire_date.split(' ')[0],
+                        position: response.data.employee.position,
+                        status: response.data.employee.status,
+                        permissions:
+                            response.data.permissions.map((p) => p.id) || [],
                     }));
                     return axios.get(
-                        route('users.show', { id: response.data.user_id }),
+                        route('users.show', {
+                            id: response.data.employee.user_id,
+                        }),
                     );
                 })
                 .then((response) => {
@@ -232,9 +240,9 @@ const EmployeeDialog = ({
                                     id="position"
                                     name="position"
                                     options={[
-                                        ...roles.map((role) => ({
-                                            value: role.job_title,
-                                            label: role.job_title,
+                                        ...jobs.map((job) => ({
+                                            value: job.job_title,
+                                            label: job.job_title,
                                         })),
                                     ]}
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
@@ -251,7 +259,7 @@ const EmployeeDialog = ({
                                 )}
                             </div>
                         </div>
-                        <div className="grid w-full grid-cols-3 gap-2">
+                        <div className="grid w-full grid-cols-2 gap-2">
                             <div className="w-full">
                                 <InputLabel htmlFor="salary" value="Salary" />
                                 <TextInput
@@ -268,32 +276,6 @@ const EmployeeDialog = ({
                                 {errors.salary && (
                                     <InputError className="mt-2">
                                         {errors.salary}
-                                    </InputError>
-                                )}
-                            </div>
-
-                            <div className="w-full">
-                                <InputLabel htmlFor="role" value="Role" />
-                                <select
-                                    id="role"
-                                    name="role"
-                                    className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data?.role || ''}
-                                    onChange={(e) =>
-                                        setData('role', e.target.value)
-                                    }
-                                    required
-                                >
-                                    <option value="" disabled>
-                                        Select a Role
-                                    </option>
-                                    <option value="admin">Admin</option>
-                                    <option value="manager">Manager</option>
-                                    <option value="employee">Employee</option>
-                                </select>
-                                {errors.role && (
-                                    <InputError className="mt-2">
-                                        {errors.role}
                                     </InputError>
                                 )}
                             </div>
@@ -321,6 +303,51 @@ const EmployeeDialog = ({
                                 )}
                             </div>
                         </div>
+                        <div className="flex w-full gap-2">
+                            <div className="w-full">
+                                <InputLabel
+                                    htmlFor="permission"
+                                    value="Permissions"
+                                />
+                                <CheckBoxGroup
+                                    options={permissions.map((permission) => ({
+                                        value: permission.id,
+                                        label: permission.description,
+                                    }))}
+                                    selectedValues={data.permissions || []}
+                                    onChange={(newPermissions) =>
+                                        setData('permissions', newPermissions)
+                                    }
+                                    className="grid w-full grid-cols-2 gap-2 text-sm"
+                                />
+                                {errors.permissions && (
+                                    <InputError className="mt-2">
+                                        {errors.permissions}
+                                    </InputError>
+                                )}
+                            </div>
+                        </div>
+                        <div className="flex w-full gap-2">
+                            <div className="w-full">
+                                <InputLabel htmlFor="status" value="Status" />
+                                <CheckBoxInput
+                                    label="Active"
+                                    checked={data?.status === 'active'}
+                                    onChange={(checked) =>
+                                        setData(
+                                            'status',
+                                            checked ? 'active' : 'inactive',
+                                        )
+                                    }
+                                />
+                                {errors.permissions && (
+                                    <InputError className="mt-2">
+                                        {errors.permissions}
+                                    </InputError>
+                                )}
+                            </div>
+                        </div>
+
                         <div className="flex w-full flex-wrap justify-end gap-2">
                             <PrimaryButton
                                 text="Cancel"

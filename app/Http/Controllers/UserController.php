@@ -24,7 +24,6 @@ class UserController extends Controller
             ->where('users.id', $user->id)
             ->select(
                 'users.id as user_id',
-                'users.role',
                 'employees.id as employee_id',
                 'employees.firstname',
                 'employees.middlename',

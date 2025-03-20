@@ -4,8 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Validation\ValidationException;
 use App\Notifications\TaskCreated;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
@@ -14,6 +15,7 @@ class Task extends Model
     // Mass assignable attributes
     protected $fillable = [
         'task_name',
+        'task_description',
         'deadline',
         'type',
         'status',
@@ -25,39 +27,27 @@ class Task extends Model
         'deadline' => 'datetime',
     ];
 
-    // Constants for Task Types (optional)
-    const ALLOWED_TYPES = [
-        'event',
-        'miscellaneous', 
-        'admin', 
-    ];
-
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function event()
-    {
-        return $this->belongsTo(Events::class);
-    }
+    // Constants for Task Types
+    const ALLOWED_TYPES = ['event', 'individual'];
 
     /**
-     * Accessor to ensure task type is always valid
+     * Relationship: The event this task is associated with (nullable)
      */
-    public function setTypeAttribute($value)
+    public function event(): BelongsTo
     {
-        if (!in_array($value, self::ALLOWED_TYPES, true)) {
-            throw ValidationException::withMessages([
-                'type' => "The type must be one of the following: " . implode(', ', self::ALLOWED_TYPES),
-            ]);
-        }
-
-        $this->attributes['type'] = $value;
+        return $this->belongsTo(Events::class, 'event_id');
     }
 
     /**
-     * Scope to filter by task type (example scope)
+     * Relationship: The user assigned to this task
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    /**
+     * Scope to filter by task type
      */
     public function scopeType($query, $type)
     {
@@ -65,24 +55,26 @@ class Task extends Model
     }
 
     /**
-     * Scope to filter by event (optional if you want to easily filter tasks by event)
+     * Scope to filter by event ID
      */
     public function scopeForEvent($query, $eventId)
     {
         return $query->where('event_id', $eventId);
     }
 
+    /**
+     * Automatically notify the assigned user when a task is created
+     */
     protected static function boot()
     {
         parent::boot();
 
         static::created(function ($task) {
-            $user = $task->event->user;
-
-            if ($user) {
-                $user->notify(new TaskCreated($task));
+            // Notify the assigned user
+            if ($task->user) { 
+                $task->user->notify(new TaskCreated($task));
             } else {
-                \Log::warning("Task created without an associated user for Event ID {$task->event_id}. Task ID: {$task->id}");
+                Log::info("Task created without an assigned user. Task ID: {$task->id}");
             }
         });
     }

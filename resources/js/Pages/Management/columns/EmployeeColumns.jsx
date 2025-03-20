@@ -183,15 +183,12 @@ const EmployeeColumns = (
                   cell: (row) => (
                       <div className="flex w-full flex-wrap gap-1 px-2">
                           <p
-                              className={`min-w-[80px] rounded border p-1 text-center font-semibold capitalize ${
+                              className={`min-w-[80px] rounded border px-2 py-1 text-center text-xs font-semibold capitalize text-white ${
                                   {
-                                      active: 'border-green-400 bg-green-50 text-green-400',
-                                      inactive:
-                                          'border-zinc-400 bg-zinc-50 text-zinc-400',
-                                      terminated:
-                                          'border-red-400 bg-red-50 text-red-400',
-                                  }[row.status] ||
-                                  'border-gray-400 text-gray-400'
+                                      active: 'bg-green-500',
+                                      inactive: 'bg-red-500',
+                                      terminated: 'bg-gray-500',
+                                  }[row.status] || 'bg-gray-500'
                               }`}
                           >
                               {row.status}

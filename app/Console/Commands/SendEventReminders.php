@@ -48,14 +48,24 @@ class SendEventReminders extends Command
         $tasks = Task::whereDate('deadline', $tomorrow)->get();
 
         foreach ($tasks as $task) {
-            $event = Events::find($task->event_id);
-            $user = User::find($event->user_id);
+            $user = null;
+
+            if ($task->event_id) {
+                $event = Events::find($task->event_id);
+                if ($event) {
+                    $user = User::find($event->user_id);
+                }
+            }
+
+            if (!$user && isset($task->assigned_to)) {
+                $user = User::find($task->assigned_to);
+            }
 
             if ($user) {
                 $user->notify(new TaskReminder($task));
                 $this->info("Task reminder sent to: " . $user->email);
             } else {
-                $this->warn("User not found for task: " . $task->id);
+                $this->warn("User not found for task ID: " . $task->id);
             }
         }
 

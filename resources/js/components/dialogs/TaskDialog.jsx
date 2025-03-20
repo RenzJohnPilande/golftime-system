@@ -25,6 +25,7 @@ const TaskDialog = ({
     const { data, setData, errors, reset } = formData;
     const { auth } = usePage().props;
     const authUser = auth.user;
+    console.log(authUser);
 
     useEffect(() => {
         if (selected && open) {
@@ -36,6 +37,8 @@ const TaskDialog = ({
                         : '';
                     setData({
                         task_name: response.data[0].task_name ?? '',
+                        task_description:
+                            response.data[0].task_description ?? '',
                         deadline: formattedDeadline ?? '',
                         type: response.data[0].type ?? '',
                         status: response.data[0].status ?? 'pending',
@@ -92,6 +95,28 @@ const TaskDialog = ({
                             {errors.task_name && (
                                 <InputError className="mt-2">
                                     {errors.task_name}
+                                </InputError>
+                            )}
+                        </div>
+                        <div className="w-full">
+                            <InputLabel
+                                htmlFor="task_description"
+                                value="Description"
+                            />
+                            <TextInput
+                                id="task_description"
+                                name="task_description"
+                                type="textarea"
+                                className="mt-1 block max-h-[120px] w-full border px-2 py-2 text-sm shadow"
+                                value={data.task_description}
+                                onChange={(e) =>
+                                    setData('task_description', e.target.value)
+                                }
+                                required
+                            />
+                            {errors.task_description && (
+                                <InputError className="mt-2">
+                                    {errors.task_description}
                                 </InputError>
                             )}
                         </div>
@@ -172,7 +197,7 @@ const TaskDialog = ({
                         )}
 
                         {/* Status */}
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid w-full grid-cols-2 gap-4">
                             <div className="w-full">
                                 <InputLabel htmlFor="status" value="Status" />
                                 <SelectInput
@@ -243,6 +268,18 @@ const TaskDialog = ({
                                 onClick={() => {
                                     reset();
                                     close();
+                                }}
+                            />
+                            <PrimaryButton
+                                type="button"
+                                text="try"
+                                style={{
+                                    wrapper:
+                                        'border bg-zinc-800 hover:bg-zinc-600 text-white',
+                                    text: 'capitalize text-sm',
+                                }}
+                                onClick={() => {
+                                    console.log(data);
                                 }}
                             />
                             <PrimaryButton

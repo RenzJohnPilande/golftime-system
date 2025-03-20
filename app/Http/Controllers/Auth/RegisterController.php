@@ -22,12 +22,13 @@ class RegisterController extends Controller
             'lastname' => 'required|string|max:255',
             'position' => 'required|string|max:255',
             'department' => 'required|string|max:255',
-            'role' => 'required|in:admin,manager,employee',
             'salary' => 'required|numeric',
             'hire_date' => 'required|date',
             'status' => 'required|in:active,inactive,terminated',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'exists:permissions,id',
         ]);
 
         if ($validator->fails()) {
@@ -40,7 +41,6 @@ class RegisterController extends Controller
             'middlename' => $request->middlename,
             'lastname' => $request->lastname,
             'email' => $request->email,
-            'role' => $request->role,
             'password' => Hash::make($request->password),
         ]);
 
@@ -58,6 +58,10 @@ class RegisterController extends Controller
             'status' => $request->status,
         ]);
 
+        if ($request->has('permissions')) {
+            $user->permissions()->attach($request->permissions);
+        }
+
         $user = Auth::user();
         $username = $user ? $user->firstname . " " . $user->lastname : "System";
         LogHelper::logAction('Created a new employee', "A new employee named {$employee->firstname} {$employee->lastname} has been added by {$username}.");
@@ -68,9 +72,9 @@ class RegisterController extends Controller
 
     public function update(Request $request, $id)
     {
-        
         $employee = Employee::findOrFail($id);
         $user = User::findOrFail($employee->user_id);
+
         // Validate incoming data
         $validator = Validator::make($request->all(), [
             'firstname' => 'required|string|max:255',
@@ -78,27 +82,29 @@ class RegisterController extends Controller
             'lastname' => 'required|string|max:255',
             'position' => 'required|string|max:255',
             'department' => 'required|string|max:255',
-            'role' => 'required|in:admin,manager,employee',
             'salary' => 'required|numeric',
             'hire_date' => 'required|date',
             'status' => 'required|in:active,inactive,terminated',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8',
+            'permissions' => 'nullable|array',
+            'permissions.*' => 'exists:permissions,id',
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
+        // Update User
         $user->update([
             'firstname' => $request->firstname,
             'lastname' => $request->lastname,
             'middlename' => $request->middlename,
             'email' => $request->email,
-            'role' => $request->role,
             'password' => $request->password ? Hash::make($request->password) : $user->password, 
         ]);
 
+        // Update Employee
         $employee->update([
             'firstname' => $request->firstname,
             'middlename' => $request->middlename,
@@ -110,7 +116,11 @@ class RegisterController extends Controller
             'status' => $request->status,
         ]);
 
+        if ($request->has('permissions')) {
+            $user->permissions()->sync($request->permissions);
+        }
 
+        // Logging Action
         $loggedUser = Auth::user();
         $username = $loggedUser ? "{$loggedUser->firstname} {$loggedUser->lastname}" : "System";
         LogHelper::logAction(
@@ -118,7 +128,7 @@ class RegisterController extends Controller
             "Employee \"{$employee->firstname} {$employee->lastname}\" was updated by {$username}."
         );
 
-        return redirect()->route('employees.index')->with('success', 'User
-         updated successfully.');
+        return redirect()->route('employees.index')->with('success', 'User updated successfully.');
     }
+
 }

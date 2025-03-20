@@ -1,3 +1,31 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.pie-chart-container {
+    width: 100%;
+    height: auto; /* Let the height adjust based on the width */
+    max-width: 400px; /* Optional: limit the max width on larger screens */
+    margin: 0 auto; /* Center the chart */
+}
+
+@media (max-width: 640px) {
+    .pie-chart-container {
+        max-width: 100%; /* Full width for smaller screens */
+        height: 200px; /* Set a max height for smaller devices */
+    }
+}
+
+@media (min-width: 768px) {
+    .pie-chart-container {
+        max-width: 300px; /* Adjust for tablet devices */
+        height: 250px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .pie-chart-container {
+        max-width: 400px; /* Adjust for larger screens */
+        height: 300px;
+    }
+}

@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>New Task Assigned</title>
+    <title>Event Reminder</title>
     <style>
         body { 
           font-family: Arial, sans-serif; 
@@ -15,9 +15,6 @@
           height: 100vh;
         }
 
-        .logo{
-            width: 40px;
-        }
         .main-container{
             background-color: #f4f4f4;
             display: flex;
@@ -51,17 +48,6 @@
           font-size: 16px; 
           color: #333 !important; 
         }
-        .button { 
-          display: block; 
-          width: 200px; 
-          margin: 20px auto; 
-          padding: 10px; 
-          text-align: center; 
-          background-color: #007bff; 
-          color: white; 
-          text-decoration: none; 
-          border-radius: 5px; 
-        }
         .footer { 
           padding: 10px; 
           font-size: 12px; 
@@ -81,25 +67,16 @@
             </div>
 
             <div class="content">
-                <p>Hello {{ $user->firstname ?? 'there' }},</p>
-
-                @if ($event)
-                    <p>A new task has been assigned to you for the event "<strong>{{ $event->name }}</strong>." Please review the task details below:</p>
-                @else
-                    <p>A new task has been assigned to you. Please review the task details below:</p>
-                @endif
-
-                <p><strong>Task:</strong> {{ $task->task_name }}</p>
-                <p><strong>Deadline:</strong> {{ $task->deadline ? Carbon::parse($task->deadline)->format('F j, Y') : 'No deadline specified' }}</p>
-
-                @if ($event && $event->date)
-                    <p><strong>Event Date:</strong> {{ Carbon::parse($event->date)->format('F j, Y') }}</p>
-                @endif
+                <p>Hello {{$user->firstname}},</p>
+                <p>This is a friendly reminder that your event, "<strong>{{ $event->name }}</strong>", is scheduled for tomorrow.</p>
+                <p>Please ensure that all necessary arrangements are in place before the event begins.</p>
+                <p><strong>Date:</strong> {{ \Carbon\Carbon::parse($event->date)->format('F j, Y') }}</p>
+                <p>We hope you have a great experience!</p>
             </div>
 
             <div class="footer">
                 <p class="notification">
-                    This email is for notification purposes only. No action is required if you have already acknowledged this task.
+                    This email is for notification purposes only. No action is required on your part.
                 </p>
                 <p>Best regards,</p>
                 <p><strong>Golf Time PH</strong></p>

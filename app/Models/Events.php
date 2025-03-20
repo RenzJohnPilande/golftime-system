@@ -14,30 +14,30 @@ class Events extends Model
     use HasFactory;
 
     protected $fillable = [
-		"name",
-		"location",
-		"date",
-		"status",
-		"personnel",
-		"assigned_to",
-		"notification_sent",
-		"notes",
-	];
+        "name",
+        "location",
+        "date",
+        "status",
+        "personnel",
+        "assigned_to",
+        "notification_sent",
+        "notes",
+    ];
 
     protected $casts = [
-        "personnel" => "array", 
+        "personnel" => "array",
     ];
 
-	const ALLOWED_STATUSES = [
+    const ALLOWED_STATUSES = [
         'pending',
         'preparation',
-        'in-progress',
-        'post-event',
+        'ongoing',
         'completed',
-		'cancelled',
+        'cancelled',
     ];
 
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class, 'assigned_to');
     }
 
@@ -46,7 +46,7 @@ class Events extends Model
         return $this->hasMany(Task::class);
     }
 
-	public function setStatusAttribute($value)
+    public function setStatusAttribute($value)
     {
         if (!in_array($value, self::ALLOWED_STATUSES, true)) {
             throw ValidationException::withMessages([

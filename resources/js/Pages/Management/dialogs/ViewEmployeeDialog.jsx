@@ -14,26 +14,25 @@ const ViewEmployeeDialog = ({ open, close, selected }) => {
                 .then((response) => {
                     setEmployee((prevData) => ({
                         ...prevData,
-                        user_id: response.data.user_id,
-                        firstname: response.data.firstname,
-                        middlename: response.data.middlename,
-                        lastname: response.data.lastname,
-                        email: response.data.user.email,
-                        department: response.data.department,
-                        salary: response.data.salary,
-                        hire_date: response.data.hire_date.split(' ')[0],
-                        position: response.data.position,
-                        status: response.data.status,
+                        user_id: response.data.employee.user_id,
+                        firstname: response.data.employee.firstname,
+                        middlename: response.data.employee.middlename,
+                        lastname: response.data.employee.lastname,
+                        email: response.data.employee.email,
+                        department: response.data.employee.department,
+                        salary: response.data.employee.salary,
+                        hire_date:
+                            response.data.employee.hire_date.split(' ')[0],
+                        position: response.data.employee.position,
+                        status: response.data.employee.status,
                     }));
                     return axios.get(
-                        route('users.show', { id: response.data.user_id }),
+                        route('users.show', {
+                            id: response.data.employee.user_id,
+                        }),
                     );
                 })
                 .then((response) => {
-                    setEmployee((prevData) => ({
-                        ...prevData,
-                        role: response.data.role,
-                    }));
                     setIsLoading(false);
                 })
                 .catch((error) => {

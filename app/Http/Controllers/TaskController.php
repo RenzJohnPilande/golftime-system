@@ -54,10 +54,11 @@ class TaskController extends Controller
     {
         $validated = $request->validate([
             'task_name'   => 'required|string|max:255',
+            'task_description'   => 'required|string|max:255',
             'deadline'    => 'required|date',
             'type'        => 'required|string|in:event,individual',
             'status'      => 'required|string|in:pending,ongoing,complete',
-            'event_id'    => 'nullable|exists:events,id',
+            'event_id'    => 'required_if:type,event|nullable|exists:events,id',
             'assigned_to' => 'required|exists:users,id',
         ]);
     
@@ -118,6 +119,7 @@ class TaskController extends Controller
 
         $validated = $request->validate([
             'task_name'   => 'required|string|max:255',
+            'task_description'   => 'required|string|max:255',
             'deadline'    => 'required|date',
             'type'        => 'required|string|in:event,individual',
             'status'      => 'required|string|in:pending,ongoing,complete',
