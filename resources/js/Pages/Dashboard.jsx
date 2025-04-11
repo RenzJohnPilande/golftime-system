@@ -5,98 +5,57 @@ import {
     MdBusiness,
     MdChecklist,
     MdEvent,
-    MdNotificationImportant,
     MdOutlineCases,
     MdPeople,
 } from 'react-icons/md';
-import EmployeeChart from './Charts/EmployeeChart';
-import EventChart from './Charts/EventChart';
-import TaskChart from './Charts/TaskChart';
+import BarChartComponent from './Charts/BarChartComponent';
 
 const Dashboard = ({ permissions, logs, data }) => {
-    console.log('Events:', data.events);
-    console.log('Tasks:', data.tasks);
-    console.log('Employees:', data.employees);
-    const chartConfig = {
-        pending: {
-            label: 'Pending',
-            color: '#FACC15',
-        },
-        preparation: {
-            label: 'Preparation',
-            color: '#60A5FA',
-        },
-        ongoing: {
-            label: 'Ongoing',
-            color: '#C084FC',
-        },
-        completed: {
-            label: 'Completed',
-            color: '#4ADE80',
-        },
-        cancelled: {
-            label: 'Cancelled',
-            color: '#F87171',
-        },
-    };
-
-    const chartData = Object.entries(
-        data?.events.reduce((acc, event) => {
-            const status = event.status || 'pending';
-            acc[status] = (acc[status] || 0) + 1;
-            return acc;
-        }, {}),
-    ).map(([status, count]) => ({
-        status,
-        count: count,
-        fill: chartConfig[status]?.color || '#000',
-    }));
-
     const cardData = [
         {
             permission: 'event_management',
-            current: 6,
+            mainValue: data?.events?.current,
             title: 'My Events',
             sub: 'Total Events',
             icon: MdEvent,
             color: 'purple',
-            total: 20,
+            subValue: data?.events?.total,
         },
         {
             permission: 'task_management',
-            current: 12,
-            title: 'My Tasks',
-            sub: 'Total Tasks',
+            mainValue: data?.tasks?.current,
+            title: 'Tasks',
+            sub: 'Total Assigned Tasks',
             icon: MdChecklist,
             color: 'blue',
-            total: 50,
+            subValue: data?.tasks?.total,
         },
         {
             permission: 'employee_management',
-            current: 50,
-            title: 'Current Employees',
-            sub: 'Total Employees',
+            mainValue: data?.employees?.active,
+            title: 'Active Employees',
+            sub: 'Inactive employees',
             icon: MdPeople,
             color: 'green',
-            total: 200,
+            subValue: data?.employees?.inactive,
         },
         {
             permission: 'department_management',
-            current: 8,
+            mainValue: data?.departments?.total,
             title: 'Departments',
-            sub: 'Total Departments',
+            sub: 'Empty Departments',
             icon: MdBusiness,
             color: 'red',
-            total: 15,
+            subValue: data?.departments?.vacancies,
         },
         {
             permission: 'job_management',
-            current: 15,
+            mainValue: data?.jobs?.total,
             title: 'Job Positions',
-            sub: 'Total jobs',
+            sub: 'Open Positions',
             icon: MdOutlineCases,
             color: 'yellow',
-            total: 30,
+            subValue: data?.jobs?.vacancies,
         },
     ];
 
@@ -120,45 +79,34 @@ const Dashboard = ({ permissions, logs, data }) => {
                         </h2>
                     </div>
                 </div>
-                <div className="grid w-full grid-cols-2 items-center gap-4 py-4 md:grid-cols-3 xl:grid-cols-6">
+                <div className="grid w-full grid-cols-1 items-center gap-4 py-4 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
                     {filteredCards.map((card, index) => (
                         <DashboardCard
                             key={index}
                             icon={card.icon}
-                            current={card.current}
+                            mainValue={card.mainValue}
                             title={card.title}
                             color={card.color}
-                            total={card.total}
+                            subValue={card.subValue}
                             sub={card.sub}
                         />
                     ))}
-                    <DashboardCard
-                        key="sample"
-                        icon={MdNotificationImportant}
-                        current="sample"
-                        title="sample"
-                        color="gray"
-                        total="sample"
-                        sub="sample"
-                    />
                 </div>
-                <div className="flex w-full grow flex-wrap gap-4 pb-4 md:flex-nowrap">
-                    <div className="flex w-full grow flex-wrap content-start gap-4 overflow-auto rounded border border-zinc-300 bg-white p-4 shadow-lg">
-                        <p className="text-lg font-semibold">Performance</p>
-                        <div className="grid w-full grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3">
-                            <EventChart data={data.events} />
-                            <TaskChart data={data.tasks} />
-                            <EmployeeChart data={data.employees} />
+                <div className="flex w-full flex-wrap gap-4 pb-4 md:flex-nowrap">
+                    <div className="flex w-full flex-wrap">
+                        <p className="mb-4 text-lg font-semibold">Charts</p>
+                        <div className="flex w-full flex-wrap border bg-white">
+                            <BarChartComponent data={data?.tasks?.data} />
                         </div>
                     </div>
 
-                    <div className="flex w-full max-w-[400px] flex-col content-start overflow-auto rounded border border-zinc-300 bg-white p-4 text-zinc-800 shadow-lg">
+                    <div className="flex w-full max-w-[400px] flex-col content-start overflow-auto rounded px-4 text-zinc-800">
                         <p className="mb-4 text-lg font-semibold">Recents</p>
-                        <div className="flex w-full flex-col gap-2 capitalize">
+                        <div className="flex w-full flex-col rounded border bg-white capitalize">
                             {logs.map((log, index) => (
                                 <div
                                     key={index}
-                                    className="flex w-full flex-wrap items-center justify-between gap-4 rounded border-2 border-zinc-300 shadow hover:bg-zinc-100"
+                                    className={`flex w-full flex-wrap items-center justify-between gap-4 border-b border-zinc-300 hover:bg-zinc-100`}
                                 >
                                     <div className="flex flex-col px-2 py-3">
                                         <p className="text-[10px] font-bold">

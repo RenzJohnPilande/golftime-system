@@ -14,16 +14,16 @@ import {
 } from '@/components/ui/chart';
 import { LabelList, Pie, PieChart } from 'recharts';
 
-const TaskChart = ({ data }) => {
+const TaskChart = ({ task }) => {
     const chartConfig = {
-        pending: { label: 'Pending', color: '#3B82F6' }, // Blue-500
-        ongoing: { label: 'Ongoing', color: '#2563EB' }, // Blue-600
-        complete: { label: 'Completed', color: '#1E40AF' }, // Blue-800
+        pending: { label: 'Pending', color: '#3B82F6' },
+        ongoing: { label: 'Ongoing', color: '#2563EB' },
+        complete: { label: 'Completed', color: '#1E40AF' },
     };
 
     // Transform task data into chart format
     const chartData = Object.entries(
-        data?.reduce((acc, task) => {
+        task?.data?.reduce((acc, task) => {
             const status = task.status || 'pending';
             acc[status] = (acc[status] || 0) + 1;
             return acc;

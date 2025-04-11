@@ -14,18 +14,17 @@ import {
 } from '@/components/ui/chart';
 import { LabelList, Pie, PieChart } from 'recharts';
 
-const EventChart = ({ data }) => {
+const EventChart = ({ event }) => {
     const chartConfig = {
-        pending: { label: 'Pending', color: '#A78BFA' }, // Purple-400
-        preparation: { label: 'Preparation', color: '#8B5CF6' }, // Purple-500
-        ongoing: { label: 'Ongoing', color: '#7C3AED' }, // Purple-600
-        completed: { label: 'Completed', color: '#6D28D9' }, // Purple-700
-        cancelled: { label: 'Cancelled', color: '#581C87' }, // Purple-900
+        pending: { label: 'Pending', color: '#A78BFA' },
+        preparation: { label: 'Preparation', color: '#8B5CF6' },
+        ongoing: { label: 'Ongoing', color: '#7C3AED' },
+        completed: { label: 'Completed', color: '#6D28D9' },
+        cancelled: { label: 'Cancelled', color: '#581C87' },
     };
 
-    // Transform event data into chart format
     const chartData = Object.entries(
-        data?.reduce((acc, event) => {
+        event?.data?.reduce((acc, event) => {
             const status = event.status || 'pending';
             acc[status] = (acc[status] || 0) + 1;
             return acc;

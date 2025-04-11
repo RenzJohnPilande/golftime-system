@@ -31,6 +31,7 @@ import {
     MdOutlineCases,
     MdPeople,
     MdPerson2,
+    MdShoppingCart,
 } from 'react-icons/md';
 import ConfirmationDialog from './dialogs/ConfirmationDialog';
 import { SidebarFooter, SidebarHeader } from './ui/sidebar';
@@ -38,7 +39,7 @@ import { SidebarFooter, SidebarHeader } from './ui/sidebar';
 const items = [
     {
         title: 'Dashboard',
-        url: '/',
+        url: '/dashboard',
         icon: MdDashboard,
     },
     {
@@ -79,6 +80,14 @@ const management = [
         url: '/logs',
         icon: MdListAlt,
         requiredPermission: 'admin',
+    },
+];
+
+const cms = [
+    {
+        title: 'Products',
+        url: '/products',
+        icon: MdShoppingCart,
     },
 ];
 
@@ -143,11 +152,32 @@ const AppSidebar = ({ user, permissions }) => {
                                 ))}
                         </SidebarMenu>
                     </SidebarGroupContent>
+                    <SidebarGroupLabel>Content Management</SidebarGroupLabel>
+                    <SidebarGroupContent className="pb-5">
+                        <SidebarMenu>
+                            {cms
+                                .filter((item) =>
+                                    hasPermission(item.requiredPermission),
+                                )
+                                .map((item) => (
+                                    <SidebarMenuItem key={item.title}>
+                                        <SidebarMenuButton asChild>
+                                            <Link href={item.url}>
+                                                <item.icon />
+                                                <span>{item.title}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
                     {management.some((item) =>
                         hasPermission(item.requiredPermission),
                     ) && (
                         <>
-                            <SidebarGroupLabel>Management</SidebarGroupLabel>
+                            <SidebarGroupLabel>
+                                System Management
+                            </SidebarGroupLabel>
                             <SidebarGroupContent>
                                 <SidebarMenu>
                                     {management

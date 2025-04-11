@@ -1,12 +1,17 @@
 import AppSidebar from '@/components/app-sidebar';
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { Toaster } from '@/components/ui/sonner';
+import ErrorPage from '@/Pages/Errors/ErrorPage';
 import { usePage } from '@inertiajs/react';
 
 export default function AuthenticatedLayout({ header, children }) {
-    const { auth } = usePage().props;
+    const { auth, status } = usePage().props;
     const user = auth.user;
     const permissions = auth.permissions || [];
+
+    if (status) {
+        return <ErrorPage status={status} />;
+    }
 
     return (
         <SidebarProvider>

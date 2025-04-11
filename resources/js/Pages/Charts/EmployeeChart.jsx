@@ -14,14 +14,14 @@ import {
 } from '@/components/ui/chart';
 import { LabelList, Pie, PieChart } from 'recharts';
 
-const EmployeeChart = ({ data }) => {
+const EmployeeChart = ({ employee }) => {
     const chartConfig = {
         active: { label: 'Active', color: '#16A34A' },
         inactive: { label: 'Inactive', color: '#14532D' },
     };
 
     const chartData = Object.entries(
-        data?.reduce((acc, employee) => {
+        employee?.data?.reduce((acc, employee) => {
             const status = employee.status || 'inactive';
             acc[status] = (acc[status] || 0) + 1;
             return acc;

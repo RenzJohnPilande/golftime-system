@@ -24,27 +24,56 @@ class DashboardController extends Controller
         $isAdmin = in_array('admin', $permissions);
 
         if ($isAdmin || in_array('event_management', $permissions)) {
-            $data['events'] = $isAdmin
-                ? Events::latest()->take(10)->get()
-                : Events::where('assigned_to', $user->id)->latest()->take(10)->get();
+            $data['events'] = [
+                'total' => $isAdmin ? Events::count() : Events::where('assigned_to', $user->id)->count(),
+                'current' => $isAdmin
+                    ? Events::whereIn('status', ['pending', 'preparation', 'ongoing'])->count()
+                    : Events::where('assigned_to', $user->id)
+                    ->whereIn('status', ['pending', 'preparation', 'ongoing'])
+                    ->count(),
+                'data' => $isAdmin
+                    ? Events::all()
+                    : Events::where('assigned_to', $user->id)->get(),
+            ];
         }
 
         if ($isAdmin || in_array('task_management', $permissions)) {
-            $data['tasks'] = $isAdmin
-                ? Task::latest()->take(10)->get()
-                : Task::where('assigned_to', $user->id)->latest()->take(10)->get();
+            $data['tasks'] = [
+                'total' => $isAdmin ? Task::count() : Task::where('assigned_to', $user->id)->count(),
+                'current' => $isAdmin
+                    ? Task::whereIn('status', ['pending', 'ongoing'])->count()
+                    : Task::where('assigned_to', $user->id)
+                    ->whereIn('status', ['pending', 'ongoing'])
+                    ->count(),
+                'data' => $isAdmin
+                    ? Task::all()
+                    : Task::where('assigned_to', $user->id)->get(),
+            ];
         }
 
         if ($isAdmin || in_array('employee_management', $permissions)) {
-            $data['employees'] = Employee::latest()->take(10)->get();
+            $data['employees'] = [
+                'inactive' => Employee::where('status', "inactive")->count(),
+                'active' => Employee::where('status', "active")->count(),
+                'data' => Employee::all(),
+            ];
         }
 
         if ($isAdmin || in_array('department_management', $permissions)) {
-            $data['departments'] = Department::latest()->take(10)->get();
+            $data['departments'] = [
+                'total' => Department::count(),
+                "vacancies" => Department::doesntHave('employees')->count(),
+                'data' => Department::withCount('employees')->get(),
+            ];
         }
 
         if ($isAdmin || in_array('job_management', $permissions)) {
-            $data['jobs'] = Job::latest()->take(10)->get();
+            $data['jobs'] = [
+                // "vacancies"
+                "total" => Job::count(),
+                "vacancies" => Job::doesntHave('employees')->count(),
+                "data" => Job::withCount('employees')->get()
+            ];
         }
 
         return Inertia::render('Dashboard', [

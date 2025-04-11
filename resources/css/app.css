@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.text-shadow {
+    text-shadow: 1px 1px 1px black;
+}
+
 .pie-chart-container {
     width: 100%;
     height: auto; /* Let the height adjust based on the width */

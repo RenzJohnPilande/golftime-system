@@ -10,9 +10,12 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
+use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\UserController;
 
 // Public Routes
@@ -29,11 +32,11 @@ Route::get('/', function () {
 
 // Protected Routes
 Route::middleware(['auth', 'verified'])->group(function () {
-    
+
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+        ->middleware(['auth', 'verified'])
+        ->name('dashboard');
 
     //Account
     Route::get('/account', [UserController::class, 'index'])->name("account.index");
@@ -75,7 +78,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
 
-    Route::prefix('employees')->group(function () {
+    Route::prefix('employees')->middleware(['auth', 'permission:employee_management'])->group(function () {
         Route::get('/', [EmployeeController::class, 'index'])->name('employees.index');
         Route::get('/{id}', [EmployeeController::class, 'show'])->name('employees.show');
         Route::patch('/update/{id}', [EmployeeController::class, 'update'])->name('employees.update');
@@ -100,14 +103,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/{department}', [DepartmentController::class, 'destroy'])->name('departments.delete');
     });
 
+    // CMS
+    Route::prefix('products')->group(function () {
+        Route::get('/', [ProductController::class, 'index'])->name('products.index');
+        Route::post('/', [ProductController::class, 'store'])->name('products.store');
+        Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
+        Route::patch('/{product}', [ProductController::class, 'updateDetails'])->name('products.updateDetails');
+        Route::patch('/{product}', [ProductController::class, 'updateThumbnail'])->name('products.updateThumbnail');
+        Route::patch('/{product}', [ProductController::class, 'updateImages'])->name('products.updateImages');
+        Route::delete('/{product}', [ProductController::class, 'destroy'])->name('products.delete');
+        Route::post('/products/temp-upload', [ProductController::class, 'tempUpload'])->name('products.tempUpload');
+    });
+
     // Logs
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
+
+    Route::get('/error/{code}', [ErrorController::class, 'show'])->name('error.page');
 
     // Notifications
     Route::get('/notifications', function (Request $request) {
         return response()->json(['notifications' => $request->user()->unreadNotifications]);
     })->name('notifications.index');
 });
+
+Route::get('/', [ShopController::class, 'index']);
+Route::get('/shop', [ShopController::class, 'shop']);
+Route::get('/news', [ShopController::class, 'news']);
+Route::get('/about', [ShopController::class, 'about']);
+Route::get('/contact', [ShopController::class, 'contact']);
 
 // Email Preview
 Route::get('/preview-email', function () {
@@ -117,4 +140,11 @@ Route::get('/preview-email', function () {
     ]);
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
+
+Route::fallback(function () {
+    return Inertia::render('Errors/ErrorPage', [
+        'status' => 404,
+        'message' => 'Page Not Found',
+    ])->toResponse(request())->setStatusCode(404);
+});

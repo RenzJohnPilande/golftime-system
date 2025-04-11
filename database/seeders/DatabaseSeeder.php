@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Employee;
+use App\Models\Permission;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,14 +15,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Seed permissions
+        $this->call(PermissionSeeder::class);
 
-        User::factory()->create([
+        // Create a user with admin details
+        $user = User::factory()->create([
             'firstname' => 'Renz',
             'lastname' => 'Pilande',
-            'middlename' => 'Ora', 
+            'middlename' => 'Ora',
             'email' => 'admin@golftime.ph',
             'password' => Hash::make('password'),
         ]);
+
+        // Get the 'admin' permission
+        $adminPermission = Permission::where('name', 'admin')->first();
+
+        // Assign the 'admin' permission to the user
+        if ($adminPermission) {
+            DB::table('permission_user')->insert([
+                'user_id' => $user->id,
+                'permission_id' => $adminPermission->id,
+            ]);
+        }
     }
 }

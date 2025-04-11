@@ -27,16 +27,14 @@ class EmployeeController extends Controller
             'employees' => Employee::all(),
             "jobs" => Job::all(),
             'departments' => Department::all(),
-            'permissions'=> Permission::all(),
+            'permissions' => Permission::all(),
         ]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
-    {
-    }
+    public function create() {}
 
     /**
      * Display the specified resource.
@@ -115,9 +113,9 @@ class EmployeeController extends Controller
             if ($employee->user_id) {
                 User::where('id', $employee->user_id)->delete();
             }
-    
+
             $employee->delete();
-    
+
             LogHelper::logAction('an employee has been deleted', "Employee {$employeeName} and their associated user account were deleted by {$username}.");
         });
 
