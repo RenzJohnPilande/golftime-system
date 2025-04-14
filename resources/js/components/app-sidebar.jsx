@@ -28,6 +28,7 @@ import {
     MdListAlt,
     MdLogout,
     MdManageAccounts,
+    MdNewspaper,
     MdOutlineCases,
     MdPeople,
     MdPerson2,
@@ -88,6 +89,11 @@ const cms = [
         title: 'Products',
         url: '/products',
         icon: MdShoppingCart,
+    },
+    {
+        title: 'News',
+        url: '/articles',
+        icon: MdNewspaper,
     },
 ];
 

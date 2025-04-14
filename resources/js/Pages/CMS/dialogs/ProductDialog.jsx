@@ -32,6 +32,7 @@ const ProductDialog = ({
                 .then((response) => {
                     setData({
                         name: response.data.name ?? '',
+                        code: response.data.code ?? '',
                         description: response.data.description ?? '',
                         price: response.data.price ?? '',
                         thumbnail: response.data.thumbnail ?? '',
@@ -126,23 +127,46 @@ const ProductDialog = ({
                                 )}
                             </div>
 
-                            <div className="w-full">
-                                <InputLabel htmlFor="price" value="Price" />
-                                <TextInput
-                                    id="price"
-                                    name="price"
-                                    className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.price}
-                                    onChange={(e) =>
-                                        setData('price', e.target.value)
-                                    }
-                                    required
-                                />
-                                {errors.price && (
-                                    <InputError className="mt-2">
-                                        {errors.price}
-                                    </InputError>
-                                )}
+                            <div className="grid w-full grid-cols-2 gap-4">
+                                <div className="w-full">
+                                    <InputLabel
+                                        htmlFor="code"
+                                        value="Product Code"
+                                    />
+                                    <TextInput
+                                        id="code"
+                                        name="code"
+                                        className="mt-1 block w-full border px-2 py-2 text-sm shadow"
+                                        value={data.code}
+                                        onChange={(e) =>
+                                            setData('code', e.target.value)
+                                        }
+                                        required
+                                    />
+                                    {errors.code && (
+                                        <InputError className="mt-2">
+                                            {errors.code}
+                                        </InputError>
+                                    )}
+                                </div>
+                                <div className="w-full">
+                                    <InputLabel htmlFor="price" value="Price" />
+                                    <TextInput
+                                        id="price"
+                                        name="price"
+                                        className="mt-1 block w-full border px-2 py-2 text-sm shadow"
+                                        value={data.price}
+                                        onChange={(e) =>
+                                            setData('price', e.target.value)
+                                        }
+                                        required
+                                    />
+                                    {errors.price && (
+                                        <InputError className="mt-2">
+                                            {errors.price}
+                                        </InputError>
+                                    )}
+                                </div>
                             </div>
 
                             {!selected && (

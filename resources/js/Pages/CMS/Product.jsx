@@ -4,9 +4,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import ProductCard from './component/ProductCard';
+import ArticleCoverDialog from './dialogs/ArticleCoverDialog';
 import ImagesDialog from './dialogs/ImagesDialog';
 import ProductDialog from './dialogs/ProductDialog';
-import ThumbnailDialog from './dialogs/ThumbnailDialog';
 
 const Product = ({ products }) => {
     const [productDialogOpen, setProductDialogOpen] = useState(false);
@@ -49,6 +49,7 @@ const Product = ({ products }) => {
         delete: destroy,
     } = useForm({
         name: '',
+        code: '',
         description: '',
         thumbnail: '',
         price: '',
@@ -70,9 +71,21 @@ const Product = ({ products }) => {
         images: [],
     });
 
+    const {
+        data: thumbnailData,
+        setData: setThumbnailData,
+        patch: patchThumbnail,
+        errors: thumbnailErrors,
+        processing: thumbnailProcessing,
+        reset: resetThumbnailForm,
+    } = useForm({
+        thumbnail: '',
+    });
+
     const onClose = () => {
         setProductDialogOpen(false);
         setImagesDialogOpen(false);
+        setThumbnailDialogOpen(false);
         setConfirmationDialogOpen(false);
         reset();
         setSelected(null);
@@ -82,6 +95,7 @@ const Product = ({ products }) => {
         setSelected(product.id);
         setData({
             name: product.name,
+            code: product.code,
             description: product.description,
             price: product.price,
             thumbnail: product.thumbnail,
@@ -118,6 +132,8 @@ const Product = ({ products }) => {
 
     const handleUploadThumbnail = (product) => {
         setSelectedProduct(product);
+        setSelected(product.id);
+        setThumbnailData({ thumbnail: product.thumbnail || '' });
         setThumbnailDialogOpen(true);
     };
 
@@ -149,6 +165,16 @@ const Product = ({ products }) => {
                     console.error('Image update failed:', errors);
                 },
             });
+        } else if (formAction === 'update thumbnail') {
+            patchThumbnail(
+                route('products.updateThumbnail', { id: selected }),
+                {
+                    onSuccess: onClose,
+                    onError: (errors) => {
+                        console.error('Thumbnail update failed:', errors);
+                    },
+                },
+            );
         }
     };
 
@@ -169,6 +195,11 @@ const Product = ({ products }) => {
                     <div className="w-full md:w-auto">
                         <PrimaryButton
                             text={'new product'}
+                            style={{
+                                wrapper:
+                                    'flex flex-wrap w-full justify-center text-center transition-all duration-50 bg-zinc-700 hover:bg-zinc-600 text-white shadow-lg',
+                                text: 'capitalize text-sm md:text-xs',
+                            }}
                             onClick={() => {
                                 setDialogConfig({
                                     title: 'Create New Product',
@@ -202,11 +233,19 @@ const Product = ({ products }) => {
                     setSelected={setSelected}
                     setConfirmationDialogOpen={setConfirmationDialogOpen}
                 />
-                <ThumbnailDialog
+                <ArticleCoverDialog
                     open={thumbnailDialogOpen}
                     close={() => setThumbnailDialogOpen(false)}
                     selected={selectedProduct}
-                    // onUpload={}
+                    formData={{
+                        data: thumbnailData,
+                        setData: setThumbnailData,
+                        errors: thumbnailErrors,
+                        processing: thumbnailProcessing,
+                        reset: resetThumbnailForm,
+                    }}
+                    setDialogConfig={setDialogConfig}
+                    setConfirmationDialogOpen={setConfirmationDialogOpen}
                 />
                 <ImagesDialog
                     open={imagesDialogOpen}

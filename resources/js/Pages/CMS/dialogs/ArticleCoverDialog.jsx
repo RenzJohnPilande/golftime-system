@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { useEffect, useState } from 'react';
 import { MdCheckCircleOutline } from 'react-icons/md';
 
-const ThumbnailDialog = ({
+const ArticleCoverDialog = ({
     open,
     close,
     selected,
@@ -19,24 +19,25 @@ const ThumbnailDialog = ({
 }) => {
     const { data, setData, errors, reset } = formData;
     const [loading, setLoading] = useState(false);
-    const [addthumbnail, setAddThumbnail] = useState(null);
+    const [coverImage, setCoverImage] = useState(null);
     const [changesAreMade, setChangesAreMade] = useState(false);
 
     useEffect(() => {
         if (selected && open) {
             setChangesAreMade(false);
             setLoading(true);
+
             axios
-                .get(route('products.show', { id: selected }))
+                .get(route('articles.show', { id: selected }))
                 .then((response) => {
                     setData({
-                        thumbnail: response.data.thumbnail ?? null,
+                        image: response.data.image ?? null,
                     });
-                    setAddThumbnail(response.data.thumbnail ?? null);
+                    setCoverImage(response.data.image ?? null);
                     setLoading(false);
                 })
                 .catch((error) => {
-                    console.error('Error fetching product:', error);
+                    console.error('Error fetching article:', error);
                     setLoading(false);
                 });
         } else if (!selected) {
@@ -46,36 +47,35 @@ const ThumbnailDialog = ({
 
     const submit = (e) => {
         e.preventDefault();
-        console.log('Submitting thumbnail:', data.thumbnail);
         setDialogConfig({
             title: 'Confirm Save',
             message:
-                'Do you want to save this thumbnail? This action will update the product thumbnail and cannot be undone.',
-            formAction: 'update thumbnail',
+                'Do you want to save this cover image? This action will update the article cover image and cannot be undone.',
+            formAction: 'update cover',
         });
         setConfirmationDialogOpen(true);
     };
 
-    const handleAddThumbnail = async (e) => {
+    const handleAddCoverImage = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
         const formData = new FormData();
-        formData.append('thumbnail', file);
+        formData.append('image', file);
 
         try {
             const response = await axios.post(
-                route('products.tempThumbnailUpload'),
+                route('articles.tempCoverUpload'),
                 formData,
                 {
                     headers: { 'Content-Type': 'multipart/form-data' },
                 },
             );
 
-            setAddThumbnail(response.data.path);
+            setCoverImage(response.data.path);
             setData((prev) => ({
                 ...prev,
-                thumbnail: response.data.path,
+                image: response.data.path,
             }));
             setChangesAreMade(true);
         } catch (error) {
@@ -88,27 +88,27 @@ const ThumbnailDialog = ({
             <DialogContent className="max-w-md rounded-lg">
                 <DialogHeader>
                     <DialogTitle className="capitalize">
-                        Manage Product Thumbnail
+                        Manage Article Cover
                     </DialogTitle>
                 </DialogHeader>
                 {loading ? (
                     <div className="py-8 text-center text-sm text-gray-500">
-                        Loading product data...
+                        Loading article data...
                     </div>
                 ) : (
                     <form onSubmit={submit}>
                         <div className="flex flex-col items-center gap-4">
-                            {addthumbnail ? (
+                            {coverImage ? (
                                 <div className="flex flex-col items-center gap-1">
                                     <img
-                                        src={`storage/${data.thumbnail}`}
-                                        alt="Thumbnail"
+                                        src={`storage/${coverImage}`}
+                                        alt="Cover Image"
                                         className="w-full rounded-md border object-cover p-2"
                                     />
                                 </div>
                             ) : (
                                 <div className="text-center text-gray-500">
-                                    No thumbnail selected
+                                    No cover image selected
                                 </div>
                             )}
                             {changesAreMade && (
@@ -128,11 +128,11 @@ const ThumbnailDialog = ({
                 <Separator />
                 <div className="flex w-full flex-wrap gap-2">
                     <FileInput
-                        id="thumbnail"
-                        name="thumbnail"
-                        label="Thumbnail Upload"
-                        onChange={handleAddThumbnail}
-                        error={errors.thumbnail}
+                        id="coverImage"
+                        name="coverImage"
+                        label="Cover Image Upload"
+                        onChange={handleAddCoverImage}
+                        error={errors.image}
                     />
                     <div className="grid w-full grid-cols-2 gap-2">
                         <button
@@ -141,7 +141,7 @@ const ThumbnailDialog = ({
                             title="cancel"
                             onClick={close}
                         >
-                            cancel
+                            Cancel
                         </button>
                         <button
                             type="button"
@@ -159,4 +159,4 @@ const ThumbnailDialog = ({
     );
 };
 
-export default ThumbnailDialog;
+export default ArticleCoverDialog;

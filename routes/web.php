@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,7 @@ use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ErrorController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\LogController;
+use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ShopController;
@@ -108,11 +110,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('products.index');
         Route::post('/', [ProductController::class, 'store'])->name('products.store');
         Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
-        Route::patch('/{product}', [ProductController::class, 'updateDetails'])->name('products.updateDetails');
-        Route::patch('/{product}', [ProductController::class, 'updateThumbnail'])->name('products.updateThumbnail');
-        Route::patch('/{product}', [ProductController::class, 'updateImages'])->name('products.updateImages');
+        Route::patch('/{product}/details', [ProductController::class, 'updateDetails'])->name('products.updateDetails');
+        Route::patch('/{product}/thumbnail', [ProductController::class, 'updateThumbnail'])->name('products.updateThumbnail');
+        Route::patch('/{product}/images', [ProductController::class, 'updateImages'])->name('products.updateImages');
         Route::delete('/{product}', [ProductController::class, 'destroy'])->name('products.delete');
-        Route::post('/products/temp-upload', [ProductController::class, 'tempUpload'])->name('products.tempUpload');
+        Route::post('/temp-upload', [ProductController::class, 'tempUpload'])->name('products.tempUpload');
+        Route::post('/temp-thumbnail-upload', [ProductController::class, 'tempThumbnailUpload'])->name('products.tempThumbnailUpload');
+    });
+
+    Route::prefix('articles')->group(function () {
+        Route::get('/', [ArticleController::class, 'index'])->name('articles.index');
+        Route::post('/', [ArticleController::class, 'store'])->name('articles.store');
+        Route::get('/{id}', [ArticleController::class, 'show'])->name('articles.show');
+        Route::patch('/{article}', [ArticleController::class, 'update'])->name('articles.update');
+        Route::post('/temp-cover-upload', [ArticleController::class, 'tempCoverUpload'])->name('articles.tempCoverUpload');
+        Route::patch('/{article}/Cover', [ArticleController::class, 'updateCover'])->name('articles.updateCover');
+        Route::delete('/{article}', [ArticleController::class, 'destroy'])->name('articles.delete');
     });
 
     // Logs
