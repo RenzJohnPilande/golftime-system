@@ -6,10 +6,11 @@ import {
     DialogTitle,
 } from '@/components/ui/dialog';
 import { Separator } from '@/components/ui/separator';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { MdCheckCircleOutline } from 'react-icons/md';
 
-const ArticleCoverDialog = ({
+const PromotionCoverDialog = ({
     open,
     close,
     selected,
@@ -27,7 +28,7 @@ const ArticleCoverDialog = ({
             setChangesAreMade(false);
             setLoading(true);
             axios
-                .get(route('articles.show', { id: selected }))
+                .get(route('promotioncms.show', { id: selected.id }))
                 .then((response) => {
                     setData({
                         image: response.data.image ?? null,
@@ -36,7 +37,7 @@ const ArticleCoverDialog = ({
                     setLoading(false);
                 })
                 .catch((error) => {
-                    console.error('Error fetching article:', error);
+                    console.error('Error fetching promotion:', error);
                     setLoading(false);
                 });
         } else if (!selected) {
@@ -49,7 +50,7 @@ const ArticleCoverDialog = ({
         setDialogConfig({
             title: 'Confirm Save',
             message:
-                'Do you want to save this cover image? This action will update the article cover image and cannot be undone.',
+                'Do you want to save this cover image? This action will update the promotion cover image and cannot be undone.',
             formAction: 'update cover',
         });
         setConfirmationDialogOpen(true);
@@ -64,7 +65,7 @@ const ArticleCoverDialog = ({
 
         try {
             const response = await axios.post(
-                route('articles.tempCoverUpload'),
+                route('promotioncms.tempCoverUpload'),
                 formData,
                 {
                     headers: { 'Content-Type': 'multipart/form-data' },
@@ -87,12 +88,12 @@ const ArticleCoverDialog = ({
             <DialogContent className="max-w-md rounded-lg">
                 <DialogHeader>
                     <DialogTitle className="capitalize">
-                        Manage Article Cover
+                        Manage Promotion Cover
                     </DialogTitle>
                 </DialogHeader>
                 {loading ? (
                     <div className="py-8 text-center text-sm text-gray-500">
-                        Loading article data...
+                        Loading promotion data...
                     </div>
                 ) : (
                     <form onSubmit={submit}>
@@ -100,7 +101,7 @@ const ArticleCoverDialog = ({
                             {coverImage ? (
                                 <div className="flex flex-col items-center gap-1">
                                     <img
-                                        src={`storage/${coverImage}`}
+                                        src={`/storage/${coverImage}`}
                                         alt="Cover Image"
                                         className="w-full rounded-md border object-cover p-2"
                                     />
@@ -158,4 +159,4 @@ const ArticleCoverDialog = ({
     );
 };
 
-export default ArticleCoverDialog;
+export default PromotionCoverDialog;

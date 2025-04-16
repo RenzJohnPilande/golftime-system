@@ -11,8 +11,9 @@ import {
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import emailjs from '@emailjs/browser';
+import { Head } from '@inertiajs/react';
+import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 import { useRef } from 'react';
-import { CiLocationOn, CiMail, CiPhone } from 'react-icons/ci';
 
 const Contact = () => {
     const { toast } = useToast();
@@ -47,6 +48,7 @@ const Contact = () => {
     };
     return (
         <ShopLayout>
+            <Head title="GolfTime Corp - Contact Us" />
             <div className="flex w-full flex-wrap justify-center">
                 <div className="container flex flex-wrap gap-5 px-5 py-10">
                     <Breadcrumb>
@@ -60,21 +62,23 @@ const Contact = () => {
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
-                    <div className="flex w-full flex-wrap gap-10 py-5">
+                    <div className="flex w-full flex-wrap justify-center gap-10 py-5">
                         <div className="container grid w-full grid-cols-1 flex-wrap justify-center gap-20 md:grid-cols-2">
-                            <div className="flex w-full flex-wrap">
-                                <h1 className="my-1 text-3xl font-semibold">
-                                    Contact us
-                                </h1>
-                                <p className="my-1 text-zinc-800">
-                                    Count on us for attentive support every step
-                                    of the way, from inquiries to post-purchase
-                                    assistance.
-                                </p>
+                            <div className="flex w-full flex-wrap content-start">
+                                <div className="flex w-full flex-wrap content-start gap-1">
+                                    <h1 className="my-1 text-3xl font-semibold">
+                                        Contact Us
+                                    </h1>
+                                    <p className="my-1 text-zinc-800">
+                                        Count on us for attentive support every
+                                        step of the way, from inquiries to
+                                        post-purchase assistance.
+                                    </p>
+                                </div>
                                 <div className="flex w-full flex-col">
                                     <div className="my-5 flex items-center">
                                         <div className="me-4 flex">
-                                            <CiLocationOn className="w-auto text-3xl text-slate-800" />
+                                            <MapPin className="w-auto text-3xl text-slate-800" />
                                         </div>
                                         <p className="w-auto text-sm">
                                             Lot 1b Blk 3-E Marigold St. Jasmine
@@ -84,7 +88,7 @@ const Contact = () => {
                                     </div>
                                     <div className="my-5 flex items-center">
                                         <div className="me-4 flex">
-                                            <CiMail className="w-auto text-3xl text-slate-800" />
+                                            <Mail className="w-auto text-3xl text-slate-800" />
                                         </div>
                                         <p className="w-auto text-sm">
                                             Service@Golftime.Ph
@@ -92,15 +96,26 @@ const Contact = () => {
                                     </div>
                                     <div className="my-5 flex items-center">
                                         <div className="me-4 flex">
-                                            <CiPhone className="w-auto text-3xl text-slate-800" />
+                                            <Phone className="w-auto text-3xl text-slate-800" />
                                         </div>
                                         <p className="w-auto text-sm">
                                             02-83506666
                                         </p>
                                     </div>
+                                    <div className="my-5 flex items-center">
+                                        <div className="me-4 flex">
+                                            <Clock className="w-auto text-3xl text-slate-800" />
+                                        </div>
+                                        <p className="w-auto text-sm">
+                                            Monday - Friday: 9:00 AM - 6:00 PM
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                             <div className="flex w-full flex-wrap">
+                                <h3 className="mb-4 text-xl font-bold">
+                                    Connect With Us
+                                </h3>
                                 <form
                                     ref={form}
                                     onSubmit={sendEmail}
@@ -129,7 +144,7 @@ const Contact = () => {
                                     <input
                                         type="submit"
                                         value="Send"
-                                        className="my-2 w-full cursor-pointer bg-green-950 py-3 text-white"
+                                        className="my-2 w-full cursor-pointer bg-zinc-800 py-3 text-white"
                                     />
                                 </form>
                             </div>

@@ -89,33 +89,12 @@ const Navigation = () => {
                             </Link>
                         </div>
                         <div className="w-[100px] text-center">
-                            <DropdownMenu className="">
-                                <DropdownMenuTrigger asChild>
-                                    <Button
-                                        variant="link"
-                                        className="text-base font-medium text-black transition-colors hover:text-green-700"
-                                    >
-                                        About
-                                    </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/about">
-                                            Company Profile
-                                        </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/about/mission">
-                                            Our Mission
-                                        </Link>
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem asChild>
-                                        <Link href="/about/vision">
-                                            Our Vision
-                                        </Link>
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
+                            <Link
+                                href="/about"
+                                className="text-base font-medium text-black underline-offset-4 transition-colors hover:text-green-700 hover:underline"
+                            >
+                                About Us
+                            </Link>
                         </div>
                         <div className="w-[100px] text-center">
                             <DropdownMenu className="">

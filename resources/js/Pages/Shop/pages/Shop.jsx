@@ -7,15 +7,15 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
-import { Link } from '@inertiajs/react';
-import { ChevronRightCircle } from 'lucide-react';
+import { Head, Link } from '@inertiajs/react';
+import FeaturedArticle from '../components/FeaturedArticle';
+import ProductCard from '../components/ProductCard';
 
-const news = [{}, {}, {}, {}];
-const products = [{}, {}, {}, {}, {}, {}, {}, {}];
-
-const Shop = () => {
+const Shop = ({ products, articles }) => {
+    console.log(products, articles);
     return (
         <ShopLayout>
+            <Head title="GolfTime Corp - Shop" />
             <div className="flex w-full flex-wrap justify-center">
                 <div className="container flex flex-wrap gap-5 px-5 py-10">
                     <Breadcrumb>
@@ -70,35 +70,7 @@ const Shop = () => {
                                 </Link>
                             </div>
                             <div className="my-4 flex w-full flex-col flex-wrap">
-                                <div className="flex justify-between">
-                                    <span className="text-sm font-semibold">
-                                        Recent Events
-                                    </span>
-                                    <Link href="/news" className="text-xs">
-                                        <ChevronRightCircle className="h-4 w-4" />
-                                    </Link>
-                                </div>
-                                {news.map((article, index) => (
-                                    <Link
-                                        href={`/news/${article.id}`}
-                                        key={index}
-                                        className="items center my-2 flex w-full content-center justify-center border-b py-2 pe-2"
-                                    >
-                                        <img
-                                            src={`/images/news/4th PSI Golf Cup.jpg`}
-                                            alt="Event Image"
-                                            className="w-24"
-                                        />
-                                        <div className="text-justified ms-2 flex w-full flex-col flex-wrap justify-center text-pretty text-xs">
-                                            <span className="font-semibold">
-                                                {article.name}
-                                            </span>
-                                            <span className="text-zinc-600">
-                                                {article.date}
-                                            </span>
-                                        </div>
-                                    </Link>
-                                ))}
+                                <FeaturedArticle articles={articles} />
                             </div>
                         </div>
                         <div className="flex w-full flex-col px-4 md:w-3/4">
@@ -112,20 +84,9 @@ const Shop = () => {
                                     {products.length + ' '}Products
                                 </span>
                             </div>
-                            <div className="flex grid w-full grid-cols-1 flex-wrap gap-4 md:grid-cols-3">
-                                {products.map((product, index) => (
-                                    <Link href="/" key={`${index}`}>
-                                        <div className="flex w-full flex-col flex-wrap content-center justify-center rounded border hover:shadow-lg">
-                                            <img
-                                                src={`/images/products/FK3-White.png`}
-                                                alt="Product Picture"
-                                                className="my-5 w-3/4"
-                                            />
-                                            <span className="my-3 text-start">
-                                                FK3
-                                            </span>
-                                        </div>
-                                    </Link>
+                            <div className="flex grid w-full grid-cols-1 flex-wrap gap-4 md:grid-cols-3 lg:grid-cols-4">
+                                {products.map((product) => (
+                                    <ProductCard product={product} />
                                 ))}
                             </div>
                         </div>

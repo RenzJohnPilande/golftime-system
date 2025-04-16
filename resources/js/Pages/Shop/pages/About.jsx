@@ -7,10 +7,20 @@ import {
     BreadcrumbPage,
     BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { Head, Link } from '@inertiajs/react';
+import {
+    Building2,
+    ClubIcon as GolfIcon,
+    Lightbulb,
+    Target,
+} from 'lucide-react';
 
 const About = () => {
     return (
         <ShopLayout>
+            <Head title="GolfTime Corp - About Us" />
             <div className="flex w-full flex-wrap justify-center">
                 <div className="container flex flex-wrap gap-5 px-5 py-10">
                     <Breadcrumb>
@@ -25,64 +35,99 @@ const About = () => {
                         </BreadcrumbList>
                     </Breadcrumb>
                     <div className="flex w-full flex-wrap gap-10">
-                        <div className="container w-full border p-4 shadow">
-                            <div className="flex flex-col">
-                                <h1 className="text-lg font-semibold capitalize leading-8">
-                                    company profile
-                                </h1>
-                                <p className="my-2 text-pretty text-justify text-sm leading-8">
-                                    Golf Time Corp. was established in the year
-                                    2015 as the Official Distributor of K&G Golf
-                                    Fashion in the Philippines. As one of the
-                                    Top 3 leading high-class fashion sports
-                                    apparel and accessories for golf, we have
-                                    been participating in the big tournaments of
-                                    the different major golf courses in the
-                                    Philippines, for around 300+ events yearly.
-                                    As we strive to be trusted golf wear, Golf
-                                    Time Corp aims to distribute and deliver our
-                                    products nationwide and become the No. 1
-                                    golf wear distributor in the coming years.
+                        <div className="container mx-auto px-4 py-12">
+                            <div className="mb-12 flex flex-col items-center text-center">
+                                <div className="mb-4 flex items-center">
+                                    <GolfIcon className="mr-2 h-8 w-8" />
+                                    <h1 className="text-4xl font-bold">
+                                        About Golf Time Corp.
+                                    </h1>
+                                </div>
+                                <p className="text-muted-foreground max-w-3xl text-xl">
+                                    Official Distributor of K&G Golf Fashion in
+                                    the Philippines since 2015
                                 </p>
                             </div>
-                        </div>
-                        <div className="container w-full border p-4 shadow">
-                            <div className="flex flex-col">
-                                <h1 className="text-lg font-semibold capitalize leading-8">
-                                    Our Mission
-                                </h1>
-                                <p className="my-2 text-pretty text-justify text-sm leading-8">
-                                    At Golf Time Corp., our mission is to
-                                    elevate the golfing experience by providing
-                                    high-quality, innovative, and stylish
-                                    apparel that not only enhances performance
-                                    on the course but also reflects the unique
-                                    lifestyle and passion of golf enthusiasts.
-                                    We strive to be a trusted companion to
-                                    golfers worldwide, delivering products that
-                                    blend functionality with fashion, enabling
-                                    every player to express their individuality
-                                    while enjoying the game they love.
-                                </p>
+
+                            <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-3">
+                                <Card className="transition-shadow hover:shadow-lg">
+                                    <CardContent className="flex flex-col items-center p-6 text-center">
+                                        <div className="bg-primary/10 mb-6 flex h-24 w-24 items-center justify-center rounded-full">
+                                            <Building2 className="text-primary h-12 w-12" />
+                                        </div>
+                                        <h2 className="mb-2 text-2xl font-bold">
+                                            Company Profile
+                                        </h2>
+                                        <p className="text-muted-foreground mb-4">
+                                            Learn about our history and
+                                            achievements as one of the Top 3
+                                            leading high-class fashion sports
+                                            apparel for golf.
+                                        </p>
+                                        <Button asChild className="mt-auto">
+                                            <Link href="/about/company-profile">
+                                                Read More
+                                            </Link>
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+
+                                <Card className="transition-shadow hover:shadow-lg">
+                                    <CardContent className="flex flex-col items-center p-6 text-center">
+                                        <div className="bg-primary/10 mb-6 flex h-24 w-24 items-center justify-center rounded-full">
+                                            <Target className="text-primary h-12 w-12" />
+                                        </div>
+                                        <h2 className="mb-2 text-2xl font-bold">
+                                            Our Mission
+                                        </h2>
+                                        <p className="text-muted-foreground mb-4">
+                                            Discover how we aim to elevate the
+                                            golfing experience through quality,
+                                            innovation, and style.
+                                        </p>
+                                        <Button asChild className="mt-auto">
+                                            <Link href="/about/mission">
+                                                Read More
+                                            </Link>
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+
+                                <Card className="transition-shadow hover:shadow-lg">
+                                    <CardContent className="flex flex-col items-center p-6 text-center">
+                                        <div className="bg-primary/10 mb-6 flex h-24 w-24 items-center justify-center rounded-full">
+                                            <Lightbulb className="text-primary h-12 w-12" />
+                                        </div>
+                                        <h2 className="mb-2 text-2xl font-bold">
+                                            Our Vision
+                                        </h2>
+                                        <p className="text-muted-foreground mb-4">
+                                            Explore our aspirations to shape the
+                                            future of golf apparel with
+                                            innovation and sustainability.
+                                        </p>
+                                        <Button asChild className="mt-auto">
+                                            <Link href="/about/vision">
+                                                Read More
+                                            </Link>
+                                        </Button>
+                                    </CardContent>
+                                </Card>
                             </div>
-                        </div>
-                        <div className="container w-full border p-4 shadow">
-                            <div className="flex flex-col">
-                                <h1 className="text-lg font-semibold capitalize leading-8">
-                                    Our Vision
-                                </h1>
-                                <p className="my-2 text-pretty text-justify text-sm leading-8">
-                                    At Golf Time Corp., our vision is to inspire
-                                    confidence and pride in golfers of all
-                                    levels, fostering a community where our
-                                    brand is celebrated for its commitment to
-                                    quality, sustainability, and continuous
-                                    innovation. By staying at the forefront of
-                                    design and technology, we aim to create a
-                                    lasting impact on the golfing world, shaping
-                                    the future of the sport with our iconic and
-                                    purposeful apparel.
+
+                            <div className="rounded-lg bg-zinc-100 p-8 text-center">
+                                <h2 className="mb-4 text-2xl font-bold">
+                                    Join Us On The Green
+                                </h2>
+                                <p className="text-muted-foreground mx-auto mb-6 max-w-2xl">
+                                    Experience the finest golf apparel and
+                                    accessories from K&G Golf Fashion,
+                                    distributed by Golf Time Corp. across the
+                                    Philippines.
                                 </p>
+                                <Button asChild>
+                                    <Link href="/contact">Contact Us</Link>
+                                </Button>
                             </div>
                         </div>
                     </div>

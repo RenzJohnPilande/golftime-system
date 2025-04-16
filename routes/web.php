@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutUsSectionController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -9,15 +10,19 @@ use App\Http\Controllers\EventsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\ContactInfoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ErrorController;
+use App\Http\Controllers\HeroBannerController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\LogController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PromotionController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ShopController;
+use App\Http\Controllers\TopbarAlertController;
 use App\Http\Controllers\UserController;
 
 // Public Routes
@@ -128,6 +133,41 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/{article}', [ArticleController::class, 'destroy'])->name('articles.delete');
     });
 
+    Route::prefix('cms')->group(function () {
+        // Promotion CMS routes
+        Route::prefix('promotioncms')->group(function () {
+            Route::get('/', [PromotionController::class, 'index'])->name('promotioncms.index');
+            Route::post('/store', [PromotionController::class, 'store'])->name('promotioncms.store');
+            Route::get('/{id}', [PromotionController::class, 'show'])->name('promotioncms.show');
+            Route::patch('/{id}', [PromotionController::class, 'update'])->name('promotioncms.update');
+            Route::post('/temp-cover-upload', [PromotionController::class, 'tempCoverUpload'])->name('promotioncms.tempCoverUpload');
+            Route::patch('/{promotion}/update-cover', [PromotionController::class, 'updateCover'])->name('promotioncms.updateCover');
+            Route::delete('/{id}', [PromotionController::class, 'destroy'])->name('promotioncms.delete');
+        });
+
+        // About CMS
+        Route::prefix('aboutcms')->group(function () {
+            Route::get('/', [AboutUsSectionController::class, 'index'])->name('aboutcms.index');
+            Route::get('/{id}', [AboutUsSectionController::class, 'show'])->name('aboutcms.show');
+            Route::patch('/{id}', [AboutUsSectionController::class, 'update'])->name('aboutcms.update');
+        });
+
+        // Contact CMS
+        Route::prefix('contactcms')->group(function () {
+            Route::get('/', [ContactInfoController::class, 'index'])->name('contactcms.index');
+        });
+
+        // Banner CMS
+        Route::prefix('bannercms')->group(function () {
+            Route::get('/', [HeroBannerController::class, 'index'])->name('bannercms.index');
+        });
+
+        // Alert CMS
+        Route::prefix('alertcms')->group(function () {
+            Route::get('/', [TopbarAlertController::class, 'index'])->name('alertcms.index');
+        });
+    });
+
     // Logs
     Route::get('/logs', [LogController::class, 'index'])->name('logs.index');
 
@@ -143,6 +183,9 @@ Route::get('/', [ShopController::class, 'index']);
 Route::get('/shop', [ShopController::class, 'shop']);
 Route::get('/news', [ShopController::class, 'news']);
 Route::get('/about', [ShopController::class, 'about']);
+Route::get('/about/company-profile', [ShopController::class, 'companyProfile']);
+Route::get('/about/mission', [ShopController::class, 'mission']);
+Route::get('/about/vision', [ShopController::class, 'vision']);
 Route::get('/contact', [ShopController::class, 'contact']);
 
 // Email Preview

@@ -7,7 +7,7 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from '@/components/ui/carousel';
-import { Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import Autoplay from 'embla-carousel-autoplay';
 import Fade from 'embla-carousel-fade';
 
@@ -127,6 +127,7 @@ const Index = () => {
 
     return (
         <ShopLayout>
+            <Head title="GolfTime Corp" />
             <div className="flex w-full flex-wrap justify-center">
                 <Carousel
                     opts={{

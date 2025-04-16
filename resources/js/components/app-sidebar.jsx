@@ -18,21 +18,28 @@ import {
 import { Link, router } from '@inertiajs/react';
 
 import { Separator } from '@/components/ui/separator';
+import {
+    Bell,
+    Briefcase,
+    BriefcaseBusiness,
+    Calendar,
+    ImageIcon,
+    Info,
+    LayoutDashboard,
+    List,
+    ListCheck,
+    Mail,
+    Newspaper,
+    ShoppingBag,
+    Tag,
+    User2,
+} from 'lucide-react';
 import { useState } from 'react';
 import {
-    MdBusiness,
-    MdChecklist,
-    MdDashboard,
-    MdEvent,
     MdKeyboardArrowUp,
-    MdListAlt,
     MdLogout,
     MdManageAccounts,
-    MdNewspaper,
-    MdOutlineCases,
-    MdPeople,
     MdPerson2,
-    MdShoppingCart,
 } from 'react-icons/md';
 import ConfirmationDialog from './dialogs/ConfirmationDialog';
 import { SidebarFooter, SidebarHeader } from './ui/sidebar';
@@ -41,18 +48,18 @@ const items = [
     {
         title: 'Dashboard',
         url: '/dashboard',
-        icon: MdDashboard,
+        icon: LayoutDashboard,
     },
     {
         title: 'My Events',
         url: '/events',
-        icon: MdEvent,
+        icon: Calendar,
         requiredPermission: 'event_management',
     },
     {
         title: 'My Tasks',
         url: '/tasks',
-        icon: MdChecklist,
+        icon: List,
         requiredPermission: 'task_management',
     },
 ];
@@ -61,25 +68,25 @@ const management = [
     {
         title: 'Employees',
         url: '/employees',
-        icon: MdPeople,
+        icon: User2,
         requiredPermission: 'employee_management',
     },
     {
         title: 'Jobs',
         url: '/jobs',
-        icon: MdOutlineCases,
+        icon: Briefcase,
         requiredPermission: 'job_management',
     },
     {
         title: 'Departments',
         url: '/departments',
-        icon: MdBusiness,
+        icon: BriefcaseBusiness,
         requiredPermission: 'department_management',
     },
     {
         title: 'Logs',
         url: '/logs',
-        icon: MdListAlt,
+        icon: ListCheck,
         requiredPermission: 'admin',
     },
 ];
@@ -88,12 +95,37 @@ const cms = [
     {
         title: 'Products',
         url: '/products',
-        icon: MdShoppingCart,
+        icon: ShoppingBag,
     },
     {
         title: 'News',
         url: '/articles',
-        icon: MdNewspaper,
+        icon: Newspaper,
+    },
+    {
+        title: 'Promotions',
+        url: '/cms/promotioncms',
+        icon: Tag,
+    },
+    {
+        title: 'About Us Info',
+        url: '/cms/aboutcms',
+        icon: Info,
+    },
+    {
+        title: 'Contact Info',
+        url: '/cms/contactcms',
+        icon: Mail,
+    },
+    {
+        title: 'Banners',
+        url: '/cms/bannercms',
+        icon: ImageIcon,
+    },
+    {
+        title: 'Alerts',
+        url: '/cms/alertcms',
+        icon: Bell,
     },
 ];
 
