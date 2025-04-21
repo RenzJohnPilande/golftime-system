@@ -10,5 +10,6 @@ class ContactInfo extends Model
         'email',
         'phone',
         'address',
+        'business_hours',
     ];
 }

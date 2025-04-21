@@ -28,14 +28,14 @@ const ConfirmationDialog = ({ open, onClose, onConfirm, config }) => {
                             Cancel
                         </button>
                         <PrimaryButton
-                            text={formAction}
+                            text={'confirm'}
                             onClick={() => {
                                 onConfirm();
                                 onClose();
                             }}
                             style={{
                                 wrapper:
-                                    'capitalize px-4 py-2 text-sm font-medium text-white bg-red-500 rounded hover:bg-red-600',
+                                    'capitalize px-4 py-2 text-sm font-medium text-white bg-zinc-900 rounded hover:bg-zinc-600',
                             }}
                         />
                     </div>

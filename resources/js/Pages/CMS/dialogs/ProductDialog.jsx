@@ -215,7 +215,7 @@ const ProductDialog = ({
                                 <MultipleInput
                                     id="categories"
                                     name="categories"
-                                    className="mt-1 block w-full"
+                                    className="mt-1 block w-full capitalize"
                                     icon={<RxCrossCircled />}
                                     value={data.categories}
                                     onChange={(newCategories) =>
@@ -238,7 +238,7 @@ const ProductDialog = ({
                                 <MultipleInput
                                     id="materials"
                                     name="materials"
-                                    className="mt-1 block w-full"
+                                    className="mt-1 block w-full capitalize"
                                     icon={<RxCrossCircled />}
                                     value={data.materials}
                                     onChange={(newMaterials) =>
@@ -258,7 +258,7 @@ const ProductDialog = ({
                                 <MultipleInput
                                     id="sizes"
                                     name="sizes"
-                                    className="mt-1 block w-full"
+                                    className="mt-1 block w-full uppercase"
                                     icon={<RxCrossCircled />}
                                     value={data.sizes}
                                     onChange={(newSizes) =>
@@ -278,7 +278,7 @@ const ProductDialog = ({
                                 <MultipleInput
                                     id="colors"
                                     name="colors"
-                                    className="mt-1 block w-full"
+                                    className="mt-1 block w-full capitalize"
                                     icon={<RxCrossCircled />}
                                     value={data.colors}
                                     onChange={(newColors) =>

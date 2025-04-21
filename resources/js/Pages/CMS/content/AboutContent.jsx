@@ -1,10 +1,16 @@
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
-import ProfileCard from './component/ProfileCard';
-import AboutDialog from './dialogs/AboutDialog';
-const AboutCMS = ({ sections }) => {
+import ProfileCard from '../component/ProfileCard';
+import AboutDialog from '../dialogs/AboutDialog';
+const AboutContent = ({ aboutInfos }) => {
     const [aboutDialogOpen, setAboutDialogOpen] = useState(false);
     const [selected, setSelected] = useState(null);
     const [isConfirmationDialogOpen, setConfirmationDialogOpen] =
@@ -62,25 +68,18 @@ const AboutCMS = ({ sections }) => {
             });
         }
     };
-    console.log(sections);
+
     return (
-        <AuthenticatedLayout>
-            <Head title="Content Management" />
-            <div className="flex min-h-screen w-full flex-col flex-wrap bg-zinc-50 p-5">
-                <div className="flex h-fit w-full flex-wrap items-end justify-between gap-2">
-                    <div className="w-full md:w-auto">
-                        <h1 className="text-3xl font-bold md:text-2xl">
-                            Content Management
-                        </h1>
-                        <h2 className="text-base md:text-sm">
-                            Update your company's profile, mission, and vision
-                            to ensure visitors understand who you are and what
-                            you stand for.
-                        </h2>
-                    </div>
-                </div>
-                <div className="flex w-full flex-wrap gap-4 py-4">
-                    {sections.map((item, index) => (
+        <Card className="rounded-none border">
+            <CardHeader>
+                <CardTitle>About Page Management</CardTitle>
+                <CardDescription>
+                    Update and manage your About Us page content with ease.
+                </CardDescription>
+            </CardHeader>
+            <CardContent>
+                <div className="flex w-full flex-wrap gap-4">
+                    {aboutInfos.map((item, index) => (
                         <ProfileCard
                             content={item}
                             onEdit={handleEdit}
@@ -104,9 +103,9 @@ const AboutCMS = ({ sections }) => {
                     onConfirm={handleConfirm}
                     config={dialogConfig}
                 />
-            </div>
-        </AuthenticatedLayout>
+            </CardContent>
+        </Card>
     );
 };
 
-export default AboutCMS;
+export default AboutContent;

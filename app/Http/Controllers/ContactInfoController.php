@@ -16,12 +16,18 @@ class ContactInfoController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        return ContactInfo::findOrFail($id);
+    }
+
     public function update(Request $request)
     {
         $validated = $request->validate([
             'email' => 'required|email',
             'phone' => 'required|string',
             'address' => 'required|string',
+            'business_hours' => 'required|string',
         ]);
 
         ContactInfo::updateOrCreate(['id' => 1], $validated);

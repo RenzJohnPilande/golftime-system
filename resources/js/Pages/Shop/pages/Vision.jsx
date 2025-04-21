@@ -11,9 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
 import { Award, Lightbulb, Recycle } from 'lucide-react';
 
-const Vision = ({ content }) => {
+const Vision = ({ content, alerts }) => {
     return (
-        <ShopLayout>
+        <ShopLayout alerts={alerts}>
             <Head title="GolfTime Corp - Our Vision" />
             <div className="flex w-full flex-wrap justify-center">
                 <div className="container flex flex-wrap gap-5 px-5 py-10">

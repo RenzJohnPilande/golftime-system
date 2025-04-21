@@ -18,6 +18,9 @@ class DatabaseSeeder extends Seeder
         // Seed permissions
         $this->call(PermissionSeeder::class);
 
+        // Seed contact info
+        $this->call(ContactInfoSeeder::class);
+
         // Create a user with admin details
         $user = User::factory()->create([
             'firstname' => 'Renz',

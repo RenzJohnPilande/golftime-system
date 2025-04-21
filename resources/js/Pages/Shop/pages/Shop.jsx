@@ -11,10 +11,9 @@ import { Head, Link } from '@inertiajs/react';
 import FeaturedArticle from '../components/FeaturedArticle';
 import ProductCard from '../components/ProductCard';
 
-const Shop = ({ products, articles }) => {
-    console.log(products, articles);
+const Shop = ({ products, articles, alerts }) => {
     return (
-        <ShopLayout>
+        <ShopLayout alerts={alerts}>
             <Head title="GolfTime Corp - Shop" />
             <div className="flex w-full flex-wrap justify-center">
                 <div className="container flex flex-wrap gap-5 px-5 py-10">

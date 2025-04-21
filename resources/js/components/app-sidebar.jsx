@@ -19,19 +19,15 @@ import { Link, router } from '@inertiajs/react';
 
 import { Separator } from '@/components/ui/separator';
 import {
-    Bell,
     Briefcase,
     BriefcaseBusiness,
     Calendar,
-    ImageIcon,
-    Info,
     LayoutDashboard,
+    LayoutTemplate,
     List,
     ListCheck,
-    Mail,
     Newspaper,
     ShoppingBag,
-    Tag,
     User2,
 } from 'lucide-react';
 import { useState } from 'react';
@@ -103,29 +99,9 @@ const cms = [
         icon: Newspaper,
     },
     {
-        title: 'Promotions',
-        url: '/cms/promotioncms',
-        icon: Tag,
-    },
-    {
-        title: 'About Us Info',
-        url: '/cms/aboutcms',
-        icon: Info,
-    },
-    {
-        title: 'Contact Info',
-        url: '/cms/contactcms',
-        icon: Mail,
-    },
-    {
-        title: 'Banners',
-        url: '/cms/bannercms',
-        icon: ImageIcon,
-    },
-    {
-        title: 'Alerts',
-        url: '/cms/alertcms',
-        icon: Bell,
+        title: 'Content',
+        url: '/cms/management',
+        icon: LayoutTemplate,
     },
 ];
 

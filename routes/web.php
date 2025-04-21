@@ -10,6 +10,7 @@ use App\Http\Controllers\EventsController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\CMS\ContentManagementController;
 use App\Http\Controllers\ContactInfoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
@@ -134,6 +135,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('cms')->group(function () {
+        Route::prefix('management')->group(function () {
+            Route::get('/', [ContentManagementController::class, 'index'])->name('cms.index');
+        });
+
         // Promotion CMS routes
         Route::prefix('promotioncms')->group(function () {
             Route::get('/', [PromotionController::class, 'index'])->name('promotioncms.index');
@@ -142,7 +147,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('/{id}', [PromotionController::class, 'update'])->name('promotioncms.update');
             Route::post('/temp-cover-upload', [PromotionController::class, 'tempCoverUpload'])->name('promotioncms.tempCoverUpload');
             Route::patch('/{promotion}/update-cover', [PromotionController::class, 'updateCover'])->name('promotioncms.updateCover');
-            Route::delete('/{id}', [PromotionController::class, 'destroy'])->name('promotioncms.delete');
         });
 
         // About CMS
@@ -155,16 +159,28 @@ Route::middleware(['auth', 'verified'])->group(function () {
         // Contact CMS
         Route::prefix('contactcms')->group(function () {
             Route::get('/', [ContactInfoController::class, 'index'])->name('contactcms.index');
+            Route::get('/{id}', [ContactInfoController::class, 'show'])->name('contactcms.show');
+            Route::patch('/{id}', [ContactInfoController::class, 'update'])->name('contactcms.update');
         });
 
         // Banner CMS
         Route::prefix('bannercms')->group(function () {
             Route::get('/', [HeroBannerController::class, 'index'])->name('bannercms.index');
+            Route::post('/store', [HeroBannerController::class, 'store'])->name('bannercms.store');
+            Route::get('/{id}', [HeroBannerController::class, 'show'])->name('bannercms.show');
+            Route::patch('/{id}', [HeroBannerController::class, 'update'])->name('bannercms.update');
+            Route::post('/temp-upload', [HeroBannerController::class, 'tempUpload'])->name('bannercms.tempUpload');
+            Route::patch('/{banner}/update-images', [HeroBannerController::class, 'updateImages'])->name('bannercms.updateImages');
+            Route::delete('/{id}', [HeroBannerController::class, 'destroy'])->name('bannercms.delete');
         });
 
         // Alert CMS
         Route::prefix('alertcms')->group(function () {
             Route::get('/', [TopbarAlertController::class, 'index'])->name('alertcms.index');
+            Route::post('/store', [TopbarAlertController::class, 'store'])->name('alertcms.store');
+            Route::get('/{id}', [TopbarAlertController::class, 'show'])->name('alertcms.show');
+            Route::patch('/{id}', [TopbarAlertController::class, 'update'])->name('alertcms.update');
+            Route::delete('/{id}', [TopbarAlertController::class, 'destroy'])->name('alertcms.delete');
         });
     });
 

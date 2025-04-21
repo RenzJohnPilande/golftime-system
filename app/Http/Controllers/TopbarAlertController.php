@@ -15,6 +15,11 @@ class TopbarAlertController extends Controller
         ]);
     }
 
+    public function show($id)
+    {
+        return TopbarAlert::findOrFail($id);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -39,10 +44,10 @@ class TopbarAlertController extends Controller
         return redirect()->back()->with('success', 'Alert updated.');
     }
 
-    public function destroy(TopbarAlert $topbarAlert)
+    public function destroy($id)
     {
-        $topbarAlert->delete();
-
-        return redirect()->back()->with('success', 'Alert deleted.');
+        $alert = TopbarAlert::findOrFail($id);
+        $alert->delete();
+        return redirect()->back()->with('success', 'Alert deleted successfully.');
     }
 }

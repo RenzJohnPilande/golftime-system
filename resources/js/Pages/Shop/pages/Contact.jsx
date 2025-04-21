@@ -15,7 +15,7 @@ import { Head } from '@inertiajs/react';
 import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 import { useRef } from 'react';
 
-const Contact = () => {
+const Contact = ({ alerts }) => {
     const { toast } = useToast();
 
     const form = useRef();
@@ -47,7 +47,7 @@ const Contact = () => {
             );
     };
     return (
-        <ShopLayout>
+        <ShopLayout alerts={alerts}>
             <Head title="GolfTime Corp - Contact Us" />
             <div className="flex w-full flex-wrap justify-center">
                 <div className="container flex flex-wrap gap-5 px-5 py-10">

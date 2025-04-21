@@ -1,12 +1,18 @@
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
 import PrimaryButton from '@/components/PrimaryButton';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from '@/components/ui/card';
+import { useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
-import PromotionCard from './component/PromotionCard';
-import PromotionCoverDialog from './dialogs/PromotionCoverDialog';
-import PromotionDialog from './dialogs/PromotionDialog';
-const Promotion = ({ promotions }) => {
+import PromotionCard from '../component/PromotionCard';
+import PromotionCoverDialog from '../dialogs/PromotionCoverDialog';
+import PromotionDialog from '../dialogs/PromotionDialog';
+const PromotionContent = ({ promotions }) => {
     const [promotionDialogOpen, setPromotionDialogOpen] = useState(false);
     const [promotionCoverDialogOpen, setPromotionCoverDialogOpen] =
         useState(false);
@@ -81,17 +87,6 @@ const Promotion = ({ promotions }) => {
         setPromotionDialogOpen(true);
     };
 
-    const handleDelete = (id) => {
-        setSelected(id);
-        setDialogConfig({
-            title: 'Delete Promotion',
-            formAction: 'delete promotion',
-            message:
-                'Are you sure you want to delete this promotion? This action cannot be undone.',
-        });
-        setConfirmationDialogOpen(true);
-    };
-
     const handleUploadThumbnail = (promotion) => {
         setSelectedPromotion(promotion);
         setSelected(promotion.id);
@@ -121,15 +116,6 @@ const Promotion = ({ promotions }) => {
                     console.error('Cover Image update failed:', errors);
                 },
             });
-        } else if (formAction === 'delete promotion') {
-            destroy(route('promotioncms.delete', { id: selected }), {
-                onSuccess: () => {
-                    setSelected(null);
-                    onClose();
-                },
-                onError: (errors) =>
-                    console.error('Error deleting article:', errors),
-            });
         } else if (formAction === 'update cover') {
             patchPromotionCover(
                 route('promotioncms.updateCover', { id: selected }),
@@ -144,20 +130,16 @@ const Promotion = ({ promotions }) => {
     };
 
     return (
-        <AuthenticatedLayout>
-            <Head title="Promotions Management" />
-            <div className="flex min-h-screen w-full flex-col flex-wrap bg-zinc-50 p-5">
-                <div className="flex h-fit w-full flex-wrap items-end justify-between gap-2">
-                    <div className="w-full md:w-auto">
-                        <h1 className="text-3xl font-bold md:text-2xl">
-                            Promotions Management
-                        </h1>
-                        <h2 className="text-base md:text-sm">
-                            Manage your Promotions and stay organized with all
-                            the details in one place.
-                        </h2>
+        <Card className="rounded-none border">
+            <CardHeader>
+                <div className="flex flex-wrap justify-between gap-4">
+                    <div className="flex flex-col flex-wrap">
+                        <CardTitle>Promotion Management</CardTitle>
+                        <CardDescription>
+                            Manage your promotional content
+                        </CardDescription>
                     </div>
-                    <div className="w-full md:w-auto">
+                    <div className="w-fit">
                         <PrimaryButton
                             text={'new promotion'}
                             style={{
@@ -175,13 +157,14 @@ const Promotion = ({ promotions }) => {
                         />
                     </div>
                 </div>
-                <div className="flex w-full flex-wrap gap-4 py-4">
+            </CardHeader>
+            <CardContent>
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                     {promotions.map((promotion) => (
                         <PromotionCard
                             key={promotion.id}
                             promotion={promotion}
                             onEdit={handleEdit}
-                            onDelete={handleDelete}
                             onUploadThumbnail={handleUploadThumbnail}
                         />
                     ))}
@@ -217,9 +200,9 @@ const Promotion = ({ promotions }) => {
                     setDialogConfig={setDialogConfig}
                     setConfirmationDialogOpen={setConfirmationDialogOpen}
                 />
-            </div>
-        </AuthenticatedLayout>
+            </CardContent>
+        </Card>
     );
 };
 
-export default Promotion;
+export default PromotionContent;

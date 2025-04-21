@@ -10,6 +10,7 @@ class HeroBanner extends Model
         'title',
         'description',
         'image',
+        'background',
         'link',
     ];
 }

@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\AboutUsSection;
 use App\Models\Article;
+use App\Models\HeroBanner;
 use App\Models\Product;
+use App\Models\Promotion;
+use App\Models\TopbarAlert;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -12,13 +15,21 @@ class ShopController extends Controller
 {
     public function index(Request $request)
     {
-        return Inertia::render('Shop/pages/Index');
+        return Inertia::render('Shop/pages/Index', [
+            'banners' => HeroBanner::all(),
+            'shirts' => Product::whereJsonContains('categories', 'Shirts')->latest()->take(6)->get(),
+            'accessories' => Product::whereJsonContains('categories', 'Accessories')->latest()->take(4)->get(),
+            'news' => Article::latest()->take(6)->get(),
+            'alerts' => TopbarAlert::all(),
+            'promotions' => Promotion::all(),
+        ]);
     }
     public function shop(Request $request)
     {
         return Inertia::render('Shop/pages/Shop', [
             'products' => Product::all(),
             'articles' => Article::latest()->take(4)->get(),
+            'alerts' => TopbarAlert::all(),
         ]);
     }
     public function news(Request $request)
@@ -26,12 +37,15 @@ class ShopController extends Controller
         return Inertia::render('Shop/pages/News', [
             'products' => Product::latest()->take(4)->get(),
             'articles' => Article::all(),
+            'alerts' => TopbarAlert::all(),
         ]);
     }
 
     public function about(Request $request)
     {
-        return Inertia::render('Shop/pages/About');
+        return Inertia::render('Shop/pages/About', [
+            'alerts' => TopbarAlert::all(),
+        ]);
     }
 
     public function companyProfile(Request $request)
@@ -40,6 +54,7 @@ class ShopController extends Controller
 
         return Inertia::render('Shop/pages/CompanyProfile', [
             'content' => $companyProfile,
+            'alerts' => TopbarAlert::all(),
         ]);
     }
 
@@ -49,6 +64,7 @@ class ShopController extends Controller
 
         return Inertia::render('Shop/pages/Mission', [
             'content' => $mission,
+            'alerts' => TopbarAlert::all(),
         ]);
     }
 
@@ -58,12 +74,15 @@ class ShopController extends Controller
 
         return Inertia::render('Shop/pages/Vision', [
             'content' => $vision,
+            'alerts' => TopbarAlert::all(),
         ]);
     }
 
 
     public function contact(Request $request)
     {
-        return Inertia::render('Shop/pages/Contact');
+        return Inertia::render('Shop/pages/Contact', [
+            'alerts' => TopbarAlert::all(),
+        ]);
     }
 }
