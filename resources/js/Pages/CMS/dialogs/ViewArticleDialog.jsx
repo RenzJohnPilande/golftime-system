@@ -1,5 +1,4 @@
 import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { formatDistanceToNow } from 'date-fns';
 import { CalendarIcon, FileTextIcon, MapPinIcon } from 'lucide-react';
 
 import { useEffect, useState } from 'react';
@@ -18,22 +17,6 @@ const ViewArticleDialog = ({ open, close, selected }) => {
             month: 'long',
             day: 'numeric',
         });
-    };
-
-    const formatTime = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return date.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            hour12: true,
-        });
-    };
-
-    const getTimeAgo = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        return formatDistanceToNow(date, { addSuffix: true });
     };
 
     const handleImageError = () => {

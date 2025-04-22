@@ -1,7 +1,8 @@
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
+import Pagination from '@/components/Pagination';
 import PrimaryButton from '@/components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import ArticleCard from './component/ArticleCard';
 import ArticleCoverDialog from './dialogs/ArticleCoverDialog';
@@ -149,6 +150,11 @@ const Article = ({ articles }) => {
         }
     };
 
+    const { url } = usePage();
+    const handlePageChange = (page) => {
+        router.get(url.split('?')[0], { page }, { preserveScroll: true });
+    };
+
     return (
         <AuthenticatedLayout>
             <Head title="Articles Management" />
@@ -181,8 +187,8 @@ const Article = ({ articles }) => {
                         />
                     </div>
                 </div>
-                <div className="flex w-full flex-wrap gap-4 py-5">
-                    {articles.map((article) => (
+                <div className="grid w-full grid-cols-1 flex-wrap gap-4 py-5 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+                    {articles.data.map((article) => (
                         <ArticleCard
                             key={article.id}
                             article={article}
@@ -193,6 +199,11 @@ const Article = ({ articles }) => {
                         />
                     ))}
                 </div>
+                <Pagination
+                    currentPage={articles.current_page}
+                    totalPages={articles.last_page}
+                    onPageChange={handlePageChange}
+                />
                 <ArticleDialog
                     open={articleDialogOpen}
                     close={onClose}

@@ -18,6 +18,7 @@ const ProductDialog = ({
     close,
     selected,
     formData,
+    categories,
     setDialogConfig,
     setConfirmationDialogOpen,
 }) => {
@@ -30,6 +31,7 @@ const ProductDialog = ({
             axios
                 .get(route('products.show', { id: selected }))
                 .then((response) => {
+                    console.log(response.data);
                     setData({
                         name: response.data.name ?? '',
                         code: response.data.code ?? '',
@@ -37,7 +39,9 @@ const ProductDialog = ({
                         price: response.data.price ?? '',
                         thumbnail: response.data.thumbnail ?? '',
                         images: response.data.images ?? [],
-                        categories: response.data.categories ?? [],
+                        categories: (response.data.categories ?? []).map(
+                            (category) => category?.toLowerCase?.() || '',
+                        ),
                         materials: response.data.materials ?? [],
                         sizes: response.data.sizes ?? [],
                         colors: response.data.colors ?? [],
@@ -136,7 +140,7 @@ const ProductDialog = ({
                                     <TextInput
                                         id="code"
                                         name="code"
-                                        className="mt-1 block w-full border px-2 py-2 text-sm shadow"
+                                        className="mt-1 block w-full border px-2 py-2 text-sm uppercase shadow"
                                         value={data.code}
                                         onChange={(e) =>
                                             setData('code', e.target.value)
@@ -213,14 +217,19 @@ const ProductDialog = ({
                                     value="Categories"
                                 />
                                 <MultipleInput
-                                    id="categories"
-                                    name="categories"
-                                    className="mt-1 block w-full capitalize"
-                                    icon={<RxCrossCircled />}
-                                    value={data.categories}
+                                    inputType="select"
+                                    value={data.categories || ''}
+                                    selectOptions={categories.map(
+                                        (category) => ({
+                                            label: category.description,
+                                            value: category.value,
+                                        }),
+                                    )}
                                     onChange={(newCategories) =>
                                         setData('categories', newCategories)
                                     }
+                                    className="mt-1 block w-full border px-2 py-2 text-sm shadow"
+                                    icon={<RxCrossCircled />}
                                 />
                                 {errors.categories && (
                                     <InputError className="mt-2">

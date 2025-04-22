@@ -34,9 +34,8 @@ export default function ProductCard({ product }) {
                         ))}
                     </div>
                     <img
-                        src={`storage/${product.thumbnail}`}
+                        src={`/storage/${product.thumbnail}`}
                         alt={product.name}
-                        fill
                         className="object-cover transition-transform duration-300 hover:scale-105"
                     />
                 </div>

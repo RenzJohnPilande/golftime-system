@@ -11,6 +11,7 @@ use App\Http\Controllers\TaskController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\CMS\ContentManagementController;
+use App\Http\Controllers\ConstantController;
 use App\Http\Controllers\ContactInfoController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DepartmentController;
@@ -182,6 +183,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('/{id}', [TopbarAlertController::class, 'update'])->name('alertcms.update');
             Route::delete('/{id}', [TopbarAlertController::class, 'destroy'])->name('alertcms.delete');
         });
+
+        // Constants CMS
+        Route::prefix('constantscms')->group(function () {
+            Route::get('/', [ConstantController::class, 'index'])->name('constantscms.index');
+            Route::post('/store', [ConstantController::class, 'store'])->name('constantscms.store');
+            Route::get('/{id}', [ConstantController::class, 'show'])->name('constantscms.show');
+            Route::patch('/{id}', [ConstantController::class, 'update'])->name('constantscms.update');
+            Route::delete('/{id}', [ConstantController::class, 'destroy'])->name('constantscms.delete');
+        });
     });
 
     // Logs
@@ -196,13 +206,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/', [ShopController::class, 'index']);
-Route::get('/shop', [ShopController::class, 'shop']);
 Route::get('/news', [ShopController::class, 'news']);
 Route::get('/about', [ShopController::class, 'about']);
 Route::get('/about/company-profile', [ShopController::class, 'companyProfile']);
 Route::get('/about/mission', [ShopController::class, 'mission']);
 Route::get('/about/vision', [ShopController::class, 'vision']);
 Route::get('/contact', [ShopController::class, 'contact']);
+
+Route::prefix('shop')->group(function () {
+    Route::get('/', [ShopController::class, 'shop'])->name('shop.index');
+    Route::get('/category/{id}', [ShopController::class, 'show'])->name('shop.product');
+    Route::get('/{slug}', [ShopController::class, 'category'])->name('shop.category');
+});
 
 // Email Preview
 Route::get('/preview-email', function () {

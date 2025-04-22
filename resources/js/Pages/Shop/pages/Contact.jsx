@@ -11,13 +11,15 @@ import {
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
 import emailjs from '@emailjs/browser';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import { Clock, Mail, MapPin, Phone } from 'lucide-react';
 import { useRef } from 'react';
 
 const Contact = ({ alerts }) => {
     const { toast } = useToast();
+    const { info } = usePage().props;
 
+    console.log(info);
     const form = useRef();
 
     const sendEmail = (e) => {
@@ -81,9 +83,7 @@ const Contact = ({ alerts }) => {
                                             <MapPin className="w-auto text-3xl text-slate-800" />
                                         </div>
                                         <p className="w-auto text-sm">
-                                            Lot 1b Blk 3-E Marigold St. Jasmine
-                                            St. Unit Ruby Park, Victoria Homes
-                                            Tunasan Muntinlupa City
+                                            {info.address}
                                         </p>
                                     </div>
                                     <div className="my-5 flex items-center">
@@ -91,7 +91,7 @@ const Contact = ({ alerts }) => {
                                             <Mail className="w-auto text-3xl text-slate-800" />
                                         </div>
                                         <p className="w-auto text-sm">
-                                            Service@Golftime.Ph
+                                            {info.email}
                                         </p>
                                     </div>
                                     <div className="my-5 flex items-center">
@@ -99,7 +99,7 @@ const Contact = ({ alerts }) => {
                                             <Phone className="w-auto text-3xl text-slate-800" />
                                         </div>
                                         <p className="w-auto text-sm">
-                                            02-83506666
+                                            {info.phone}
                                         </p>
                                     </div>
                                     <div className="my-5 flex items-center">
@@ -107,7 +107,7 @@ const Contact = ({ alerts }) => {
                                             <Clock className="w-auto text-3xl text-slate-800" />
                                         </div>
                                         <p className="w-auto text-sm">
-                                            Monday - Friday: 9:00 AM - 6:00 PM
+                                            {info.business_hours}
                                         </p>
                                     </div>
                                 </div>

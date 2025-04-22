@@ -4,6 +4,7 @@ namespace App\Http\Controllers\CMS;
 
 use App\Http\Controllers\Controller;
 use App\Models\AboutUsSection;
+use App\Models\Constant;
 use App\Models\ContactInfo;
 use App\Models\HeroBanner;
 use App\Models\Promotion;
@@ -21,6 +22,7 @@ class ContentManagementController extends Controller
             "contactInfos" => ContactInfo::all(),
             "banners" => HeroBanner::all(),
             "alerts" => TopbarAlert::all(),
+            "constants" => Constant::orderBy('type')->get(),
         ]);
     }
 }

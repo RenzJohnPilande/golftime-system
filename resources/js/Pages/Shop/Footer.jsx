@@ -27,13 +27,13 @@ function Footer() {
                             About us
                         </Link>
                         <Link
-                            href="/products"
+                            href="/shop"
                             className="my-1 text-sm text-white focus:outline-none"
                         >
                             Products
                         </Link>
                         <Link
-                            href="/events"
+                            href="/news"
                             className="my-1 text-sm text-white focus:outline-none"
                         >
                             News & Events
@@ -87,7 +87,7 @@ function Footer() {
                             About Us
                         </span>
                         <Link
-                            href="/about"
+                            href="/about/company-profile"
                             className="my-1 text-sm text-white focus:outline-none"
                         >
                             Company Profile

@@ -43,7 +43,7 @@ const FeaturedProducts = ({ products }) => {
             </div>
             <div className="mt-3 text-center">
                 <Link
-                    href="/products"
+                    href="/shop"
                     className="text-sm text-zinc-600 underline-offset-4 hover:text-zinc-800 hover:underline"
                 >
                     View all products

@@ -12,7 +12,7 @@ class ArticleController extends Controller
     public function index()
     {
         return Inertia::render('CMS/Article', [
-            'articles' => Article::all(),
+            'articles' => Article::paginate(10),
         ]);
     }
 

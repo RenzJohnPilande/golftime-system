@@ -4,6 +4,7 @@ import { Head } from '@inertiajs/react';
 import AboutContent from './content/AboutContent';
 import AlertContent from './content/AlertContent';
 import BannerContent from './content/BannerContent';
+import ConstantContent from './content/ConstantContent';
 import ContactContent from './content/ContactContent';
 import PromotionContent from './content/PromotionContent';
 const ContentManagement = ({
@@ -12,6 +13,7 @@ const ContentManagement = ({
     contactInfos,
     banners,
     alerts,
+    constants,
 }) => {
     return (
         <AuthenticatedLayout>
@@ -37,34 +39,40 @@ const ContentManagement = ({
                         <div className="flex h-16 w-full flex-wrap xl:h-auto">
                             <TabsList className="grid w-full grid-cols-3 bg-transparent xl:grid-cols-6">
                                 <TabsTrigger
-                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 text-zinc-900"
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
                                     value="promotions"
                                 >
                                     Promotions
                                 </TabsTrigger>
                                 <TabsTrigger
-                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 text-zinc-900"
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
                                     value="about us"
                                 >
                                     About
                                 </TabsTrigger>
                                 <TabsTrigger
-                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 text-zinc-900"
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
                                     value="contact us"
                                 >
                                     Contact
                                 </TabsTrigger>
                                 <TabsTrigger
-                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 text-zinc-900"
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
                                     value="banners"
                                 >
                                     Banners
                                 </TabsTrigger>
                                 <TabsTrigger
-                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 text-zinc-900"
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
                                     value="alerts"
                                 >
                                     Alerts
+                                </TabsTrigger>
+                                <TabsTrigger
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
+                                    value="constants"
+                                >
+                                    constants
                                 </TabsTrigger>
                             </TabsList>
                         </div>
@@ -86,6 +94,9 @@ const ContentManagement = ({
 
                         <TabsContent value="alerts" className="w-full">
                             <AlertContent alerts={alerts} />
+                        </TabsContent>
+                        <TabsContent value="constants" className="w-full">
+                            <ConstantContent constants={constants} />
                         </TabsContent>
                     </Tabs>
                 </div>

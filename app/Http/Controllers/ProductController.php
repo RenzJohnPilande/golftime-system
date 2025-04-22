@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Constant;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -12,7 +13,8 @@ class ProductController extends Controller
     public function index()
     {
         return Inertia::render('CMS/Product', [
-            'products' => Product::all(),
+            'products' => Product::paginate(10),
+            'categories' => Constant::where('type', 'Category')->orderBy('description')->get(),
         ]);
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AboutUsSection;
 use App\Models\Article;
+use App\Models\ContactInfo;
 use App\Models\HeroBanner;
 use App\Models\Product;
 use App\Models\Promotion;
@@ -17,26 +18,47 @@ class ShopController extends Controller
     {
         return Inertia::render('Shop/pages/Index', [
             'banners' => HeroBanner::all(),
-            'shirts' => Product::whereJsonContains('categories', 'Shirts')->latest()->take(6)->get(),
-            'accessories' => Product::whereJsonContains('categories', 'Accessories')->latest()->take(4)->get(),
+            'shirts' => Product::whereJsonContains('categories', 'shirts')->latest()->take(6)->get(),
+            'accessories' => Product::whereJsonContains('categories', 'accessories')->latest()->take(4)->get(),
             'news' => Article::latest()->take(6)->get(),
             'alerts' => TopbarAlert::all(),
             'promotions' => Promotion::all(),
         ]);
     }
+
     public function shop(Request $request)
     {
         return Inertia::render('Shop/pages/Shop', [
-            'products' => Product::all(),
+            'products' => Product::paginate(8),
             'articles' => Article::latest()->take(4)->get(),
             'alerts' => TopbarAlert::all(),
         ]);
     }
+
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+
+        return Inertia::render('Shop/pages/ProductShow', [
+            'product' => $product,
+        ]);
+    }
+
+    public function category($slug)
+    {
+        return Inertia::render('Shop/pages/Shop', [
+            'products' => Product::whereJsonContains('categories', $slug)->paginate(8),
+            'articles' => Article::latest()->take(4)->get(),
+            'alerts' => TopbarAlert::all(),
+            'activeCategory' => $slug,
+        ]);
+    }
+
     public function news(Request $request)
     {
         return Inertia::render('Shop/pages/News', [
             'products' => Product::latest()->take(4)->get(),
-            'articles' => Article::all(),
+            'articles' => Article::paginate(6),
             'alerts' => TopbarAlert::all(),
         ]);
     }
@@ -83,6 +105,7 @@ class ShopController extends Controller
     {
         return Inertia::render('Shop/pages/Contact', [
             'alerts' => TopbarAlert::all(),
+            'info' => ContactInfo::first(),
         ]);
     }
 }

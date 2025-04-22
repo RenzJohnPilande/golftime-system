@@ -1,14 +1,16 @@
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
+import Pagination from '@/components/Pagination';
 import PrimaryButton from '@/components/PrimaryButton';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import ProductCard from './component/ProductCard';
 import ArticleCoverDialog from './dialogs/ArticleCoverDialog';
 import ImagesDialog from './dialogs/ImagesDialog';
 import ProductDialog from './dialogs/ProductDialog';
+import ViewProductDialog from './dialogs/ViewProductDialog';
 
-const Product = ({ products }) => {
+const Product = ({ products, categories }) => {
     const [productDialogOpen, setProductDialogOpen] = useState(false);
     const [selected, setSelected] = useState(null);
     const [isConfirmationDialogOpen, setConfirmationDialogOpen] =
@@ -20,6 +22,7 @@ const Product = ({ products }) => {
     const [thumbnailDialogOpen, setThumbnailDialogOpen] = useState(false);
     const [imagesDialogOpen, setImagesDialogOpen] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
+    const [viewDialogOpen, setViewDialogOpen] = useState(false);
     const [imagesToUpload, setImagesToUpload] = useState([]);
     const [imageUploadError, setImageUploadError] = useState(null);
 
@@ -84,11 +87,17 @@ const Product = ({ products }) => {
 
     const onClose = () => {
         setProductDialogOpen(false);
+        setViewDialogOpen(false);
         setImagesDialogOpen(false);
         setThumbnailDialogOpen(false);
         setConfirmationDialogOpen(false);
         reset();
         setSelected(null);
+    };
+
+    const handleView = (product) => {
+        setSelected(product.id);
+        setViewDialogOpen(true);
     };
 
     const handleEdit = (product) => {
@@ -177,6 +186,10 @@ const Product = ({ products }) => {
             );
         }
     };
+    const { url } = usePage();
+    const handlePageChange = (page) => {
+        router.get(url.split('?')[0], { page }, { preserveScroll: true });
+    };
 
     return (
         <AuthenticatedLayout>
@@ -210,11 +223,12 @@ const Product = ({ products }) => {
                         />
                     </div>
                 </div>
-                <div className="flex w-full flex-wrap gap-6 pt-5">
-                    {products.map((product) => (
+                <div className="grid w-full grow grid-cols-1 flex-wrap gap-4 pt-5 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+                    {products.data.map((product) => (
                         <ProductCard
                             key={product.id}
                             product={product}
+                            onView={handleView}
                             onEdit={handleEdit}
                             onDelete={onDelete}
                             onUploadThumbnail={handleUploadThumbnail}
@@ -222,11 +236,17 @@ const Product = ({ products }) => {
                         />
                     ))}
                 </div>
+                <Pagination
+                    currentPage={products.current_page}
+                    totalPages={products.last_page}
+                    onPageChange={handlePageChange}
+                />
 
                 <ProductDialog
                     open={productDialogOpen}
                     close={onClose}
                     selected={selected}
+                    categories={categories}
                     user={user}
                     formData={{ data, setData, errors, processing, reset }}
                     setDialogConfig={setDialogConfig}
@@ -260,6 +280,11 @@ const Product = ({ products }) => {
                     }}
                     setDialogConfig={setDialogConfig}
                     setConfirmationDialogOpen={setConfirmationDialogOpen}
+                />
+                <ViewProductDialog
+                    open={viewDialogOpen}
+                    close={onClose}
+                    selected={selected}
                 />
                 <ConfirmationDialog
                     open={isConfirmationDialogOpen}

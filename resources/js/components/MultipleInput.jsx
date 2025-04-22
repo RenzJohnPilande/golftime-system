@@ -5,21 +5,23 @@ import {
     useRef,
     useState,
 } from 'react';
+import SelectInput from './SelectInput';
 
 export default forwardRef(function MultipleInput(
     {
-        type = 'text',
+        inputType = 'text',
+        selectOptions = [],
         icon,
         className = '',
         isFocused = false,
-        value = [], // Default value is an empty array
+        value = [],
         onChange,
         ...props
     },
     ref,
 ) {
     const localRef = useRef(null);
-    const [inputs, setInputs] = useState(value.length > 0 ? value : ['']); // Set default to one input if value is empty
+    const [inputs, setInputs] = useState(value.length > 0 ? value : ['']);
 
     useImperativeHandle(ref, () => ({
         focus: () => localRef.current?.focus(),
@@ -31,9 +33,9 @@ export default forwardRef(function MultipleInput(
         }
     }, [isFocused]);
 
-    const handleChange = (e, index) => {
+    const handleChange = (val, index) => {
         const newInputs = [...inputs];
-        newInputs[index] = e.target.value;
+        newInputs[index] = val;
         setInputs(newInputs);
 
         if (onChange) {
@@ -48,7 +50,6 @@ export default forwardRef(function MultipleInput(
     const removeInput = (index) => {
         const newInputs = inputs.filter((_, i) => i !== index);
         setInputs(newInputs);
-
         if (onChange) {
             onChange(newInputs);
         }
@@ -58,17 +59,28 @@ export default forwardRef(function MultipleInput(
         <div className="space-y-2">
             {inputs.map((inputValue, index) => (
                 <div key={index} className="flex items-center space-x-2">
-                    <input
-                        {...props}
-                        type={type}
-                        className={
-                            'mt-1 block w-full rounded-md border border-gray-300 px-2 py-2 text-sm shadow shadow-sm focus:border-indigo-500 focus:ring-indigo-500' +
-                            className
-                        }
-                        ref={index === 0 ? localRef : null}
-                        value={inputValue}
-                        onChange={(e) => handleChange(e, index)}
-                    />
+                    {inputType === 'select' ? (
+                        <SelectInput
+                            options={selectOptions}
+                            className={`mt-1 w-full ${className}`}
+                            value={inputValue}
+                            onChange={(e) =>
+                                handleChange(e.target.value, index)
+                            }
+                            ref={index === 0 ? localRef : null}
+                        />
+                    ) : (
+                        <input
+                            {...props}
+                            type={inputType}
+                            className={`mt-1 block w-full rounded-md border border-gray-300 px-2 py-2 text-sm shadow shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${className}`}
+                            ref={index === 0 ? localRef : null}
+                            value={inputValue}
+                            onChange={(e) =>
+                                handleChange(e.target.value, index)
+                            }
+                        />
+                    )}
                     <button
                         type="button"
                         onClick={() => removeInput(index)}
