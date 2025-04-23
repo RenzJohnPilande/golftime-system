@@ -178,7 +178,7 @@ const EventDialog = ({
                                         value: 'preparation',
                                     },
                                     { label: 'ongoing', value: 'ongoing' },
-                                    { label: 'complete', value: 'complete' },
+                                    { label: 'completed', value: 'completed' },
                                     { label: 'cancelled', value: 'cancelled' },
                                 ]}
                                 className="mt-1 block w-full border px-2 py-2 text-sm capitalize text-zinc-900 shadow"

@@ -20,6 +20,7 @@ class PermissionSeeder extends Seeder
             ['name' => 'employee_management', 'description' => "employee management"],
             ['name' => 'role_management', 'description' => "role management"],
             ['name' => 'department_management', 'description' => "department management"],
+            ['name' => 'content_management', 'description' => "content management"],
         ];
 
         DB::table('permissions')->insert($permissions);

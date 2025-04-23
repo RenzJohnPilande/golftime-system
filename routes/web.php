@@ -113,7 +113,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     // CMS
-    Route::prefix('products')->group(function () {
+    Route::prefix('products')->middleware(['auth', 'permission:content_management'])->group(function () {
         Route::get('/', [ProductController::class, 'index'])->name('products.index');
         Route::post('/', [ProductController::class, 'store'])->name('products.store');
         Route::get('/{id}', [ProductController::class, 'show'])->name('products.show');
@@ -125,7 +125,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/temp-thumbnail-upload', [ProductController::class, 'tempThumbnailUpload'])->name('products.tempThumbnailUpload');
     });
 
-    Route::prefix('articles')->group(function () {
+    Route::prefix('articles')->middleware(['auth', 'permission:content_management'])->group(function () {
         Route::get('/', [ArticleController::class, 'index'])->name('articles.index');
         Route::post('/', [ArticleController::class, 'store'])->name('articles.store');
         Route::get('/{id}', [ArticleController::class, 'show'])->name('articles.show');
@@ -136,12 +136,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('cms')->group(function () {
-        Route::prefix('management')->group(function () {
+        Route::prefix('management')->middleware(['auth', 'permission:content_management'])->group(function () {
             Route::get('/', [ContentManagementController::class, 'index'])->name('cms.index');
         });
-
-        // Promotion CMS routes
-        Route::prefix('promotioncms')->group(function () {
+        Route::prefix('promotioncms')->middleware(['auth', 'permission:content_management'])->group(function () {
             Route::get('/', [PromotionController::class, 'index'])->name('promotioncms.index');
             Route::post('/store', [PromotionController::class, 'store'])->name('promotioncms.store');
             Route::get('/{id}', [PromotionController::class, 'show'])->name('promotioncms.show');
@@ -151,21 +149,21 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         // About CMS
-        Route::prefix('aboutcms')->group(function () {
+        Route::prefix('aboutcms')->middleware(['auth', 'permission:content_management'])->group(function () {
             Route::get('/', [AboutUsSectionController::class, 'index'])->name('aboutcms.index');
             Route::get('/{id}', [AboutUsSectionController::class, 'show'])->name('aboutcms.show');
             Route::patch('/{id}', [AboutUsSectionController::class, 'update'])->name('aboutcms.update');
         });
 
         // Contact CMS
-        Route::prefix('contactcms')->group(function () {
+        Route::prefix('contactcms')->middleware(['auth', 'permission:content_management'])->group(function () {
             Route::get('/', [ContactInfoController::class, 'index'])->name('contactcms.index');
             Route::get('/{id}', [ContactInfoController::class, 'show'])->name('contactcms.show');
             Route::patch('/{id}', [ContactInfoController::class, 'update'])->name('contactcms.update');
         });
 
         // Banner CMS
-        Route::prefix('bannercms')->group(function () {
+        Route::prefix('bannercms')->middleware(['auth', 'permission:content_management'])->group(function () {
             Route::get('/', [HeroBannerController::class, 'index'])->name('bannercms.index');
             Route::post('/store', [HeroBannerController::class, 'store'])->name('bannercms.store');
             Route::get('/{id}', [HeroBannerController::class, 'show'])->name('bannercms.show');
@@ -176,7 +174,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         // Alert CMS
-        Route::prefix('alertcms')->group(function () {
+        Route::prefix('alertcms')->middleware(['auth', 'permission:content_management'])->group(function () {
             Route::get('/', [TopbarAlertController::class, 'index'])->name('alertcms.index');
             Route::post('/store', [TopbarAlertController::class, 'store'])->name('alertcms.store');
             Route::get('/{id}', [TopbarAlertController::class, 'show'])->name('alertcms.show');
@@ -185,7 +183,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         // Constants CMS
-        Route::prefix('constantscms')->group(function () {
+        Route::prefix('constantscms')->middleware(['auth', 'permission:content_management'])->group(function () {
             Route::get('/', [ConstantController::class, 'index'])->name('constantscms.index');
             Route::post('/store', [ConstantController::class, 'store'])->name('constantscms.store');
             Route::get('/{id}', [ConstantController::class, 'show'])->name('constantscms.show');

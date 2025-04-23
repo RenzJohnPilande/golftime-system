@@ -17,7 +17,15 @@ export default function AuthenticatedLayout({ header, children }) {
         <SidebarProvider>
             <AppSidebar user={user} permissions={permissions} />
             <main className="w-full">
-                <div className="flex w-full flex-wrap justify-end bg-zinc-700 px-2 py-3 lg:hidden">
+                <div className="flex w-full flex-wrap justify-between bg-zinc-50 px-4 py-3 lg:hidden">
+                    <div className="flex flex-wrap content-center items-center gap-4">
+                        <img
+                            src="/images/GolfTimeLogo.png"
+                            alt="Golftime Logo"
+                            className="w-8"
+                        />
+                        <p className="font-semibold uppercase">golftime corp</p>
+                    </div>
                     <SidebarTrigger className="align-right bg-white text-zinc-900 shadow-lg" />
                 </div>
                 {children}

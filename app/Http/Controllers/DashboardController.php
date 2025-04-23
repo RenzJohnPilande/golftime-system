@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Article;
 use App\Models\Department;
 use App\Models\Employee;
 use App\Models\Events;
+use App\Models\HeroBanner;
 use App\Models\Job;
 use App\Models\Log;
+use App\Models\Product;
+use App\Models\Promotion;
 use App\Models\Task;
+use App\Models\TopbarAlert;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -73,6 +78,16 @@ class DashboardController extends Controller
                 "total" => Job::count(),
                 "vacancies" => Job::doesntHave('employees')->count(),
                 "data" => Job::withCount('employees')->get()
+            ];
+        }
+
+        if ($isAdmin || in_array('content_management', $permissions)) {
+            $data['cms'] = [
+                "products" => Product::all(),
+                "articles" => Article::all(),
+                "promotions" => Promotion::all(),
+                "banners" => HeroBanner::all(),
+                "topbar_alerts" => TopbarAlert::all(),
             ];
         }
 
