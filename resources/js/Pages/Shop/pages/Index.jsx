@@ -11,9 +11,17 @@ import { Head, Link } from '@inertiajs/react';
 import Autoplay from 'embla-carousel-autoplay';
 import Fade from 'embla-carousel-fade';
 
-const Index = ({ banners, shirts, accessories, news, alerts, promotions }) => {
+const Index = ({
+    banners,
+    shirts,
+    accessories,
+    news,
+    alerts,
+    promotions,
+    columns,
+}) => {
     return (
-        <ShopLayout alerts={alerts}>
+        <ShopLayout alerts={alerts} columns={columns}>
             <Head title="GolfTime Corp" />
             <div className="flex w-full flex-wrap justify-center">
                 <Carousel

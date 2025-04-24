@@ -5,9 +5,9 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import ProductCard from './component/ProductCard';
-import ArticleCoverDialog from './dialogs/ArticleCoverDialog';
 import ImagesDialog from './dialogs/ImagesDialog';
 import ProductDialog from './dialogs/ProductDialog';
+import ThumbnailDialog from './dialogs/ThumbnailDialog';
 import ViewProductDialog from './dialogs/ViewProductDialog';
 
 const Product = ({ products, categories }) => {
@@ -120,15 +120,14 @@ const Product = ({ products, categories }) => {
         setProductDialogOpen(true);
     };
 
-    const onDelete = (id) => {
-        destroy(route('products.delete', { id }), {
-            onSuccess: () => {
-                setSelected(null);
-                onClose();
-            },
-            onError: (errors) =>
-                console.error('Error deleting product:', errors),
+    const onDelete = (product) => {
+        setSelected(product.id);
+        setDialogConfig({
+            title: 'Delete Product',
+            message: `Are you sure you want to delete the product ${product.name}? This action cannot be undone.`,
+            formAction: 'delete product',
         });
+        setConfirmationDialogOpen(true);
     };
 
     const handleUploadImages = (product) => {
@@ -162,7 +161,10 @@ const Product = ({ products, categories }) => {
             });
         } else if (formAction === 'delete product') {
             destroy(route('products.delete', { id: selected }), {
-                onSuccess: onClose,
+                onSuccess: () => {
+                    setSelected(null);
+                    onClose();
+                },
                 onError: (errors) =>
                     console.error('Error deleting product:', errors),
             });
@@ -253,7 +255,7 @@ const Product = ({ products, categories }) => {
                     setSelected={setSelected}
                     setConfirmationDialogOpen={setConfirmationDialogOpen}
                 />
-                <ArticleCoverDialog
+                <ThumbnailDialog
                     open={thumbnailDialogOpen}
                     close={() => setThumbnailDialogOpen(false)}
                     selected={selectedProduct}

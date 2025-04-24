@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogHelper;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -33,8 +34,8 @@ class PromotionController extends Controller
             $validated['image'] = $request->file('image')->store('images/promotion', 'public');
         }
 
-        Promotion::create($validated);
-
+        $promotion = Promotion::create($validated);
+        LogHelper::logAction('Promotion Created', "Promotion {$promotion->title} has been created");
         return back()->with('success', 'Promotion created successfully.');
     }
 
@@ -48,7 +49,7 @@ class PromotionController extends Controller
         ]);
 
         $promotion->update($data);
-
+        LogHelper::logAction('Promotion Updated', "Promotion {$promotion->title} has been updated");
         return back()->with('success', 'Promotion updated successfully.');
     }
 
@@ -57,7 +58,7 @@ class PromotionController extends Controller
         $promotion = Promotion::findOrFail($id);
 
         $promotion->delete();
-
+        LogHelper::logAction('Promotion Deleted', "Promotion {$promotion->title} has been deleted");
         return redirect()->back()->with('success', 'Promotion deleted successfully.');
     }
 
@@ -104,7 +105,7 @@ class PromotionController extends Controller
             }
 
             $promotion->update(['image' => $path]);
-
+            LogHelper::logAction('Promotion Updated', "Promotion {$promotion->title} has been updated");
             return back()->with('success', 'Cover image updated successfully!');
         }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AboutUsSection;
 use App\Models\Article;
+use App\Models\Constant;
 use App\Models\ContactInfo;
 use App\Models\HeroBanner;
 use App\Models\Product;
@@ -23,6 +24,7 @@ class ShopController extends Controller
             'news' => Article::latest()->take(6)->get(),
             'alerts' => TopbarAlert::all(),
             'promotions' => Promotion::all(),
+            'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
         ]);
     }
 
@@ -32,6 +34,7 @@ class ShopController extends Controller
             'products' => Product::paginate(8),
             'articles' => Article::latest()->take(4)->get(),
             'alerts' => TopbarAlert::all(),
+            'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
         ]);
     }
 
@@ -41,6 +44,8 @@ class ShopController extends Controller
 
         return Inertia::render('Shop/pages/ProductShow', [
             'product' => $product,
+            'alerts' => TopbarAlert::all(),
+            'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
         ]);
     }
 
@@ -51,6 +56,7 @@ class ShopController extends Controller
             'articles' => Article::latest()->take(4)->get(),
             'alerts' => TopbarAlert::all(),
             'activeCategory' => $slug,
+            'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
         ]);
     }
 
@@ -60,6 +66,7 @@ class ShopController extends Controller
             'products' => Product::latest()->take(4)->get(),
             'articles' => Article::paginate(6),
             'alerts' => TopbarAlert::all(),
+            'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
         ]);
     }
 
@@ -67,6 +74,7 @@ class ShopController extends Controller
     {
         return Inertia::render('Shop/pages/About', [
             'alerts' => TopbarAlert::all(),
+            'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
         ]);
     }
 
@@ -77,6 +85,7 @@ class ShopController extends Controller
         return Inertia::render('Shop/pages/CompanyProfile', [
             'content' => $companyProfile,
             'alerts' => TopbarAlert::all(),
+            'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
         ]);
     }
 
@@ -87,6 +96,7 @@ class ShopController extends Controller
         return Inertia::render('Shop/pages/Mission', [
             'content' => $mission,
             'alerts' => TopbarAlert::all(),
+            'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
         ]);
     }
 
@@ -97,6 +107,7 @@ class ShopController extends Controller
         return Inertia::render('Shop/pages/Vision', [
             'content' => $vision,
             'alerts' => TopbarAlert::all(),
+            'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
         ]);
     }
 
@@ -106,6 +117,7 @@ class ShopController extends Controller
         return Inertia::render('Shop/pages/Contact', [
             'alerts' => TopbarAlert::all(),
             'info' => ContactInfo::first(),
+            'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
         ]);
     }
 }

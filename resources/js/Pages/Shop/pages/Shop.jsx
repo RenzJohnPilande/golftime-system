@@ -12,7 +12,7 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useMemo } from 'react';
 import FeaturedArticle from '../components/FeaturedArticle';
 import ProductCard from '../components/ProductCard';
-const Shop = ({ products, articles, alerts }) => {
+const Shop = ({ products, articles, alerts, columns }) => {
     const { url } = usePage();
 
     const pathSegments = useMemo(() => {
@@ -45,7 +45,7 @@ const Shop = ({ products, articles, alerts }) => {
     };
 
     return (
-        <ShopLayout alerts={alerts}>
+        <ShopLayout alerts={alerts} columns={columns}>
             <Head title="GolfTime Corp - Shop" />
             <div className="flex w-full flex-wrap justify-center">
                 <div className="container flex flex-wrap gap-5 px-5 py-10">

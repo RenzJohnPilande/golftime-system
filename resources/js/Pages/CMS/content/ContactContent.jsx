@@ -69,113 +69,118 @@ const ContactContent = ({ contactInfos }) => {
             <CardContent>
                 <div className="flex w-full flex-wrap gap-4">
                     <div className="flex w-full flex-wrap rounded border p-4">
-                        <div className="flex grow flex-col">
-                            <h1 className="text-sm font-medium">Address</h1>
+                        <div className="flex grow flex-col gap-2">
+                            <div className="flex flex-wrap items-end justify-between">
+                                <h1 className="flex text-sm font-medium">
+                                    Address
+                                </h1>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex"
+                                    onClick={() => {
+                                        setDialogConfig({
+                                            title: 'Update Address',
+                                            message:
+                                                'Are you sure you want to update the address?',
+                                            formAction: 'update address',
+                                        });
+                                        setContactDialogOpen(true);
+                                        setSelected(contactInfos[0].id);
+                                    }}
+                                >
+                                    <Pencil /> Edit
+                                </Button>
+                            </div>
                             <p className="text-sm font-light">
                                 {contactInfos[0].address}
                             </p>
                         </div>
-                        <div className="flex content-center items-center">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1"
-                                onClick={() => {
-                                    setDialogConfig({
-                                        title: 'Update Address',
-                                        message:
-                                            'Are you sure you want to update the address?',
-                                        formAction: 'update address',
-                                    });
-                                    setContactDialogOpen(true);
-                                    setSelected(contactInfos[0].id);
-                                }}
-                            >
-                                <Pencil /> Edit
-                            </Button>
-                        </div>
                     </div>
                     <div className="flex w-full flex-wrap rounded border p-4">
-                        <div className="flex grow flex-col">
-                            <h1 className="text-sm font-medium">Email</h1>
+                        <div className="flex grow flex-col gap-2">
+                            <div className="flex flex-wrap items-end justify-between">
+                                <h1 className="text-sm font-medium">Email</h1>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex"
+                                    onClick={() => {
+                                        setDialogConfig({
+                                            title: 'Update Email',
+                                            formAction: 'update email',
+                                            message:
+                                                'Are you sure you want to update the email?',
+                                        });
+                                        setContactDialogOpen(true);
+                                        setSelected(contactInfos[0].id);
+                                    }}
+                                >
+                                    <Pencil /> Edit
+                                </Button>
+                            </div>
+
                             <p className="text-sm font-light">
                                 {contactInfos[0].email}
                             </p>
                         </div>
-                        <div className="flex content-center items-center">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1"
-                                onClick={() => {
-                                    setDialogConfig({
-                                        title: 'Update Email',
-                                        formAction: 'update email',
-                                        message:
-                                            'Are you sure you want to update the email?',
-                                    });
-                                    setContactDialogOpen(true);
-                                    setSelected(contactInfos[0].id);
-                                }}
-                            >
-                                <Pencil /> Edit
-                            </Button>
-                        </div>
                     </div>
                     <div className="flex w-full flex-wrap rounded border p-4">
                         <div className="flex grow flex-col">
-                            <h1 className="text-sm font-medium">Phone</h1>
+                            <div className="flex flex-wrap items-end justify-between">
+                                <h1 className="text-sm font-medium">Phone</h1>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex"
+                                    onClick={() => {
+                                        setDialogConfig({
+                                            title: 'Update Phone',
+                                            formAction: 'update phone',
+                                            message:
+                                                'Are you sure you want to update the phone number?',
+                                        });
+                                        setContactDialogOpen(true);
+                                        setSelected(contactInfos[0].id);
+                                    }}
+                                >
+                                    <Pencil /> Edit
+                                </Button>
+                            </div>
+
                             <p className="text-sm font-light">
                                 {contactInfos[0].phone}
                             </p>
                         </div>
-                        <div className="flex content-center items-center">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1"
-                                onClick={() => {
-                                    setDialogConfig({
-                                        title: 'Update Phone',
-                                        formAction: 'update phone',
-                                        message:
-                                            'Are you sure you want to update the phone number?',
-                                    });
-                                    setContactDialogOpen(true);
-                                    setSelected(contactInfos[0].id);
-                                }}
-                            >
-                                <Pencil /> Edit
-                            </Button>
-                        </div>
                     </div>
                     <div className="flex w-full flex-wrap rounded border p-4">
                         <div className="flex grow flex-col">
-                            <h1 className="text-sm font-medium">
-                                Business Hours
-                            </h1>
+                            <div className="flex flex-wrap items-end justify-between">
+                                <h1 className="text-sm font-medium">
+                                    Business Hours
+                                </h1>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    className="flex"
+                                    onClick={() => {
+                                        setDialogConfig({
+                                            title: 'Update Business Hours',
+                                            formAction: 'update business_hours',
+                                            message:
+                                                'Are you sure you want to update the business hours?',
+                                        });
+                                        setContactDialogOpen(true);
+                                        setSelected(contactInfos[0].id);
+                                    }}
+                                >
+                                    <Pencil /> Edit
+                                </Button>
+                            </div>
+
                             <p className="text-sm font-light">
                                 {contactInfos[0].business_hours}
                             </p>
-                        </div>
-                        <div className="flex content-center items-center">
-                            <Button
-                                variant="outline"
-                                size="sm"
-                                className="flex-1"
-                                onClick={() => {
-                                    setDialogConfig({
-                                        title: 'Update Business Hours',
-                                        formAction: 'update business_hours',
-                                        message:
-                                            'Are you sure you want to update the business hours?',
-                                    });
-                                    setContactDialogOpen(true);
-                                    setSelected(contactInfos[0].id);
-                                }}
-                            >
-                                <Pencil /> Edit
-                            </Button>
                         </div>
                     </div>
                 </div>

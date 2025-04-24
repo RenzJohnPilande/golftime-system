@@ -14,7 +14,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     };
 
     return (
-        <div className="flex w-full justify-end">
+        <div className="flex w-full justify-center">
             <div className="mt-4 flex items-center space-x-2">
                 <button
                     className="rounded border bg-gray-200 px-4 py-2 text-xs disabled:opacity-50"

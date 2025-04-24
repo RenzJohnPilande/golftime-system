@@ -139,7 +139,7 @@ const PromotionContent = ({ promotions }) => {
                             Manage your promotional content
                         </CardDescription>
                     </div>
-                    <div className="w-fit">
+                    <div className="w-full md:w-fit">
                         <PrimaryButton
                             text={'new promotion'}
                             style={{

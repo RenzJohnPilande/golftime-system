@@ -39,6 +39,18 @@ class DashboardController extends Controller
                 'data' => $isAdmin
                     ? Events::all()
                     : Events::where('assigned_to', $user->id)->get(),
+                'upcoming_events' => $isAdmin
+                    ? Events::whereIn("status", ["pending", "preparation", "ongoing"])->get()
+                    : Events::whereIn("status", ["pending", "preparation", "ongoing"])
+                    ->where('assigned_to', $user->id)->get(),
+                "event_month_total" => $isAdmin
+                    ? Events::whereMonth('date', now()->month)
+                    ->whereYear('date', now()->year)
+                    ->count()
+                    : Events::whereMonth('date', now()->month)
+                    ->whereYear('date', now()->year)
+                    ->where('assigned_to', $user->id)
+                    ->count(),
             ];
         }
 
@@ -50,9 +62,21 @@ class DashboardController extends Controller
                     : Task::where('assigned_to', $user->id)
                     ->whereIn('status', ['pending', 'ongoing'])
                     ->count(),
-                'data' => $isAdmin
-                    ? Task::all()
-                    : Task::where('assigned_to', $user->id)->get(),
+                'complete' => $isAdmin
+                    ? Task::where('status', 'complete')->count()
+                    : Task::where('assigned_to', $user->id)
+                    ->whereIn('status', 'complete')
+                    ->count(),
+                'current_data' => $isAdmin
+                    ? Task::where('status', '!=', 'complete')->get()
+                    : Task::where('status', '!=', 'complete')
+                    ->where('assigned_to', $user->id)
+                    ->get(),
+                'complete_data' => $isAdmin
+                    ? Task::where('status', 'complete')->get()
+                    : Task::where('status', 'complete')
+                    ->where('assigned_to', $user->id)
+                    ->get(),
             ];
         }
 

@@ -21,7 +21,7 @@ const JobColumns = (
               {
                   accessorKey: 'job_title',
                   header: () => (
-                      <span className="font-semibold capitalize text-white">
+                      <span className="font-semibold capitalize">
                           Job Title
                       </span>
                   ),
@@ -30,7 +30,7 @@ const JobColumns = (
               {
                   id: 'actions',
                   header: () => (
-                      <span className="flex w-full justify-center text-center font-semibold capitalize text-white">
+                      <span className="flex w-full justify-center text-center font-semibold capitalize">
                           Actions
                       </span>
                   ),
@@ -49,7 +49,7 @@ const JobColumns = (
                                           text="Edit"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500 text-white',
+                                                  'flex w-full gap-3 bg-blue-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -69,7 +69,7 @@ const JobColumns = (
                                           text="Delete"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500 text-white',
+                                                  'flex w-full gap-3 bg-red-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -93,7 +93,7 @@ const JobColumns = (
               {
                   accessorKey: 'job_title',
                   header: () => (
-                      <span className="font-semibold capitalize text-white">
+                      <span className="font-semibold capitalize">
                           Job Title
                       </span>
                   ),
@@ -102,7 +102,7 @@ const JobColumns = (
               {
                   accessorKey: 'job_description',
                   header: () => (
-                      <span className="font-semibold capitalize text-white">
+                      <span className="font-semibold capitalize">
                           Job Description
                       </span>
                   ),
@@ -115,7 +115,7 @@ const JobColumns = (
               {
                   id: 'actions',
                   header: () => (
-                      <span className="flex w-full justify-center text-center font-semibold capitalize text-white">
+                      <span className="flex w-full justify-center text-center font-semibold capitalize">
                           Actions
                       </span>
                   ),
@@ -134,7 +134,7 @@ const JobColumns = (
                                           text="Edit"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500 text-white',
+                                                  'flex w-full gap-3 bg-blue-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -154,7 +154,7 @@ const JobColumns = (
                                           text="Delete"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500 text-white',
+                                                  'flex w-full gap-3 bg-red-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogHelper;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -12,7 +13,7 @@ class ArticleController extends Controller
     public function index()
     {
         return Inertia::render('CMS/Article', [
-            'articles' => Article::paginate(10),
+            'articles' => Article::paginate(8),
         ]);
     }
 
@@ -30,7 +31,9 @@ class ArticleController extends Controller
             $validated['image'] = $request->file('image')->store('images/articles', 'public');
         }
 
-        Article::create($validated);
+        $article = Article::create($validated);
+
+        LogHelper::logAction('Article Created', "Article {$article->title} has been created");
 
         return redirect()->back()->with('success', 'Article created successfully!');
     }
@@ -50,7 +53,7 @@ class ArticleController extends Controller
         ]);
 
         $article->update($data);
-
+        LogHelper::logAction('Article Updated', "Article {$article->title} has been updated");
         return back()->with('success', 'Product details updated successfully!');
     }
 
@@ -86,7 +89,7 @@ class ArticleController extends Controller
             }
 
             $article->update(['image' => $path]);
-
+            LogHelper::logAction('Article Updated', "Article image has been updated");
             return back()->with('success', 'Cover image updated successfully!');
         }
 
@@ -109,6 +112,7 @@ class ArticleController extends Controller
     {
         $article = Article::findOrFail($id);
         $article->delete();
+        LogHelper::logAction('Article Deleted', "Article {$article->title} has been deleted");
         return redirect()->route('articles.index')->with('success', 'Article deleted successfully.');
     }
 }

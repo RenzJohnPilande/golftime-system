@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogHelper;
 use App\Models\AboutUsSection;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -31,7 +32,7 @@ class AboutUsSectionController extends Controller
 
         $data->update($validated);
 
-
+        LogHelper::logAction('Content Updated', "Content {$data->section_type} has been updated");
         return back()->with('success', 'Content updated successfully.');
     }
 }

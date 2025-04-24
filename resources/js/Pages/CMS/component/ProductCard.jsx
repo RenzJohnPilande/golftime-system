@@ -44,7 +44,7 @@ const ProductCard = ({
                     </button>
 
                     <button
-                        onClick={() => onDelete(product.id)}
+                        onClick={() => onDelete(product)}
                         className="rounded-md p-1.5 text-gray-500 transition-colors hover:bg-red-50 hover:text-red-600"
                         title="Delete product"
                     >
@@ -70,7 +70,7 @@ const ProductCard = ({
                                     <Button
                                         variant="secondary"
                                         size="sm"
-                                        className="flex w-48 items-center justify-center gap-2"
+                                        className="flex w-36 items-center justify-center gap-2"
                                         onClick={() =>
                                             onUploadThumbnail(product)
                                         }
@@ -81,7 +81,7 @@ const ProductCard = ({
                                     <Button
                                         variant="secondary"
                                         size="sm"
-                                        className="flex w-48 items-center justify-center gap-2"
+                                        className="flex w-36 items-center justify-center gap-2"
                                         onClick={() => onUploadImages(product)}
                                     >
                                         <Images size={16} />

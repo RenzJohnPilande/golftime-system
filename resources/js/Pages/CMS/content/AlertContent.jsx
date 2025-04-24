@@ -104,7 +104,7 @@ const AlertContent = ({ alerts }) => {
                             Control site-wide topbar alerts from one place.
                         </CardDescription>
                     </div>
-                    <div className="w-fit">
+                    <div className="w-full md:w-fit">
                         <PrimaryButton
                             text={'New Alert'}
                             style={{
@@ -130,9 +130,9 @@ const AlertContent = ({ alerts }) => {
                         {alerts.map((alert) => (
                             <div
                                 key={alert.id}
-                                className="flex items-center justify-between rounded-md border p-4"
+                                className="flex w-full flex-wrap items-center justify-between rounded-md border p-4"
                             >
-                                <div className="flex items-center space-x-3">
+                                <div className="flex w-full flex-wrap items-center space-x-3">
                                     <div>
                                         <div className="font-medium">
                                             {alert.message}
@@ -144,29 +144,29 @@ const AlertContent = ({ alerts }) => {
                                                 : 'Inactive'}
                                         </div>
                                     </div>
-                                </div>
-                                <div className="flex space-x-2">
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className="flex-1"
-                                        onClick={() => {
-                                            setSelected(alert.id);
-                                            setAlertDialogOpen(true);
-                                        }}
-                                    >
-                                        <Pencil /> Edit
-                                    </Button>
-                                    <Button
-                                        variant="destructive"
-                                        size="sm"
-                                        className="flex-1"
-                                        onClick={() => {
-                                            handleDelete(alert.id);
-                                        }}
-                                    >
-                                        <Trash2 /> Delete
-                                    </Button>
+                                    <div className="flex w-full justify-end space-x-2">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="flex"
+                                            onClick={() => {
+                                                setSelected(alert.id);
+                                                setAlertDialogOpen(true);
+                                            }}
+                                        >
+                                            <Pencil /> Edit
+                                        </Button>
+                                        <Button
+                                            variant="destructive"
+                                            size="sm"
+                                            className="flex"
+                                            onClick={() => {
+                                                handleDelete(alert.id);
+                                            }}
+                                        >
+                                            <Trash2 /> Delete
+                                        </Button>
+                                    </div>
                                 </div>
                             </div>
                         ))}

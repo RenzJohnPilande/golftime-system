@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogHelper;
 use App\Models\Constant;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -63,6 +64,8 @@ class ProductController extends Controller
             'price' => $request->input('price'),
         ]);
 
+        LogHelper::logAction('Product Created', "Product {$product->name} has been created");
+
         return redirect()->back()->with('success', 'Product created successfully!');
     }
 
@@ -86,7 +89,7 @@ class ProductController extends Controller
         ]);
 
         $product->update($data);
-
+        LogHelper::logAction('Product Updated', "Product {$product->name} has been updated");
         return back()->with('success', 'Product details updated successfully!');
     }
 
@@ -123,9 +126,9 @@ class ProductController extends Controller
 
             $product->update(['thumbnail' => $path]);
 
+            LogHelper::logAction('Product Updated', "Product thumbnail has been updated");
             return back()->with('success', 'Thumbnail updated successfully!');
         }
-
         return back()->withErrors(['thumbnail' => 'Thumbnail upload failed.']);
     }
 
@@ -173,7 +176,7 @@ class ProductController extends Controller
         // Save updated image paths to DB
         $product->images = $finalPaths;
         $product->save();
-
+        LogHelper::logAction('Product Updated', "Product images has been updated");
         return back()->with('success', 'Product images updated successfully!');
     }
 
@@ -214,6 +217,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $product->delete();
+        LogHelper::logAction('Product Deleted', "Product {$product->name} has been deleted");
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
 }

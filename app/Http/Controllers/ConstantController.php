@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogHelper;
 use App\Models\Constant;
 use Illuminate\Http\Request;
 
@@ -17,7 +18,7 @@ class ConstantController extends Controller
         ]);
 
         $constant = Constant::create($validated);
-
+        LogHelper::logAction("{$constant->type} Created", "{$constant->type} {$constant->description} has been created");
         return redirect()->back()->with('success', 'Constant created.');
     }
 
@@ -39,7 +40,7 @@ class ConstantController extends Controller
         ]);
 
         $constant->update($validated);
-
+        LogHelper::logAction("{$constant->type} Updated", "{$constant->type} {$constant->description} has been updated");
         return redirect()->back()->with('success', 'Constant updated.');
     }
 
@@ -47,7 +48,7 @@ class ConstantController extends Controller
     {
         $constant = Constant::findOrFail($id);
         $constant->delete();
-
+        LogHelper::logAction("{$constant->type} Deleted", "{$constant->type} {$constant->description} has been deleted");
         return redirect()->back()->with('success', 'Constant deleted.');
     }
 }

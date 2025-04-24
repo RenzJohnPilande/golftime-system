@@ -156,7 +156,7 @@ const BannerContent = ({ banners }) => {
                             throughout the site.
                         </CardDescription>
                     </div>
-                    <div className="w-fit">
+                    <div className="w-full md:w-fit">
                         <PrimaryButton
                             text={'Add Banner'}
                             style={{

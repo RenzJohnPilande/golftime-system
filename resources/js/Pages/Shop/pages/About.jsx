@@ -17,9 +17,9 @@ import {
     Target,
 } from 'lucide-react';
 
-const About = ({ alerts }) => {
+const About = ({ alerts, columns }) => {
     return (
-        <ShopLayout alerts={alerts}>
+        <ShopLayout alerts={alerts} columns={columns}>
             <Head title="GolfTime Corp - About Us" />
             <div className="flex w-full flex-wrap justify-center">
                 <div className="container flex flex-wrap gap-5 px-5 py-10">

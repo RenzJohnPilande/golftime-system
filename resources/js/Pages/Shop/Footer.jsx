@@ -5,7 +5,7 @@ import {
     BiLogoTwitter,
 } from 'react-icons/bi';
 
-function Footer() {
+function Footer({ columns }) {
     return (
         <>
             <div className="flex w-full flex-wrap justify-center bg-green-950 py-10 capitalize">
@@ -50,66 +50,40 @@ function Footer() {
                         <span className="text-xl font-bold text-white">
                             Products
                         </span>
-                        <Link
-                            href="/products/men"
-                            className="my-1 text-sm text-white focus:outline-none"
-                        >
-                            Men
-                        </Link>
-                        <Link
-                            href="/products/women"
-                            className="my-1 text-sm text-white focus:outline-none"
-                        >
-                            Women
-                        </Link>
-                        <Link
-                            href="/products/kids"
-                            className="my-1 text-sm text-white focus:outline-none"
-                        >
-                            Kids
-                        </Link>
-                        <Link
-                            href="/products/bags"
-                            className="my-1 text-sm text-white focus:outline-none"
-                        >
-                            Bags
-                        </Link>
-                        <Link
-                            href="/products/accessories"
-                            className="my-1 text-sm text-white focus:outline-none"
-                        >
-                            Accessories
-                        </Link>
+                        {columns
+                            .filter(
+                                (col) =>
+                                    col.type === 'Product Column' && col.active,
+                            )
+                            .map((col) => (
+                                <Link
+                                    key={col.id}
+                                    href={`${col.value}`}
+                                    className="my-1 text-sm text-white focus:outline-none"
+                                >
+                                    {col.description}
+                                </Link>
+                            ))}
                     </div>
 
                     <div className="my-4 flex w-1/2 flex-col flex-wrap content-start lg:my-1 lg:w-1/4 lg:content-center">
                         <span className="text-xl font-bold text-white">
-                            About Us
+                            Company Info
                         </span>
-                        <Link
-                            href="/about/company-profile"
-                            className="my-1 text-sm text-white focus:outline-none"
-                        >
-                            Company Profile
-                        </Link>
-                        <Link
-                            href="/about/mission"
-                            className="my-1 text-sm text-white focus:outline-none"
-                        >
-                            Our Mission
-                        </Link>
-                        <Link
-                            href="/about/vision"
-                            className="my-1 text-sm text-white focus:outline-none"
-                        >
-                            Our Vision
-                        </Link>
-                        <Link
-                            href="/contact"
-                            className="my-1 text-sm text-white focus:outline-none"
-                        >
-                            Contact Us
-                        </Link>
+                        {columns
+                            .filter(
+                                (col) =>
+                                    col.type === 'About Column' && col.active,
+                            )
+                            .map((col) => (
+                                <Link
+                                    key={col.id}
+                                    href={`${col.value}`}
+                                    className="my-1 text-sm text-white focus:outline-none"
+                                >
+                                    {col.description}
+                                </Link>
+                            ))}
                     </div>
 
                     <div className="my-4 flex w-1/2 flex-col flex-wrap content-start lg:my-1 lg:w-1/4 lg:content-center">

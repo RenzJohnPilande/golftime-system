@@ -59,7 +59,7 @@ const EmployeeColumns = (
                                           text="View"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-green-500 text-white',
+                                                  'flex w-full gap-3 bg-green-500',
                                           }}
                                           onClick={() => {
                                               setSelected(row.id);
@@ -73,7 +73,7 @@ const EmployeeColumns = (
                                           text="Edit"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500 text-white',
+                                                  'flex w-full gap-3 bg-blue-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -93,7 +93,7 @@ const EmployeeColumns = (
                                           text="Delete"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500 text-white',
+                                                  'flex w-full gap-3 bg-red-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -214,7 +214,7 @@ const EmployeeColumns = (
                                           text="View"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-green-500 text-white',
+                                                  'flex w-full gap-3 bg-green-500',
                                           }}
                                           onClick={() => {
                                               setSelected(row.id);
@@ -228,7 +228,7 @@ const EmployeeColumns = (
                                           text="Edit"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500 text-white',
+                                                  'flex w-full gap-3 bg-blue-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -248,7 +248,7 @@ const EmployeeColumns = (
                                           text="Delete"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500 text-white',
+                                                  'flex w-full gap-3 bg-red-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({

@@ -38,7 +38,7 @@ const DepartmentColumns = (
               {
                   accessorKey: 'name',
                   header: () => (
-                      <span className="font-semibold capitalize text-white">
+                      <span className="font-semibold capitalize">
                           Department Name
                       </span>
                   ),
@@ -47,7 +47,7 @@ const DepartmentColumns = (
               {
                   id: 'actions',
                   header: () => (
-                      <span className="flex w-full justify-center text-center font-semibold capitalize text-white">
+                      <span className="flex w-full justify-center text-center font-semibold capitalize">
                           Actions
                       </span>
                   ),
@@ -66,7 +66,7 @@ const DepartmentColumns = (
                                           text="Edit"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500 text-white',
+                                                  'flex w-full gap-3 bg-blue-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -87,7 +87,7 @@ const DepartmentColumns = (
                                           text="Delete"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500 text-white',
+                                                  'flex w-full gap-3 bg-red-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -149,7 +149,7 @@ const DepartmentColumns = (
                                           type="button"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500 text-white',
+                                                  'flex w-full gap-3 bg-blue-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -172,7 +172,7 @@ const DepartmentColumns = (
                                           type="button"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500 text-white',
+                                                  'flex w-full gap-3 bg-red-500',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({

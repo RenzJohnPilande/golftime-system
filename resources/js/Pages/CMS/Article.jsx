@@ -139,7 +139,7 @@ const Article = ({ articles }) => {
                 },
             });
         } else if (formAction === 'delete article') {
-            destroy(route('articles.delete', { id }), {
+            destroy(route('articles.delete', { id: selected }), {
                 onSuccess: () => {
                     setSelected(null);
                     onClose();
@@ -187,7 +187,7 @@ const Article = ({ articles }) => {
                         />
                     </div>
                 </div>
-                <div className="grid w-full grid-cols-1 flex-wrap gap-4 py-5 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+                <div className="grid w-full grid-cols-1 flex-wrap gap-4 py-5 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4">
                     {articles.data.map((article) => (
                         <ArticleCard
                             key={article.id}

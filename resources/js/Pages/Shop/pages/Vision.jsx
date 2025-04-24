@@ -11,9 +11,9 @@ import { Button } from '@/components/ui/button';
 import { Head, Link } from '@inertiajs/react';
 import { Award, Lightbulb, Recycle } from 'lucide-react';
 
-const Vision = ({ content, alerts }) => {
+const Vision = ({ content, alerts, columns }) => {
     return (
-        <ShopLayout alerts={alerts}>
+        <ShopLayout alerts={alerts} columns={columns}>
             <Head title="GolfTime Corp - Our Vision" />
             <div className="flex w-full flex-wrap justify-center">
                 <div className="container flex flex-wrap gap-5 px-5 py-10">
@@ -52,7 +52,6 @@ const Vision = ({ content, alerts }) => {
                                     <img
                                         src="/storage/resources/booth.jpg"
                                         alt="Future of Golf Fashion"
-                                        fill
                                         className="h-full w-full object-cover object-center"
                                     />
                                 </div>

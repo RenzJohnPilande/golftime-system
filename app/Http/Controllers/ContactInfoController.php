@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogHelper;
 use App\Models\ContactInfo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -30,8 +31,8 @@ class ContactInfoController extends Controller
             'business_hours' => 'required|string',
         ]);
 
-        ContactInfo::updateOrCreate(['id' => 1], $validated);
-
+        $data = ContactInfo::updateOrCreate(['id' => 1], $validated);
+        LogHelper::logAction('Contact info Updated', "Contact info has been updated");
         return redirect()->back()->with('success', 'Contact Info updated.');
     }
 }

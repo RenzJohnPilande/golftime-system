@@ -12,13 +12,13 @@ import { Head, router, usePage } from '@inertiajs/react';
 import ArticleCard from '../components/ArticleCard';
 import FeaturedProducts from '../components/FeaturedProducts';
 
-const News = ({ articles, products, alerts }) => {
+const News = ({ articles, products, alerts, columns }) => {
     const { url } = usePage();
     const handlePageChange = (page) => {
         router.get(url.split('?')[0], { page }, { preserveScroll: true });
     };
     return (
-        <ShopLayout alerts={alerts}>
+        <ShopLayout alerts={alerts} columns={columns}>
             <Head title="GolfTime Corp - News" />
             <div className="flex w-full flex-wrap justify-center">
                 <div className="container flex flex-wrap gap-5 px-5 py-10">

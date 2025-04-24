@@ -106,7 +106,7 @@ const ConstantContent = ({ constants }) => {
                             other global settings used throughout the site.
                         </CardDescription>
                     </div>
-                    <div className="w-fit">
+                    <div className="w-full md:w-fit">
                         <PrimaryButton
                             text={'New Constant'}
                             style={{
@@ -131,10 +131,10 @@ const ConstantContent = ({ constants }) => {
                         {constants.map((constant) => (
                             <div
                                 key={constant.id}
-                                className="flex items-center justify-between rounded-md border p-4"
+                                className="flex flex-wrap items-center justify-between gap-4 rounded-md border p-4 md:flex-nowrap"
                             >
                                 <div className="flex w-full items-center">
-                                    <div className="grid w-full grid-cols-3 gap-4 text-start">
+                                    <div className="grid w-full grid-cols-2 gap-4 text-start md:grid-cols-4">
                                         <div className="flex w-full flex-col">
                                             <div className="text-xs text-zinc-500">
                                                 Type
@@ -153,6 +153,14 @@ const ConstantContent = ({ constants }) => {
                                         </div>
                                         <div className="flex w-full flex-col">
                                             <div className="text-xs text-zinc-500">
+                                                Value
+                                            </div>
+                                            <div className="text-sm font-medium">
+                                                {constant.value}
+                                            </div>
+                                        </div>
+                                        <div className="flex w-full flex-col">
+                                            <div className="text-xs text-zinc-500">
                                                 Status
                                             </div>
                                             <div className="text-sm font-medium">
@@ -163,7 +171,7 @@ const ConstantContent = ({ constants }) => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="flex space-x-2">
+                                <div className="flex w-full space-x-2 md:w-fit">
                                     <Button
                                         variant="outline"
                                         size="sm"
@@ -180,7 +188,7 @@ const ConstantContent = ({ constants }) => {
                                         size="sm"
                                         className="flex-1"
                                         onClick={() => {
-                                            handleDelete(alert.id);
+                                            handleDelete(constant.id);
                                         }}
                                     >
                                         <Trash2 /> Delete

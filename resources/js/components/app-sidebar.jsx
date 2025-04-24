@@ -24,8 +24,8 @@ import {
     Calendar,
     LayoutDashboard,
     LayoutTemplate,
-    List,
     ListChecksIcon as ListCheck,
+    ListChecks,
     Newspaper,
     ShoppingBag,
     User2,
@@ -42,15 +42,15 @@ const items = [
         icon: LayoutDashboard,
     },
     {
-        title: 'My Events',
+        title: 'Events',
         url: '/events',
         icon: Calendar,
         requiredPermission: 'event_management',
     },
     {
-        title: 'My Tasks',
+        title: 'Tasks',
         url: '/tasks',
-        icon: List,
+        icon: ListChecks,
         requiredPermission: 'task_management',
     },
 ];

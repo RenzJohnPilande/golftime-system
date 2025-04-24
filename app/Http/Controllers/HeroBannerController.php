@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\LogHelper;
 use App\Models\HeroBanner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -39,8 +40,8 @@ class HeroBannerController extends Controller
             $validated['image'] = $request->file('image')->store('images/banners/image', 'public');
         }
 
-        HeroBanner::create($validated);
-
+        $banner = HeroBanner::create($validated);
+        LogHelper::logAction('Banner Created', "Banner {$banner->title} has been created");
         return back()->with('success', 'Banner created successfully.');
     }
 
@@ -55,7 +56,7 @@ class HeroBannerController extends Controller
         ]);
 
         $banner->update($data);
-
+        LogHelper::logAction('Banner Updated', "Banner {$banner->title} has been updated");
         return back()->with('success', 'Banner updated successfully.');
     }
 
@@ -64,7 +65,7 @@ class HeroBannerController extends Controller
         $banner = HeroBanner::findOrFail($id);
 
         $banner->delete();
-
+        LogHelper::logAction('Banner Deleted', "Banner {$banner->title} has been deleted");
         return redirect()->back()->with('success', 'Banner deleted successfully.');
     }
 
@@ -119,7 +120,7 @@ class HeroBannerController extends Controller
         }
 
         $banner->update($updates);
-
+        LogHelper::logAction('Banner Updated', "Banner {$banner->title} has been updated");
         return back()->with('success', 'Banner images updated successfully!');
     }
 }

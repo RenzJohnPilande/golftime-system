@@ -50,18 +50,18 @@ const ArticleCard = ({
                 </div>
                 <div className="flex w-full flex-col justify-between p-5">
                     <div className="flex w-full flex-wrap">
-                        <h2 className="text-sm font-bold leading-tight">
+                        <h2 className="w-full text-sm font-bold leading-tight">
                             {article?.title || 'Article Title'}
                         </h2>
                         <div className="text-muted-foreground mb-4 mt-3 flex flex-wrap items-center gap-4 text-sm">
-                            <div className="flex items-center gap-1">
+                            <div className="flex w-full items-center gap-1">
                                 <MdOutlineLocationOn size={16} />
-                                <span className="max-w-[200px] truncate">
+                                <span className="line-clamp-1 w-full">
                                     {article?.location ||
                                         'Location not specified'}
                                 </span>
                             </div>
-                            <div className="flex items-center gap-1">
+                            <div className="flex w-full items-center gap-1">
                                 <MdOutlineCalendarToday size={16} />
                                 <span>
                                     {formatDate(article?.date) ||
