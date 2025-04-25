@@ -25,7 +25,7 @@ const JobColumns = (
                           Job Title
                       </span>
                   ),
-                  cell: (row) => <p className="px-2 py-3">{row.job_title}</p>,
+                  cell: (row) => <p className="py-3">{row.job_title}</p>,
               },
               {
                   id: 'actions',
@@ -49,7 +49,7 @@ const JobColumns = (
                                           text="Edit"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500',
+                                                  'flex w-full gap-3 bg-blue-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -69,7 +69,7 @@ const JobColumns = (
                                           text="Delete"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500',
+                                                  'flex w-full gap-3 bg-red-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -97,7 +97,7 @@ const JobColumns = (
                           Job Title
                       </span>
                   ),
-                  cell: (row) => <p className="px-2 py-3">{row.job_title}</p>,
+                  cell: (row) => <p className="py-3">{row.job_title}</p>,
               },
               {
                   accessorKey: 'job_description',
@@ -107,7 +107,7 @@ const JobColumns = (
                       </span>
                   ),
                   cell: (row) => (
-                      <p className="line-clamp-2 px-2 py-3 text-xs capitalize">
+                      <p className="line-clamp-2 py-3 text-xs capitalize">
                           {row.job_description ?? 'None'}
                       </p>
                   ),
@@ -134,7 +134,7 @@ const JobColumns = (
                                           text="Edit"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500',
+                                                  'flex w-full gap-3 bg-blue-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -154,7 +154,7 @@ const JobColumns = (
                                           text="Delete"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500',
+                                                  'flex w-full gap-3 bg-red-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({

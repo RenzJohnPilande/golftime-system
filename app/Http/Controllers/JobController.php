@@ -10,10 +10,19 @@ use Illuminate\Support\Facades\Auth;
 
 class JobController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = Job::query();
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('job_title', 'like', "%{$search}%");
+            });
+        }
+
+        $jobs = $query->latest()->paginate(9)->withQueryString();
         return Inertia::render('Management/Job', [
-            'jobs' => Job::all(),
+            'jobs' => $jobs,
         ]);
     }
 
@@ -25,7 +34,7 @@ class JobController extends Controller
         ]);
 
         $job = Job::create($request->all());
-        
+
         $user = Auth::user();
         $username = $user ? $user->firstname . " " . $user->lastname : "System";
 
@@ -64,7 +73,7 @@ class JobController extends Controller
         if ($oldTitle !== $job->job_title) {
             $changes[] = "Job title changed was changed from \"{$oldTitle}\" to \"{$job->job_title}\"";
         }
-        
+
         if ($oldDescription !== $job->job_description) {
             $changes[] = "Job description was changed from \"{$oldDescription}\" to \"{$job->job_description}\"";
         }

@@ -161,7 +161,7 @@ const BannerContent = ({ banners }) => {
                             text={'Add Banner'}
                             style={{
                                 wrapper:
-                                    'flex flex-wrap w-full justify-center text-center transition-all duration-50 bg-zinc-700 hover:bg-zinc-600 text-white shadow-lg',
+                                    'flex flex-wrap w-full justify-center text-center transition-all duration-50 bg-gray-700 hover:bg-gray-600 text-white shadow-lg',
                                 text: 'capitalize text-sm md:text-xs',
                             }}
                             onClick={() => {

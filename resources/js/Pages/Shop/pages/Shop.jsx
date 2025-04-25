@@ -12,7 +12,7 @@ import { Head, Link, router, usePage } from '@inertiajs/react';
 import { useMemo } from 'react';
 import FeaturedArticle from '../components/FeaturedArticle';
 import ProductCard from '../components/ProductCard';
-const Shop = ({ products, articles, alerts, columns }) => {
+const Shop = ({ products, articles, alerts, columns, filters }) => {
     const { url } = usePage();
 
     const pathSegments = useMemo(() => {

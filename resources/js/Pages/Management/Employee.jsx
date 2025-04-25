@@ -1,8 +1,12 @@
 import TableComponent from '@/components/datatable/TableComponent';
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
+import Pagination from '@/components/Pagination';
 import PrimaryButton from '@/components/PrimaryButton';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import EmployeeColumns from './columns/EmployeeColumns';
 import EmployeeDialog from './dialogs/EmployeeDialog';
@@ -112,10 +116,32 @@ const Employee = ({ employees, departments, jobs, permissions }) => {
         );
     }, [isMobile]);
 
+    const { url } = usePage();
+    const handlePageChange = (page) => {
+        router.get(url.split('?')[0], { page }, { preserveScroll: true });
+    };
+
+    // Search
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            router.get(
+                route('employees.index'),
+                { search: searchTerm },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                },
+            );
+        }
+    };
+
     return (
         <AuthenticatedLayout>
             <Head title="Employees" />
-            <div className="flex min-h-screen w-full flex-col flex-wrap bg-zinc-50 p-5">
+            <div className="flex min-h-screen w-full flex-col flex-wrap gap-2 bg-zinc-50 p-5">
                 <div className="flex h-fit w-full flex-wrap items-end justify-between gap-2">
                     <div className="w-full md:w-auto">
                         <h1 className="text-3xl font-bold md:text-2xl">
@@ -131,7 +157,7 @@ const Employee = ({ employees, departments, jobs, permissions }) => {
                             text={'new employee'}
                             style={{
                                 wrapper:
-                                    'flex flex-wrap w-full justify-center text-center transition-all duration-50 bg-zinc-700 hover:bg-zinc-600 text-white shadow-lg',
+                                    'flex flex-wrap w-full justify-center text-center transition-all duration-50 bg-gray-700 hover:bg-gray-600 text-white shadow-lg',
                                 text: 'capitalize text-sm md:text-xs',
                             }}
                             onClick={() => {
@@ -144,11 +170,37 @@ const Employee = ({ employees, departments, jobs, permissions }) => {
                         />
                     </div>
                 </div>
-                <div className="flex w-full flex-wrap py-5">
-                    <TableComponent
-                        columns={columns}
-                        data={employees}
-                        rowsPerPage={10}
+                <div className="flex w-full flex-wrap">
+                    <div className="flex w-full flex-wrap items-end justify-between gap-2 md:flex-nowrap">
+                        <h1 className="w-full text-lg font-bold capitalize">
+                            Employee List
+                        </h1>
+                        <form
+                            onSubmit={handleSearchSubmit}
+                            className="flex w-full items-center justify-end gap-2 pb-2"
+                        >
+                            <Input
+                                type="search"
+                                placeholder="Search Employee"
+                                className="w-full md:max-w-[200px]"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                autoFocus
+                            />
+                            <Button
+                                variant="outline"
+                                type="submit"
+                                className="bg-gray-700 text-white hover:bg-gray-600 hover:text-white"
+                            >
+                                <Search />
+                            </Button>
+                        </form>
+                    </div>
+                    <TableComponent columns={columns} data={employees.data} />
+                    <Pagination
+                        currentPage={employees.current_page}
+                        totalPages={employees.last_page}
+                        onPageChange={handlePageChange}
                     />
                 </div>
                 <EmployeeDialog

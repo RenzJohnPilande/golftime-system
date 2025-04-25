@@ -30,11 +30,28 @@ class ShopController extends Controller
 
     public function shop(Request $request)
     {
+        $search = $request->input('search');
+
+        $products = Product::query()
+            ->when(
+                $search,
+                fn($query) =>
+                $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('code', 'like', "%{$search}%");
+                })
+            )
+            ->paginate(8)
+            ->withQueryString();
+
         return Inertia::render('Shop/pages/Shop', [
-            'products' => Product::paginate(8),
+            'products' => $products,
             'articles' => Article::latest()->take(4)->get(),
             'alerts' => TopbarAlert::all(),
             'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
+            'filters' => [
+                'search' => $search,
+            ],
         ]);
     }
 

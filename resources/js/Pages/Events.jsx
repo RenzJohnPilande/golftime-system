@@ -2,7 +2,9 @@ import TableComponent from '@/components/datatable/TableComponent';
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
 import EventDetailsDialog from '@/components/dialogs/EventDetailsDialog';
 import EventDialog from '@/components/dialogs/EventDialog';
+import Pagination from '@/components/Pagination';
 import PrimaryButton from '@/components/PrimaryButton';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,7 +13,9 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Input } from '@/components/ui/input';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import {
     MdMoreHoriz,
@@ -363,6 +367,29 @@ const Events = ({ events, employees }) => {
         ];
     }, [isMobile]);
 
+    //Pagination
+    const { url } = usePage();
+    const handlePageChange = (page) => {
+        router.get(url.split('?')[0], { page }, { preserveScroll: true });
+    };
+
+    // Search
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            router.get(
+                route('events.index'),
+                { search: searchTerm },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                },
+            );
+        }
+    };
+
     return (
         <AuthenticatedLayout>
             <Head title="Events" />
@@ -382,7 +409,7 @@ const Events = ({ events, employees }) => {
                             text={'new event'}
                             style={{
                                 wrapper:
-                                    'flex flex-wrap w-full justify-center text-center transition-all duration-50 bg-zinc-700 hover:bg-zinc-600 text-white shadow-lg',
+                                    'flex flex-wrap w-full justify-center text-center transition-all duration-50 bg-gray-700 hover:bg-gray-600 text-white shadow-lg',
                                 text: 'capitalize text-sm md:text-xs',
                             }}
                             onClick={() => {
@@ -397,11 +424,37 @@ const Events = ({ events, employees }) => {
                         />
                     </div>
                 </div>
-                <div className="flex w-full flex-wrap py-5">
-                    <TableComponent
-                        columns={columns}
-                        data={events}
-                        rowsPerPage={10}
+                <div className="flex w-full flex-wrap">
+                    <div className="flex w-full flex-wrap items-end justify-between gap-2 md:flex-nowrap">
+                        <h1 className="w-full text-lg font-bold capitalize">
+                            Event List
+                        </h1>
+                        <form
+                            onSubmit={handleSearchSubmit}
+                            className="flex w-full items-center justify-end gap-2 pb-2"
+                        >
+                            <Input
+                                type="search"
+                                placeholder="Search"
+                                className="w-full md:max-w-[200px]"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                autoFocus
+                            />
+                            <Button
+                                variant="outline"
+                                type="submit"
+                                className="bg-gray-700 text-white hover:bg-gray-600 hover:text-white"
+                            >
+                                <Search />
+                            </Button>
+                        </form>
+                    </div>
+                    <TableComponent columns={columns} data={events.data} />
+                    <Pagination
+                        currentPage={events.current_page}
+                        totalPages={events.last_page}
+                        onPageChange={handlePageChange}
                     />
                 </div>
                 <EventDialog

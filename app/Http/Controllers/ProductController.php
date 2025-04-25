@@ -5,16 +5,27 @@ namespace App\Http\Controllers;
 use App\Helpers\LogHelper;
 use App\Models\Constant;
 use App\Models\Product;
+use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = Product::query();
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('code', 'like', "%{$search}%");
+            });
+        }
+
+        $products = $query->latest()->paginate(9)->withQueryString();
         return Inertia::render('CMS/Product', [
-            'products' => Product::paginate(10),
+            'products' => $products,
             'categories' => Constant::where('type', 'Category')->orderBy('description')->get(),
         ]);
     }

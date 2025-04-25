@@ -42,7 +42,7 @@ const DepartmentColumns = (
                           Department Name
                       </span>
                   ),
-                  cell: (row) => <p className="px-2 py-3">{row.name}</p>,
+                  cell: (row) => <p className="py-3">{row.name}</p>,
               },
               {
                   id: 'actions',
@@ -66,7 +66,7 @@ const DepartmentColumns = (
                                           text="Edit"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500',
+                                                  'flex w-full gap-3 bg-blue-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -87,7 +87,7 @@ const DepartmentColumns = (
                                           text="Delete"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500',
+                                                  'flex w-full gap-3 bg-red-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -112,13 +112,13 @@ const DepartmentColumns = (
               {
                   accessorKey: 'name',
                   header: 'Department Name',
-                  cell: (row) => <p className="px-2 py-3">{row.name}</p>,
+                  cell: (row) => <p className="py-3">{row.name}</p>,
               },
               {
                   accessorKey: 'manager',
                   header: 'Manager',
                   cell: (row) => (
-                      <p className="px-2 py-3">
+                      <p className="py-3">
                           {getSupervisorName(row.supervisor)}
                       </p>
                   ),
@@ -127,7 +127,7 @@ const DepartmentColumns = (
                   accessorKey: 'employee_count',
                   header: 'Employees',
                   cell: (row) => (
-                      <p className="px-2 py-3">{getEmployeeCount(row.name)}</p>
+                      <p className="py-3">{getEmployeeCount(row.name)}</p>
                   ),
               },
               {
@@ -149,7 +149,7 @@ const DepartmentColumns = (
                                           type="button"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500',
+                                                  'flex w-full gap-3 bg-blue-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -172,7 +172,7 @@ const DepartmentColumns = (
                                           type="button"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500',
+                                                  'flex w-full gap-3 bg-red-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({

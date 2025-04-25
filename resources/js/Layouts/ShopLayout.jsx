@@ -6,7 +6,7 @@ export default function ShopLayout({ children, alerts, columns }) {
     return (
         <div className="flex min-h-screen w-full flex-col bg-white">
             <AlertBar alerts={alerts} />
-            <Navigation />
+            <Navigation columns={columns} />
             <main className="w-full flex-grow">{children}</main>
             <Footer columns={columns} />
         </div>

@@ -39,37 +39,37 @@ const ContentManagement = ({
                         <div className="flex h-16 w-full flex-wrap xl:h-auto">
                             <TabsList className="grid w-full grid-cols-3 bg-transparent xl:grid-cols-6">
                                 <TabsTrigger
-                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-400 capitalize text-white"
                                     value="promotions"
                                 >
                                     Promotions
                                 </TabsTrigger>
                                 <TabsTrigger
-                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-400 capitalize text-white"
                                     value="about us"
                                 >
                                     About
                                 </TabsTrigger>
                                 <TabsTrigger
-                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-400 capitalize text-white"
                                     value="contact us"
                                 >
                                     Contact
                                 </TabsTrigger>
                                 <TabsTrigger
-                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-400 capitalize text-white"
                                     value="banners"
                                 >
                                     Banners
                                 </TabsTrigger>
                                 <TabsTrigger
-                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-400 capitalize text-white"
                                     value="alerts"
                                 >
                                     Alerts
                                 </TabsTrigger>
                                 <TabsTrigger
-                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-200 capitalize text-zinc-900"
+                                    className="w-full rounded-t-none border border-zinc-50 bg-gray-400 capitalize text-white"
                                     value="constants"
                                 >
                                     constants

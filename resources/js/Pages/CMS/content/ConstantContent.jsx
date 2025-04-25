@@ -102,8 +102,8 @@ const ConstantContent = ({ constants }) => {
                     <div className="flex flex-col flex-wrap">
                         <CardTitle>Constants Management</CardTitle>
                         <CardDescription>
-                            Manage reusable values like categories, tags, and
-                            other global settings used throughout the site.
+                            Manage reusable values and other global settings
+                            used throughout the site.
                         </CardDescription>
                     </div>
                     <div className="w-full md:w-fit">
@@ -111,7 +111,7 @@ const ConstantContent = ({ constants }) => {
                             text={'New Constant'}
                             style={{
                                 wrapper:
-                                    'flex flex-wrap w-full justify-center text-center transition-all duration-50 bg-zinc-700 hover:bg-zinc-600 text-white shadow-lg',
+                                    'flex flex-wrap w-full justify-center text-center transition-all duration-50 bg-gray-700 hover:bg-gray-600 text-white shadow-lg',
                                 text: 'capitalize text-sm md:text-xs',
                             }}
                             onClick={() => {

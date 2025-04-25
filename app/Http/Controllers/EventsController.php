@@ -9,6 +9,7 @@ use Inertia\Inertia;
 use Inertia\Response;
 use App\Helpers\LogHelper;
 use App\Models\Employee;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class EventsController extends Controller
@@ -16,14 +17,27 @@ class EventsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+
+        $query = Events::with('user');
+
         if ($user->role === 'employee') {
-            $events = Events::with('user')->where('assigned_to', $user->id)->get();
-        } else {
-            $events = Events::with('user')->get();
+            $query->where('assigned_to', $user->id);
         }
+
+
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%")
+                    ->orWhere('notes', 'like', "%{$search}%");
+            });
+        }
+
+        $events = $query->latest()->paginate(9)->withQueryString();
 
         return Inertia::render('Events', [
             'events' => $events,

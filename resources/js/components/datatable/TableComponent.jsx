@@ -8,21 +8,9 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import { useState } from 'react';
-import Pagination from '../Pagination';
 
-const TableComponent = ({
-    data = [],
-    caption,
-    columns = [],
-    rowsPerPage = 10,
-}) => {
+const TableComponent = ({ data, caption, columns }) => {
     const [currentPage, setCurrentPage] = useState(1);
-
-    const totalPages = Math.ceil(data.length / rowsPerPage);
-    const paginatedData = data.slice(
-        (currentPage - 1) * rowsPerPage,
-        currentPage * rowsPerPage,
-    );
 
     return (
         <div className="flex w-full flex-wrap space-y-4">
@@ -48,7 +36,7 @@ const TableComponent = ({
                         </TableRow>
                     </TableHeader>
                     <TableBody>
-                        {paginatedData.length === 0 ? (
+                        {data.length === 0 ? (
                             <TableRow>
                                 <TableCell
                                     colSpan={columns.length}
@@ -58,16 +46,11 @@ const TableComponent = ({
                                         <p className="mb-1 text-lg">
                                             No records found
                                         </p>
-                                        {searchQuery && (
-                                            <p className="text-sm">
-                                                Try adjusting your search query
-                                            </p>
-                                        )}
                                     </div>
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            paginatedData.map((row, index) => (
+                            data.map((row, index) => (
                                 <TableRow
                                     key={row.id || index}
                                     className="border-t transition-colors hover:bg-gray-50"
@@ -87,18 +70,6 @@ const TableComponent = ({
                         )}
                     </TableBody>
                 </Table>
-            </div>
-
-            {totalPages > 1 && (
-                <Pagination
-                    currentPage={currentPage}
-                    totalPages={totalPages}
-                    onPageChange={setCurrentPage}
-                />
-            )}
-
-            <div className="text-muted-foreground flex w-full justify-center text-sm">
-                Showing {paginatedData.length} of {data.length} entries
             </div>
         </div>
     );

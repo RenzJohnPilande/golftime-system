@@ -1,7 +1,4 @@
-'use client';
-
 import { useEffect, useState } from 'react';
-
 const AlertBar = ({ alerts }) => {
     const [currentAlertIndex, setCurrentAlertIndex] = useState(0);
     useEffect(() => {
@@ -21,10 +18,10 @@ const AlertBar = ({ alerts }) => {
     const currentAlert = alerts[currentAlertIndex];
 
     return (
-        <div className={`bg-green-950 px-4 py-2 text-white`}>
+        <div className="hidden bg-green-950 px-4 py-2 text-white md:flex">
             <div className="relative mx-auto flex w-full items-center justify-center">
-                <div className="px-8 text-center text-sm font-medium sm:text-base">
-                    <span>{currentAlert.message}</span>
+                <div className="px-8 text-center text-sm font-medium">
+                    <span className="line-clamp-1">{currentAlert.message}</span>
                 </div>
             </div>
         </div>

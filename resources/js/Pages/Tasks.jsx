@@ -2,7 +2,9 @@ import TableComponent from '@/components/datatable/TableComponent';
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
 import TaskDetailsDialog from '@/components/dialogs/TaskDetailsDialog';
 import TaskDialog from '@/components/dialogs/TaskDialog';
+import Pagination from '@/components/Pagination';
 import PrimaryButton from '@/components/PrimaryButton';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -11,8 +13,10 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, useForm, usePage } from '@inertiajs/react';
+import { Head, router, useForm, usePage } from '@inertiajs/react';
+import { Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import {
     MdMoreHoriz,
@@ -332,6 +336,29 @@ const Tasks = ({ tasks, employees, events }) => {
         }
     };
 
+    //Pagination
+    const { url } = usePage();
+    const handlePageChange = (page) => {
+        router.get(url.split('?')[0], { page }, { preserveScroll: true });
+    };
+
+    // Search
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (searchTerm.trim()) {
+            router.get(
+                route('tasks.index'),
+                { search: searchTerm },
+                {
+                    preserveScroll: true,
+                    preserveState: true,
+                },
+            );
+        }
+    };
+
     return (
         <AuthenticatedLayout>
             <Head title="Tasks" />
@@ -346,12 +373,12 @@ const Tasks = ({ tasks, employees, events }) => {
                             efficiently.
                         </h2>
                     </div>
-                    <div className="w-full md:w-auto">
+                    <div className="flex w-full flex-wrap gap-2 md:w-auto md:flex-nowrap">
                         <PrimaryButton
                             text={'New Task'}
                             style={{
                                 wrapper:
-                                    'flex flex-wrap w-full justify-center text-center transition-all duration-50 bg-zinc-700 hover:bg-zinc-600 text-white shadow-lg',
+                                    'flex flex-wrap w-full justify-center text-center transition-all duration-50 bg-gray-700 hover:bg-gray-600 text-white shadow-lg',
                                 text: 'capitalize text-sm md:text-xs',
                             }}
                             onClick={() => {
@@ -366,11 +393,37 @@ const Tasks = ({ tasks, employees, events }) => {
                         />
                     </div>
                 </div>
-                <div className="flex w-full flex-wrap py-5">
-                    <TableComponent
-                        columns={columns}
-                        data={tasks}
-                        rowsPerPage={10}
+                <div className="flex w-full flex-wrap">
+                    <div className="flex w-full flex-wrap items-end justify-between gap-2 md:flex-nowrap">
+                        <h1 className="w-full text-lg font-bold capitalize">
+                            Task List
+                        </h1>
+                        <form
+                            onSubmit={handleSearchSubmit}
+                            className="flex w-full items-center justify-end gap-2 pb-2"
+                        >
+                            <Input
+                                type="search"
+                                placeholder="Search"
+                                className="w-full md:max-w-[200px]"
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                autoFocus
+                            />
+                            <Button
+                                variant="outline"
+                                type="submit"
+                                className="bg-gray-700 text-white hover:bg-gray-600 hover:text-white"
+                            >
+                                <Search />
+                            </Button>
+                        </form>
+                    </div>
+                    <TableComponent columns={columns} data={tasks.data} />
+                    <Pagination
+                        currentPage={tasks.current_page}
+                        totalPages={tasks.last_page}
+                        onPageChange={handlePageChange}
                     />
                 </div>
                 <TaskDialog

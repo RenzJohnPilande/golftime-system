@@ -17,23 +17,30 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = Auth::user();
+        $query = Task::with('user');
 
         if ($user->role === 'employee') {
-            $tasks = Task::with('user')
-            ->where('assigned_to', $user->id)
-            ->get();
-        } else {
-            $tasks = Task::with('user')->get();
+            $query->where('assigned_to', $user->id);
         }
+
+
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('task_name', 'like', "%{$search}%");
+            });
+        }
+
+        $tasks = $query->latest()->paginate(9)->withQueryString();
 
         return Inertia::render('Tasks', [
             'tasks' => $tasks,
             'employees' => Employee::all(),
             'events' => Events::all(),
-            'success' => session('success'), 
+            'success' => session('success'),
         ]);
     }
 
@@ -61,16 +68,16 @@ class TaskController extends Controller
             'event_id'    => 'required_if:type,event|nullable|exists:events,id',
             'assigned_to' => 'required|exists:users,id',
         ]);
-    
+
         $task = Task::create($validated);
-        
+
         if ($task->type === 'event') {
             LogHelper::logAction('Event Task Created', "Task ID: {$task->id}, Name: {$task->task_name}, Event ID: {$task->event_id}");
         } else {
             LogHelper::logAction('Individual Task Created', "Task ID: {$task->id}, Name: {$task->task_name}, Assigned To: {$task->assigned_to}");
         }
 
-    
+
         return back()->with('success', 'Task created successfully!');
     }
 
@@ -81,22 +88,22 @@ class TaskController extends Controller
     public function show($eventId)
     {
         $tasks = Task::where('event_id', $eventId)->with('user')->get();
-        
+
         if ($tasks->isEmpty()) {
             return response()->json(['message' => 'No tasks found for this event.'], 404);
         }
-    
+
         return response()->json($tasks);
     }
 
     public function show_task($id)
     {
         $tasks = Task::where('id', $id)->with('user')->get();
-        
+
         if ($tasks->isEmpty()) {
             return response()->json(['message' => 'Task not found.'], 404);
         }
-    
+
         return response()->json($tasks);
     }
 
@@ -114,7 +121,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+
         $task = Task::findOrFail($id);
 
         $validated = $request->validate([
@@ -123,12 +130,12 @@ class TaskController extends Controller
             'deadline'    => 'required|date',
             'type'        => 'required|string|in:event,individual',
             'status'      => 'required|string|in:pending,ongoing,complete',
-            'event_id'    => 'nullable|exists:events,id', 
+            'event_id'    => 'nullable|exists:events,id',
             'assigned_to' => 'nullable|exists:users,id',
         ]);
 
         $task->update($validated);
-        
+
         if ($task->type === 'event') {
             LogHelper::logAction('Task Updated', "Task ID: {$task->id}, Name: {$task->task_name}, Event ID: {$task->event_id}, Status: {$task->status}");
         } else {
@@ -139,12 +146,13 @@ class TaskController extends Controller
         return back()->with('success', 'Task deleted successfully!');
     }
 
-    public function complete(Request $request, $id){
+    public function complete(Request $request, $id)
+    {
         $task = Task::findOrFail($id);
         $validated = $request->validate([
             'status' => 'required|string|max:255',
         ]);
-        
+
         $task->update($validated);
         LogHelper::logAction('Task Completed', "Task ID: {$task->id}, Name: {$task->task_name}, Status: {$task->status}");
 
@@ -167,5 +175,4 @@ class TaskController extends Controller
 
         return back()->with('success', 'Task deleted successfully!');
     }
-    
 }

@@ -11,11 +11,22 @@ class LogController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Log::with('user');
+
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('action', 'like', "%{$search}%");
+            });
+        }
+
+        $logs = $query->latest()->paginate(9)->withQueryString();
+
         return Inertia::render('Logs', [
-            'logs' => Log::with('user')->orderBy('created_at', 'desc')->get(),
-            'success' => session('success'), 
+            'logs' => $logs,
+            'success' => session('success'),
         ]);
     }
 

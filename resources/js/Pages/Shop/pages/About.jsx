@@ -10,12 +10,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Head, Link } from '@inertiajs/react';
-import {
-    Building2,
-    ClubIcon as GolfIcon,
-    Lightbulb,
-    Target,
-} from 'lucide-react';
+import { Building2, Lightbulb, Target } from 'lucide-react';
+import { MdGolfCourse } from 'react-icons/md';
 
 const About = ({ alerts, columns }) => {
     return (
@@ -38,7 +34,7 @@ const About = ({ alerts, columns }) => {
                         <div className="container mx-auto px-4 py-12">
                             <div className="mb-12 flex flex-col items-center text-center">
                                 <div className="mb-4 flex items-center">
-                                    <GolfIcon className="mr-2 h-8 w-8" />
+                                    <MdGolfCourse className="mr-2 h-8 w-8" />
                                     <h1 className="text-4xl font-bold">
                                         About Golf Time Corp.
                                     </h1>

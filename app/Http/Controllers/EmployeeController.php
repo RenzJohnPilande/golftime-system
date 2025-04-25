@@ -20,11 +20,24 @@ class EmployeeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $query = Employee::query();
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('firstname', 'like', "%{$search}%")
+                    ->orWhere('firstname', 'like', "%{$search}%")
+                    ->orWhere('middlename', 'like', "%{$search}%")
+                    ->orWhere('lastname', 'like', "%{$search}%")
+                    ->orWhere('position', 'like', "%{$search}%")
+                    ->orWhere('department', 'like', "%{$search}%");
+            });
+        }
 
+        $employees = $query->latest()->paginate(9)->withQueryString();
         return Inertia::render('Management/Employee', [
-            'employees' => Employee::all(),
+            'employees' => $employees,
             "jobs" => Job::all(),
             'departments' => Department::all(),
             'permissions' => Permission::all(),

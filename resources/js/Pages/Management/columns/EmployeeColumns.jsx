@@ -28,7 +28,7 @@ const EmployeeColumns = (
                   accessorKey: 'employee',
                   header: 'Employee',
                   cell: (row) => (
-                      <div className="flex w-full flex-wrap gap-1 px-2">
+                      <div className="flex w-full flex-wrap gap-1">
                           <div className="flex w-full flex-col">
                               <h1 className="text-sm font-medium text-zinc-900">
                                   {row.lastname}, {row.firstname}{' '}
@@ -59,7 +59,7 @@ const EmployeeColumns = (
                                           text="View"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-green-500',
+                                                  'flex w-full gap-3 bg-green-500 text-white',
                                           }}
                                           onClick={() => {
                                               setSelected(row.id);
@@ -73,7 +73,7 @@ const EmployeeColumns = (
                                           text="Edit"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500',
+                                                  'flex w-full gap-3 bg-blue-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -93,7 +93,7 @@ const EmployeeColumns = (
                                           text="Delete"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500',
+                                                  'flex w-full gap-3 bg-red-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -118,7 +118,7 @@ const EmployeeColumns = (
                   accessorKey: 'employee',
                   header: 'Employee',
                   cell: (row) => (
-                      <div className="flex w-full flex-wrap gap-1 px-2">
+                      <div className="flex w-full flex-wrap gap-1">
                           <div className="flex w-full">
                               <h1 className="text-base font-medium">
                                   {row.lastname}, {row.firstname}{' '}
@@ -137,7 +137,7 @@ const EmployeeColumns = (
                   accessorKey: 'department',
                   header: 'Department',
                   cell: (row) => (
-                      <div className="flex w-full flex-wrap gap-1 px-2">
+                      <div className="flex w-full flex-wrap gap-1">
                           <p className="text-xs capitalize text-zinc-600">
                               {row.department}
                           </p>
@@ -148,7 +148,7 @@ const EmployeeColumns = (
                   accessorKey: 'salary',
                   header: 'Salary',
                   cell: (row) => (
-                      <div className="flex w-full flex-wrap gap-1 px-2">
+                      <div className="flex w-full flex-wrap gap-1">
                           <p className="text-xs text-zinc-600">
                               {row.salary
                                   ? `₱${row.salary.toLocaleString()}`
@@ -169,7 +169,7 @@ const EmployeeColumns = (
                           day: 'numeric',
                       });
                       return (
-                          <div className="flex w-full flex-wrap gap-1 px-2">
+                          <div className="flex w-full flex-wrap gap-1">
                               <p className="text-xs text-zinc-600">
                                   {formattedDate}
                               </p>
@@ -181,9 +181,9 @@ const EmployeeColumns = (
                   accessorKey: 'status',
                   header: 'Status',
                   cell: (row) => (
-                      <div className="flex w-full flex-wrap gap-1 px-2">
+                      <div className="flex w-full flex-wrap gap-1">
                           <p
-                              className={`min-w-[80px] rounded border px-2 py-1 text-center text-xs font-semibold capitalize text-white ${
+                              className={`min-w-[80px] rounded border py-1 text-center text-xs font-semibold capitalize text-white ${
                                   {
                                       active: 'bg-green-500',
                                       inactive: 'bg-red-500',
@@ -214,7 +214,7 @@ const EmployeeColumns = (
                                           text="View"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-green-500',
+                                                  'flex w-full gap-3 bg-green-500 text-white',
                                           }}
                                           onClick={() => {
                                               setSelected(row.id);
@@ -228,7 +228,7 @@ const EmployeeColumns = (
                                           text="Edit"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-blue-500',
+                                                  'flex w-full gap-3 bg-blue-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({
@@ -248,7 +248,7 @@ const EmployeeColumns = (
                                           text="Delete"
                                           style={{
                                               wrapper:
-                                                  'flex w-full gap-3 bg-red-500',
+                                                  'flex w-full gap-3 bg-red-500 text-white',
                                           }}
                                           onClick={() => {
                                               setDialogConfig({

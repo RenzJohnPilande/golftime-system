@@ -10,10 +10,19 @@ use Illuminate\Support\Facades\Storage;
 
 class ArticleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = Article::query();
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%");
+            });
+        }
+
+        $articles = $query->latest()->paginate(8)->withQueryString();
         return Inertia::render('CMS/Article', [
-            'articles' => Article::paginate(8),
+            'articles' => $articles,
         ]);
     }
 

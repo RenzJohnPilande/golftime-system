@@ -11,12 +11,20 @@ use Illuminate\Support\Facades\Auth;
 
 class DepartmentController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $query = Department::query();
+        if ($request->filled('search')) {
+            $search = trim($request->input('search'));
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%");
+            });
+        }
 
+        $departments = $query->latest()->paginate(9)->withQueryString();
         return Inertia::render('Management/Department', [
             'employees' => Employee::all(),
-            'departments' => Department::all(),
+            'departments' => $departments,
         ]);
     }
 
@@ -87,7 +95,7 @@ class DepartmentController extends Controller
     {
         $department = Department::findOrFail($id);
         $departmentName = $department->name;
-        
+
         $user = Auth::user();
         $username = $user ? $user->firstname . " " . $user->lastname : "System";
 
