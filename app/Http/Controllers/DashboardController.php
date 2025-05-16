@@ -14,6 +14,7 @@ use App\Models\Promotion;
 use App\Models\Task;
 use App\Models\TopbarAlert;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class DashboardController extends Controller
@@ -65,7 +66,7 @@ class DashboardController extends Controller
                 'complete' => $isAdmin
                     ? Task::where('status', 'complete')->count()
                     : Task::where('assigned_to', $user->id)
-                    ->whereIn('status', 'complete')
+                    ->where('status', 'complete')
                     ->count(),
                 'current_data' => $isAdmin
                     ? Task::where('status', '!=', 'complete')->get()
@@ -114,9 +115,11 @@ class DashboardController extends Controller
                 "topbar_alerts" => TopbarAlert::all(),
             ];
         }
+        $user = Auth::user();
 
         return Inertia::render('Dashboard', [
             'permissions' => $permissions,
+            'user' => $user,
             'logs' => $logs,
             'data' => $data,
         ]);

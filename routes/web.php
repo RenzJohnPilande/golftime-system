@@ -204,16 +204,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('/', [ShopController::class, 'index']);
-Route::get('/news', [ShopController::class, 'news']);
 Route::get('/about', [ShopController::class, 'about']);
 Route::get('/about/company-profile', [ShopController::class, 'companyProfile']);
 Route::get('/about/mission', [ShopController::class, 'mission']);
 Route::get('/about/vision', [ShopController::class, 'vision']);
 Route::get('/contact', [ShopController::class, 'contact']);
 
+Route::prefix('news')->group(function () {
+    Route::get('/', [ShopController::class, 'news'])->name('news.index');
+    Route::get('/{id}', [ShopController::class, 'show_article'])->name('news.details');
+});
+
 Route::prefix('shop')->group(function () {
     Route::get('/', [ShopController::class, 'shop'])->name('shop.index');
-    Route::get('/category/{id}', [ShopController::class, 'show'])->name('shop.product');
+    Route::get('/item/{id}', [ShopController::class, 'show'])->name('shop.product');
     Route::get('/{slug}', [ShopController::class, 'category'])->name('shop.category');
 });
 

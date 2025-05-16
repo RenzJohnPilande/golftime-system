@@ -19,10 +19,11 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $user = Auth::user();
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
         $query = Task::with('user');
 
-        if ($user->role === 'employee') {
+        if (!$user->hasPermission('admin') && !$user->hasPermission('view_all_tasks')) {
             $query->where('assigned_to', $user->id);
         }
 
@@ -34,7 +35,9 @@ class TaskController extends Controller
             });
         }
 
-        $tasks = $query->latest()->paginate(9)->withQueryString();
+        $query->orderByRaw("FIELD(status, 'pending', 'ongoing', 'complete')");
+
+        $tasks = $query->latest()->paginate(8)->withQueryString();
 
         return Inertia::render('Tasks', [
             'tasks' => $tasks,

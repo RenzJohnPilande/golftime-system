@@ -130,7 +130,7 @@ const AppSidebar = ({ user, permissions }) => {
                 <div className="flex items-center gap-3 px-4 py-4">
                     <Avatar className="h-10 w-10 border border-zinc-200">
                         <AvatarImage
-                            src="/images/GolfTimeLogo.png"
+                            src="/public/images/GolfTimeLogo.png"
                             alt="Golf Time Logo"
                         />
                         <AvatarFallback className="bg-zinc-100 text-zinc-800">

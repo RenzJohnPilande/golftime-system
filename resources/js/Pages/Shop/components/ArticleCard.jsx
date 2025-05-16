@@ -25,7 +25,7 @@ const ArticleCard = ({ article }) => {
         >
             <div className="relative aspect-video w-full">
                 <img
-                    src={`/storage/${article.image}`}
+                    src={`/public/${article.image}`}
                     alt={article.title}
                     className="h-full w-full object-cover"
                 />
@@ -51,7 +51,7 @@ const ArticleCard = ({ article }) => {
                 </p>
             </CardContent>
             <CardFooter className="pt-2">
-                <Link href={`/articles/${article.id}`} className="w-full">
+                <Link href={`/news/${article.id}`} className="w-full">
                     <Button variant="outline" className="w-full">
                         Read More
                     </Button>

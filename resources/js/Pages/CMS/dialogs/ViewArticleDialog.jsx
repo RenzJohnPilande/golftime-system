@@ -7,8 +7,6 @@ const ViewArticleDialog = ({ open, close, selected }) => {
     const [loading, setLoading] = useState(false);
     const [data, setData] = useState(null);
 
-    const [imageError, setImageError] = useState(false);
-
     const formatDate = (dateString) => {
         if (!dateString) return '';
         const date = new Date(dateString);
@@ -19,14 +17,7 @@ const ViewArticleDialog = ({ open, close, selected }) => {
         });
     };
 
-    const handleImageError = () => {
-        setImageError(true);
-    };
-
-    const imageSrc =
-        imageError || !data?.image
-            ? '/placeholder.svg?height=600&width=800'
-            : `storage/${data?.image}`;
+    const imageSrc = `/public/${data?.image}`;
 
     useEffect(() => {
         if (selected && open) {
@@ -93,10 +84,9 @@ const ViewArticleDialog = ({ open, close, selected }) => {
                                 </div>
                                 <div className="bg-muted w-full">
                                     <img
-                                        src={imageSrc || '/placeholder.svg'}
+                                        src={`${imageSrc}`}
                                         alt={data?.title}
                                         className="h-full w-full object-contain"
-                                        onError={handleImageError}
                                     />
                                 </div>
                             </div>

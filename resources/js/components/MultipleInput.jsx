@@ -58,11 +58,11 @@ export default forwardRef(function MultipleInput(
     return (
         <div className="space-y-2">
             {inputs.map((inputValue, index) => (
-                <div key={index} className="flex items-center space-x-2">
+                <div key={index} className="flex w-full gap-2">
                     {inputType === 'select' ? (
                         <SelectInput
                             options={selectOptions}
-                            className={`mt-1 w-full ${className}`}
+                            className={` ${className}`}
                             value={inputValue}
                             onChange={(e) =>
                                 handleChange(e.target.value, index)
@@ -73,7 +73,7 @@ export default forwardRef(function MultipleInput(
                         <input
                             {...props}
                             type={inputType}
-                            className={`mt-1 block w-full rounded-md border border-gray-300 px-2 py-2 text-sm shadow shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ${className}`}
+                            className={`mt-1 block w-full rounded-md border border-gray-300 px-2 py-2 text-sm shadow shadow-sm outline-none ${className}`}
                             ref={index === 0 ? localRef : null}
                             value={inputValue}
                             onChange={(e) =>

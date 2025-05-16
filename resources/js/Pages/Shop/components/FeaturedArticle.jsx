@@ -20,7 +20,7 @@ const FeaturedArticle = ({ articles }) => {
                     >
                         <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
                             <img
-                                src={`/storage/${article.image}`}
+                                src={`/public/${article.image}`}
                                 alt={article.title}
                                 className="h-full w-full object-cover"
                             />

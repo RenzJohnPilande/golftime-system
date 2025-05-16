@@ -27,7 +27,7 @@ const DepartmentDialog = ({
             axios
                 .get(route('departments.show', { id: selected }))
                 .then((response) => {
-                    console.log(response);
+                    response;
                     setData({
                         name: response.data.name ?? '',
                         supervisor: response.data.supervisor?.id ?? '',

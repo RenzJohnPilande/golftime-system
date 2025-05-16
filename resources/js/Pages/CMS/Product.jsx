@@ -172,7 +172,6 @@ const Product = ({ products, categories }) => {
                     console.error('Error deleting product:', errors),
             });
         } else if (formAction === 'update images') {
-            console.log(data);
             patchImages(route('products.updateImages', { id: selected }), {
                 onSuccess: onClose,
                 onError: (errors) => {
@@ -210,6 +209,11 @@ const Product = ({ products, categories }) => {
                     preserveState: true,
                 },
             );
+        } else {
+            router.get(route('products.index'), {
+                preserveScroll: true,
+                preserveState: true,
+            });
         }
     };
 
@@ -271,25 +275,25 @@ const Product = ({ products, categories }) => {
                             </Button>
                         </form>
                     </div>
-                    <div className="grid w-full grow grid-cols-1 flex-wrap gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
-                        {products.data.map((product) => (
-                            <ProductCard
-                                key={product.id}
-                                product={product}
-                                onView={handleView}
-                                onEdit={handleEdit}
-                                onDelete={onDelete}
-                                onUploadThumbnail={handleUploadThumbnail}
-                                onUploadImages={handleUploadImages}
-                            />
-                        ))}
-                    </div>
-                    <Pagination
-                        currentPage={products.current_page}
-                        totalPages={products.last_page}
-                        onPageChange={handlePageChange}
-                    />
                 </div>
+                <div className="grid w-full grow grid-cols-1 flex-wrap gap-4 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-5">
+                    {products.data.map((product) => (
+                        <ProductCard
+                            key={product.id}
+                            product={product}
+                            onView={handleView}
+                            onEdit={handleEdit}
+                            onDelete={onDelete}
+                            onUploadThumbnail={handleUploadThumbnail}
+                            onUploadImages={handleUploadImages}
+                        />
+                    ))}
+                </div>
+                <Pagination
+                    currentPage={products.current_page}
+                    totalPages={products.last_page}
+                    onPageChange={handlePageChange}
+                />
 
                 <ProductDialog
                     open={productDialogOpen}

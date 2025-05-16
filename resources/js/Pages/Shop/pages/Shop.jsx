@@ -116,7 +116,7 @@ const Shop = ({ products, articles, alerts, columns, filters }) => {
                             </div>
                             <div className="my-2 flex w-full flex-wrap">
                                 <span className="text-sm font-semibold">
-                                    {products.length + ' '}Products
+                                    {products.total + ' '}Products
                                 </span>
                             </div>
                             <div className="flex grid w-full grid-cols-1 flex-wrap gap-4 md:grid-cols-3 lg:grid-cols-4">

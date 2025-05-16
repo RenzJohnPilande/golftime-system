@@ -52,21 +52,21 @@ const CompanyProfile = ({ content, alerts, columns }) => {
                                     <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
                                         <div className="flex flex-col items-center justify-center rounded-lg bg-white">
                                             <img
-                                                src="/storage/resources/stalucia.jpg"
+                                                src="/public/images/stalucia.jpg"
                                                 alt="Partner Logo"
                                                 className="rounded object-cover"
                                             />
                                         </div>
                                         <div className="flex flex-col items-center justify-center rounded-lg bg-white">
                                             <img
-                                                src="/storage/resources/suntrust.jpg"
+                                                src="/public/images/suntrust.jpg"
                                                 alt="Partner Logo"
                                                 className="rounded object-cover"
                                             />
                                         </div>
                                         <div className="flex flex-col items-center justify-center rounded-lg bg-white">
                                             <img
-                                                src="/storage/resources/newport.jpg"
+                                                src="/public/images/newport.jpg"
                                                 alt="Partner Logo"
                                                 className="rounded object-cover"
                                             />

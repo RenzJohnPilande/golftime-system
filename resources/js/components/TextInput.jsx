@@ -21,7 +21,7 @@ export default forwardRef(function TextInput(
             <textarea
                 {...props}
                 className={
-                    'min-h-[80px] rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500' +
+                    'min-h-[80px] rounded-md border-gray-300 shadow-sm outline-none ' +
                     className
                 }
                 ref={localRef}
@@ -34,8 +34,7 @@ export default forwardRef(function TextInput(
             {...props}
             type={type}
             className={
-                'rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ' +
-                className
+                'rounded-md border-gray-300 shadow-sm outline-none ' + className
             }
             ref={localRef}
         />

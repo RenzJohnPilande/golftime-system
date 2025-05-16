@@ -117,7 +117,7 @@ const BannerImageUpload = ({
                                     </div>
                                     {imagePreview ? (
                                         <img
-                                            src={`/storage/${imagePreview}`}
+                                            src={`/public/${imagePreview}`}
                                             alt="Banner Image"
                                             className="aspect-video h-auto w-full rounded-md border object-contain p-2"
                                         />
@@ -134,7 +134,7 @@ const BannerImageUpload = ({
                                     </div>
                                     {backgroundPreview ? (
                                         <img
-                                            src={`/storage/${backgroundPreview}`}
+                                            src={`/public/${backgroundPreview}`}
                                             alt="Banner Background"
                                             className="aspect-video h-auto w-full rounded-md border object-contain p-2"
                                         />

@@ -25,7 +25,6 @@ const TaskDialog = ({
     const { data, setData, errors, reset } = formData;
     const { auth } = usePage().props;
     const authUser = auth.user;
-    console.log(authUser);
 
     useEffect(() => {
         if (selected && open) {
@@ -49,11 +48,6 @@ const TaskDialog = ({
                 .catch((error) => {
                     console.error('Error fetching task:', error);
                 });
-        } else {
-            setData((prevData) => ({
-                ...prevData,
-                assigned_to: authUser.id,
-            }));
         }
     }, [selected, open]);
 
@@ -112,6 +106,8 @@ const TaskDialog = ({
                                 onChange={(e) =>
                                     setData('task_description', e.target.value)
                                 }
+                                minLength={5}
+                                maxLength={200}
                                 required
                             />
                             {errors.task_description && (
@@ -133,6 +129,7 @@ const TaskDialog = ({
                                 onChange={(e) =>
                                     setData('deadline', e.target.value)
                                 }
+                                required
                             />
                             {errors.deadline && (
                                 <InputError className="mt-2">
@@ -240,11 +237,42 @@ const TaskDialog = ({
                                         label: `${employee.firstname} ${employee.lastname}`,
                                     }))}
                                     className="mt-1 block w-full border px-2 py-2 text-sm text-zinc-900 shadow"
-                                    value={data.assigned_to || authUser.id}
-                                    onChange={(e) =>
-                                        setData('assigned_to', e.target.value)
+                                    value={
+                                        authUser?.permissions?.some(
+                                            (perm) =>
+                                                perm.name ===
+                                                    'view_all_tasks' ||
+                                                perm.name === 'admin',
+                                        )
+                                            ? data.assigned_to
+                                            : authUser.id
                                     }
-                                    disabled={authUser?.role === 'employee'}
+                                    onChange={(e) => {
+                                        const hasPermission =
+                                            authUser?.permissions?.some(
+                                                (perm) =>
+                                                    perm.name ===
+                                                        'view_all_tasks' ||
+                                                    perm.name === 'admin',
+                                            );
+
+                                        if (hasPermission) {
+                                            setData(
+                                                'assigned_to',
+                                                e.target.value,
+                                            );
+                                        } else {
+                                            setData('assigned_to', authUser.id);
+                                        }
+                                    }}
+                                    disabled={
+                                        !authUser?.permissions?.some(
+                                            (permission) =>
+                                                permission.name === 'admin' ||
+                                                permission.name ===
+                                                    'view_all_tasks',
+                                        )
+                                    }
                                     required
                                 />
 
@@ -268,18 +296,6 @@ const TaskDialog = ({
                                 onClick={() => {
                                     reset();
                                     close();
-                                }}
-                            />
-                            <PrimaryButton
-                                type="button"
-                                text="try"
-                                style={{
-                                    wrapper:
-                                        'border bg-zinc-800 hover:bg-zinc-600 text-white',
-                                    text: 'capitalize text-sm',
-                                }}
-                                onClick={() => {
-                                    console.log(data);
                                 }}
                             />
                             <PrimaryButton

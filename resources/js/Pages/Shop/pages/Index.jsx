@@ -22,7 +22,7 @@ const Index = ({
 }) => {
     return (
         <ShopLayout alerts={alerts} columns={columns}>
-            <Head title="GolfTime Corp" />
+            <Head title="Home" />
             <div className="flex w-full flex-wrap justify-center">
                 <Carousel
                     opts={{
@@ -41,7 +41,7 @@ const Index = ({
                             <CarouselItem
                                 key={index}
                                 style={{
-                                    backgroundImage: `url(/storage/${banner.background})`,
+                                    backgroundImage: `url(/public/${banner.background})`,
                                 }}
                                 className="bg-cover bg-center"
                             >
@@ -66,7 +66,7 @@ const Index = ({
                                         <div className="container order-1 flex w-full flex-wrap content-center justify-center md:w-1/3 md:p-0 xl:order-2 xl:justify-end">
                                             <div className="flex h-[400px] max-w-[400px] items-center">
                                                 <img
-                                                    src={`/storage/${banner.image}`}
+                                                    src={`/public/${banner.image}`}
                                                     alt="Brand Logo"
                                                     className="w-full"
                                                 />
@@ -95,18 +95,19 @@ const Index = ({
                     <div className="grid w-full grid-cols-1 justify-center gap-4 md:grid-cols-3">
                         {shirts.map((shirt, index) => {
                             return (
-                                <div
+                                <Link
+                                    href={`/shop/item/${shirt.id}`}
                                     className="border bg-slate-50 p-5 text-center"
                                     key={index}
                                 >
                                     <img
-                                        src={`/storage/${shirt.thumbnail}`}
+                                        src={`/public/${shirt.thumbnail}`}
                                         alt={shirt.name}
                                     />
                                     <span className="m-2 text-lg uppercase text-zinc-800">
                                         {shirt.name}
                                     </span>
-                                </div>
+                                </Link>
                             );
                         })}
                     </div>
@@ -123,7 +124,7 @@ const Index = ({
                         </p>
                     </div>
                     <img
-                        src={`/storage/${promotions[0].image}`}
+                        src={`/public/${promotions[0].image}`}
                         alt="Customized Golf Shirts"
                         className="w-full lg:w-1/2"
                     />
@@ -163,7 +164,7 @@ const Index = ({
                                             className="border bg-slate-200 hover:shadow md:m-1 md:p-3"
                                         >
                                             <img
-                                                src={`storage/${accessory.thumbnail}`}
+                                                src={`/public/${accessory.thumbnail}`}
                                                 alt={accessory.name}
                                                 className="w-full"
                                             />
@@ -184,7 +185,7 @@ const Index = ({
                 <div className="container flex w-full flex-wrap">
                     <img
                         className="w-full lg:w-1/2"
-                        src={`/storage/${promotions[1].image}`}
+                        src={`/public/${promotions[1].image}`}
                         alt="Usage photo"
                     />
                     <div className="flex w-full flex-col flex-wrap justify-center py-10 uppercase lg:w-1/2 lg:px-20">
@@ -217,7 +218,7 @@ const Index = ({
                                 <CardHeader className="overflow-hidden border p-0 hover:shadow-lg">
                                     <Link href={`/news/${article.id}`}>
                                         <img
-                                            src={`storage/${article.image}`}
+                                            src={`/public/${article.image}`}
                                             alt={article.title}
                                             className="w-full transition-all duration-500 hover:scale-110"
                                         />

@@ -122,6 +122,7 @@ const EmployeeDialog = ({
                                     onChange={(e) =>
                                         setData('middlename', e.target.value)
                                     }
+                                    required
                                 />
                                 {errors.middlename && (
                                     <InputError className="mt-2">
@@ -340,9 +341,9 @@ const EmployeeDialog = ({
                                         )
                                     }
                                 />
-                                {errors.permissions && (
+                                {errors.status && (
                                     <InputError className="mt-2">
-                                        {errors.permissions}
+                                        {errors.status}
                                     </InputError>
                                 )}
                             </div>

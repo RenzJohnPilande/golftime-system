@@ -6,7 +6,7 @@ use App\Helpers\LogHelper;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class ArticleController extends Controller
 {
@@ -37,7 +37,10 @@ class ArticleController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('images/articles', 'public');
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/articles'), $filename);
+            $validated['image'] = 'images/articles/' . $filename;
         }
 
         $article = Article::create($validated);
@@ -63,7 +66,7 @@ class ArticleController extends Controller
 
         $article->update($data);
         LogHelper::logAction('Article Updated', "Article {$article->title} has been updated");
-        return back()->with('success', 'Product details updated successfully!');
+        return back()->with('success', 'Article details updated successfully!');
     }
 
     public function updateCover(Request $request, Article $article)
@@ -76,15 +79,18 @@ class ArticleController extends Controller
         $path = null;
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('images/articles', 'public');
+            $file = $request->file('image');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/articles'), $filename);
+            $path = 'images/articles/' . $filename;
         } elseif (is_string($image) && str_starts_with($image, 'temp/articles/')) {
-
             $filename = basename($image);
-            $finalPath = "images/articles/{$filename}";
+            $tempPath = public_path($image);
+            $finalPath = public_path("images/articles/{$filename}");
 
-            if (Storage::disk('public')->exists($image)) {
-                Storage::disk('public')->move($image, $finalPath);
-                $path = $finalPath;
+            if (file_exists($tempPath)) {
+                rename($tempPath, $finalPath);
+                $path = "images/articles/{$filename}";
             } else {
                 return back()->withErrors(['image' => 'Temporary cover image not found.']);
             }
@@ -93,8 +99,8 @@ class ArticleController extends Controller
         }
 
         if ($path) {
-            if ($article->image && Storage::disk('public')->exists($article->image)) {
-                Storage::disk('public')->delete($article->image);
+            if ($article->image && file_exists(public_path($article->image))) {
+                unlink(public_path($article->image));
             }
 
             $article->update(['image' => $path]);
@@ -105,21 +111,27 @@ class ArticleController extends Controller
         return back()->withErrors(['image' => 'Cover image upload failed.']);
     }
 
-
     public function tempCoverUpload(Request $request)
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $path = $request->file('image')->store('temp/articles', 'public');
+        $file = $request->file('image');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('temp/articles'), $filename);
 
-        return response()->json(['path' => $path]);
+        return response()->json(['path' => 'temp/articles/' . $filename]);
     }
 
     public function destroy($id)
     {
         $article = Article::findOrFail($id);
+
+        if ($article->image && file_exists(public_path($article->image))) {
+            unlink(public_path($article->image));
+        }
+
         $article->delete();
         LogHelper::logAction('Article Deleted', "Article {$article->title} has been deleted");
         return redirect()->route('articles.index')->with('success', 'Article deleted successfully.');

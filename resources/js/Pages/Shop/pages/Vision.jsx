@@ -50,7 +50,7 @@ const Vision = ({ content, alerts, columns }) => {
                             <div className="mb-16 grid grid-cols-1 items-center gap-12 md:grid-cols-2">
                                 <div className="relative h-[400px] overflow-hidden rounded-lg">
                                     <img
-                                        src="/storage/resources/booth.jpg"
+                                        src="/public/images/booth.jpg"
                                         alt="Future of Golf Fashion"
                                         className="h-full w-full object-cover object-center"
                                     />

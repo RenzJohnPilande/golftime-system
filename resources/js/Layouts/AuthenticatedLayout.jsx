@@ -20,7 +20,7 @@ export default function AuthenticatedLayout({ header, children }) {
                 <div className="flex w-full flex-wrap justify-between border-b bg-zinc-100 px-4 py-3 shadow-lg lg:hidden">
                     <div className="flex flex-wrap content-center items-center gap-4">
                         <img
-                            src="/images/GolfTimeLogo.png"
+                            src="/public/images/GolfTimeLogo.png"
                             alt="Golftime Logo"
                             className="w-8"
                         />

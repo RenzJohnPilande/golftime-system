@@ -100,7 +100,7 @@ const ArticleCoverDialog = ({
                             {coverImage ? (
                                 <div className="flex flex-col items-center gap-1">
                                     <img
-                                        src={`storage/${coverImage}`}
+                                        src={`/public/${coverImage}`}
                                         alt="Cover Image"
                                         className="w-full rounded-md border object-cover p-2"
                                     />

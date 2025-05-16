@@ -19,7 +19,6 @@ const Contact = ({ alerts, columns }) => {
     const { toast } = useToast();
     const { info } = usePage().props;
 
-    console.log(info);
     const form = useRef();
 
     const sendEmail = (e) => {
@@ -31,7 +30,6 @@ const Contact = ({ alerts, columns }) => {
             })
             .then(
                 (response) => {
-                    console.log('SUCCESS!', response.status, response.text);
                     form.current.reset();
                     toast({
                         title: 'Success',
@@ -39,7 +37,6 @@ const Contact = ({ alerts, columns }) => {
                     });
                 },
                 (error) => {
-                    console.log('FAILED...', error);
                     toast({
                         title: 'Error',
                         description:

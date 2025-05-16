@@ -2,6 +2,7 @@ import { Link, router } from '@inertiajs/react';
 import { Menu, Search, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
+import TextInput from '@/components/TextInput';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -17,6 +18,7 @@ const Navigation = ({ columns }) => {
     const [searchTerm, setSearchTerm] = useState('');
     const [productColumns, setProductColumns] = useState([]);
     const [aboutColumns, setAboutColumns] = useState([]);
+    const [isSheetOpen, setIsSheetOpen] = useState(false);
 
     useEffect(() => {
         const products = columns.filter((col) => col.type === 'Product Column');
@@ -39,6 +41,7 @@ const Navigation = ({ columns }) => {
             );
         }
         setIsSearchOpen(false);
+        setIsSheetOpen(false);
     };
 
     return (
@@ -46,12 +49,12 @@ const Navigation = ({ columns }) => {
             <div className="container mx-auto px-3 py-2 sm:px-4">
                 <div className="flex items-center justify-between">
                     {/* Mobile Menu Trigger */}
-                    <Sheet>
+                    <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                         <SheetTrigger asChild>
                             <Button
                                 variant="ghost"
                                 size="icon"
-                                className="lg:hidden"
+                                className="outline-none ring-0 lg:hidden"
                             >
                                 <Menu className="h-5 w-5 sm:h-6 sm:w-6" />
                                 <span className="sr-only">Toggle menu</span>
@@ -64,13 +67,13 @@ const Navigation = ({ columns }) => {
                             <nav className="mt-8 flex flex-col gap-3">
                                 <Link
                                     href="/"
-                                    className="text-base font-medium transition-colors hover:text-green-700 sm:text-lg"
+                                    className="text-base font-medium outline-none transition-colors hover:text-green-700 sm:text-lg"
                                 >
                                     Home
                                 </Link>
                                 <Link
                                     href="/about"
-                                    className="text-base font-medium transition-colors hover:text-green-700 sm:text-lg"
+                                    className="text-base font-medium outline-none transition-colors hover:text-green-700 sm:text-lg"
                                 >
                                     About Us
                                 </Link>
@@ -80,7 +83,7 @@ const Navigation = ({ columns }) => {
                                             <Link
                                                 href={item.value}
                                                 key={index}
-                                                className="text-sm font-medium transition-colors hover:text-green-700"
+                                                className="text-sm font-medium outline-none transition-colors hover:text-green-700"
                                             >
                                                 {item.description}
                                             </Link>
@@ -89,7 +92,7 @@ const Navigation = ({ columns }) => {
                                 )}
                                 <Link
                                     href="/products"
-                                    className="text-base font-medium transition-colors hover:text-green-700 sm:text-lg"
+                                    className="text-base font-medium outline-none transition-colors hover:text-green-700 sm:text-lg"
                                 >
                                     Product
                                 </Link>
@@ -99,7 +102,7 @@ const Navigation = ({ columns }) => {
                                             <Link
                                                 href={item.value}
                                                 key={index}
-                                                className="text-sm font-medium transition-colors hover:text-green-700"
+                                                className="text-sm font-medium outline-none transition-colors hover:text-green-700"
                                             >
                                                 {item.description}
                                             </Link>
@@ -108,13 +111,13 @@ const Navigation = ({ columns }) => {
                                 )}
                                 <Link
                                     href="/events"
-                                    className="text-base font-medium transition-colors hover:text-green-700 sm:text-lg"
+                                    className="text-base font-medium outline-none transition-colors hover:text-green-700 sm:text-lg"
                                 >
                                     News
                                 </Link>
                                 <Link
                                     href="/contact"
-                                    className="text-base font-medium transition-colors hover:text-green-700 sm:text-lg"
+                                    className="text-base font-medium outline-none transition-colors hover:text-green-700 sm:text-lg"
                                 >
                                     Contact Us
                                 </Link>
@@ -125,10 +128,10 @@ const Navigation = ({ columns }) => {
                                         onSubmit={handleSearchSubmit}
                                         className="flex items-center"
                                     >
-                                        <Input
+                                        <TextInput
                                             type="search"
                                             placeholder="Search products..."
-                                            className="mr-2"
+                                            className="mr-2 w-full border px-4 py-1 outline-none ring-0"
                                             value={searchTerm}
                                             onChange={(e) =>
                                                 setSearchTerm(e.target.value)
@@ -137,7 +140,7 @@ const Navigation = ({ columns }) => {
                                         <Button
                                             type="submit"
                                             size="sm"
-                                            variant="outline"
+                                            className="outline-none"
                                         >
                                             <Search className="h-4 w-4" />
                                         </Button>
@@ -148,9 +151,9 @@ const Navigation = ({ columns }) => {
                     </Sheet>
 
                     {/* Logo */}
-                    <Link href="/" className="flex items-center">
+                    <Link href="/" className="flex items-center outline-none">
                         <img
-                            src="/images/GolfTimeLogo.png"
+                            src="/public/images/GolfTimeLogo.png"
                             alt="Golftime Logo"
                             className="h-8 w-auto sm:h-10 md:h-12"
                         />
@@ -164,7 +167,7 @@ const Navigation = ({ columns }) => {
                         <div className="px-2 text-center xl:w-[100px] xl:px-0">
                             <Link
                                 href="/"
-                                className="text-sm font-medium text-black underline-offset-4 transition-colors hover:text-green-700 hover:underline xl:text-base"
+                                className="text-sm font-medium text-black underline-offset-4 outline-none transition-colors hover:text-green-700 hover:underline xl:text-base"
                             >
                                 Home
                             </Link>
@@ -174,7 +177,7 @@ const Navigation = ({ columns }) => {
                                 <DropdownMenuTrigger asChild>
                                     <Button
                                         variant="link"
-                                        className="h-auto p-0 text-sm font-medium text-black transition-colors hover:text-green-700 xl:text-base"
+                                        className="h-auto p-0 text-sm font-medium text-black outline-none transition-colors hover:text-green-700 xl:text-base"
                                     >
                                         About Us
                                     </Button>
@@ -195,7 +198,7 @@ const Navigation = ({ columns }) => {
                                 <DropdownMenuTrigger asChild>
                                     <Button
                                         variant="link"
-                                        className="h-auto p-0 text-sm font-medium text-black transition-colors hover:text-green-700 xl:text-base"
+                                        className="h-auto p-0 text-sm font-medium text-black outline-none transition-colors hover:text-green-700 xl:text-base"
                                     >
                                         Product
                                     </Button>
@@ -217,7 +220,7 @@ const Navigation = ({ columns }) => {
                         <div className="px-2 text-center xl:w-[100px] xl:px-0">
                             <Link
                                 href="/news"
-                                className="text-sm font-medium text-black underline-offset-4 transition-colors hover:text-green-700 hover:underline xl:text-base"
+                                className="text-sm font-medium text-black underline-offset-4 outline-none transition-colors hover:text-green-700 hover:underline xl:text-base"
                             >
                                 News
                             </Link>
@@ -225,7 +228,7 @@ const Navigation = ({ columns }) => {
                         <div className="px-2 text-center xl:w-[100px] xl:px-0">
                             <Link
                                 href="/contact"
-                                className="text-sm font-medium text-black underline-offset-4 transition-colors hover:text-green-700 hover:underline xl:text-base"
+                                className="text-sm font-medium text-black underline-offset-4 outline-none transition-colors hover:text-green-700 hover:underline xl:text-base"
                             >
                                 Contact Us
                             </Link>

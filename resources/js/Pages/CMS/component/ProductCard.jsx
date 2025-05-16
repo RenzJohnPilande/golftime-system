@@ -62,7 +62,7 @@ const ProductCard = ({
                     >
                         <div className="flex h-full w-full items-center justify-center bg-gray-200">
                             <img
-                                src={`storage/${product.thumbnail}`}
+                                src={`/public/${product.thumbnail}`}
                                 className={`text-gray-400 ${isHovered ? 'opacity-60' : ''}`}
                             />
                             {isHovered && (

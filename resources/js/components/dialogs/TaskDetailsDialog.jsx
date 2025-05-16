@@ -1,12 +1,24 @@
-import { Dialog, DialogContent } from '@/components/ui/dialog';
-import { usePage } from '@inertiajs/react';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
+import {
+    CalendarIcon,
+    CheckCircle2Icon,
+    Clock3Icon,
+    TagIcon,
+    User,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { Badge } from '../ui/badge';
+import { Separator } from '../ui/separator';
 
-const TaskDetailsDialog = ({ open, close, selected, employees, events }) => {
-    const { auth } = usePage().props;
+const TaskDetailsDialog = ({ open, close, selected, events }) => {
     const [task, setTask] = useState([]);
     const [event, setEvent] = useState([]);
-    const authUser = auth.user;
 
     useEffect(() => {
         if (selected && open) {
@@ -25,73 +37,117 @@ const TaskDetailsDialog = ({ open, close, selected, employees, events }) => {
         }
     }, [selected, open]);
 
+    const getStatusColor = (status) => {
+        switch (status) {
+            case 'complete':
+                return 'bg-green-500 hover:bg-green-600';
+            case 'ongoing':
+                return 'bg-blue-500 hover:bg-blue-600';
+            default:
+                return 'bg-yellow-500 hover:bg-yellow-600';
+        }
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return 'Not set';
+
+        return new Date(dateString).toLocaleDateString('en-PH', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+        });
+    };
+
     return (
         <Dialog open={open} onOpenChange={close}>
-            <DialogContent className="max-w-sm rounded-lg md:max-w-md">
-                <div className="flex w-full flex-wrap gap-4">
-                    <div className="flex w-full flex-col gap-2">
-                        <p className="text-xs font-medium capitalize text-zinc-700">
-                            Task
-                        </p>
-                        <p className="font-medium capitalize">
-                            {task.task_name}
-                        </p>
+            <DialogContent className="max-w-md rounded-lg sm:max-w-lg">
+                <DialogHeader>
+                    <DialogTitle className="text-xl font-semibold">
+                        {task.task_name}
+                    </DialogTitle>
+                    <DialogDescription className="text-muted-foreground text-sm">
+                        Task details and information
+                    </DialogDescription>
+                </DialogHeader>
+
+                <div className="space-y-6 py-2">
+                    <div className="space-y-2">
+                        <h3 className="text-muted-foreground text-sm font-medium">
+                            Overview
+                        </h3>
+                        <p className="text-sm">{task.task_description}</p>
                     </div>
-                    <div className="flex w-full flex-col gap-2">
-                        <p className="text-xs font-medium capitalize text-zinc-700">
-                            overview
-                        </p>
-                        <p className="text-sm font-medium">
-                            {task.task_description}
-                        </p>
-                    </div>
-                    <div className="grid w-full grid-cols-2">
-                        <div className="flex w-full flex-col gap-2">
-                            <p className="text-xs font-medium capitalize text-zinc-700">
-                                Deadline
-                            </p>
-                            <p className="py-1 text-xs font-medium text-zinc-800">
-                                {task.deadline
-                                    ? new Date(
-                                          task.deadline,
-                                      ).toLocaleDateString('en-US', {
-                                          year: 'numeric',
-                                          month: 'long',
-                                          day: 'numeric',
-                                      })
-                                    : 'N/A'}
-                            </p>
-                        </div>
-                        <div className="flex w-full flex-col gap-2">
-                            <p className="text-xs font-medium capitalize text-zinc-700">
-                                Status
-                            </p>
-                            <p
-                                className={`w-fit rounded px-2 py-1 text-xs font-medium capitalize text-white ${task.status === 'complete' ? 'bg-green-500' : task.status === 'ongoing' ? 'bg-blue-500' : 'bg-yellow-500'}`}
+
+                    <Separator />
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                                <CheckCircle2Icon className="text-muted-foreground h-4 w-4" />
+                                <h3 className="text-muted-foreground text-sm font-medium">
+                                    Status
+                                </h3>
+                            </div>
+                            <Badge
+                                className={`${getStatusColor(task.status)} capitalize`}
                             >
                                 {task.status}
+                            </Badge>
+                        </div>
+
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                                <CalendarIcon className="text-muted-foreground h-4 w-4" />
+                                <h3 className="text-muted-foreground text-sm font-medium">
+                                    Deadline
+                                </h3>
+                            </div>
+                            <p className="text-sm">
+                                {formatDate(task.deadline)}
                             </p>
                         </div>
                     </div>
-                    <div className="grid w-full grid-cols-2 gap-2">
-                        <div className="flex w-full flex-col gap-2">
-                            <p className="text-xs font-medium capitalize text-zinc-700">
-                                Task Type
-                            </p>
-                            <p className="text-xs font-medium capitalize">
-                                {task.type}
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                                <TagIcon className="text-muted-foreground h-4 w-4" />
+                                <h3 className="text-muted-foreground text-sm font-medium">
+                                    Task Type
+                                </h3>
+                            </div>
+                            <p className="text-sm capitalize">{task.type}</p>
+                        </div>
+
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                                <Clock3Icon className="text-muted-foreground h-4 w-4" />
+                                <h3 className="text-muted-foreground text-sm font-medium">
+                                    Event
+                                </h3>
+                            </div>
+                            <p className="text-sm">
+                                {task.type === 'event' ? event.name : 'N/A'}
                             </p>
                         </div>
-                        {task.type === 'event' && (
-                            <div className="flex w-full flex-col gap-2">
-                                <p className="text-xs font-medium capitalize text-zinc-700">
-                                    Event
-                                </p>
-                                <p className="text-xs font-medium capitalize">
-                                    {event.name}
-                                </p>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                            <div className="flex items-center gap-2">
+                                <User className="text-muted-foreground h-4 w-4" />
+                                <h3 className="text-muted-foreground text-sm font-medium">
+                                    Assigned To
+                                </h3>
                             </div>
-                        )}
+                            <p className="text-sm">
+                                {task?.user?.firstname}{' '}
+                                {task?.user?.middlename
+                                    ? task?.user?.middlename + ' '
+                                    : ''}
+                                {task?.user?.lastname}
+                            </p>
+                        </div>
                     </div>
                 </div>
             </DialogContent>

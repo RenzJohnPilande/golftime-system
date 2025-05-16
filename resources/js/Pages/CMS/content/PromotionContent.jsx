@@ -103,7 +103,6 @@ const PromotionContent = ({ promotions }) => {
                     console.log('Submission failed with errors:', errors),
             });
         } else if (formAction === 'update promotion') {
-            console.log(data);
             patch(route('promotioncms.update', { id: selected }), {
                 onSuccess: onClose,
                 onError: (errors) =>

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Helpers\LogHelper;
 use App\Models\Promotion;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class PromotionController extends Controller
@@ -31,7 +30,10 @@ class PromotionController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('images/promotion', 'public');
+            $file = $request->file('image');
+            $path = 'images/promotion/' . $file->getClientOriginalName();
+            $file->move(public_path('images/promotion'), $file->getClientOriginalName());
+            $validated['image'] = $path;
         }
 
         $promotion = Promotion::create($validated);
@@ -57,6 +59,10 @@ class PromotionController extends Controller
     {
         $promotion = Promotion::findOrFail($id);
 
+        if ($promotion->image && file_exists(public_path($promotion->image))) {
+            unlink(public_path($promotion->image));
+        }
+
         $promotion->delete();
         LogHelper::logAction('Promotion Deleted', "Promotion {$promotion->title} has been deleted");
         return redirect()->back()->with('success', 'Promotion deleted successfully.');
@@ -68,7 +74,9 @@ class PromotionController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $path = $request->file('image')->store('temp/promotion', 'public');
+        $file = $request->file('image');
+        $path = 'temp/promotion/' . $file->getClientOriginalName();
+        $file->move(public_path('temp/promotion'), $file->getClientOriginalName());
 
         return response()->json(['path' => $path]);
     }
@@ -83,15 +91,18 @@ class PromotionController extends Controller
         $path = null;
 
         if ($request->hasFile('image')) {
-            $path = $request->file('image')->store('images/promotion', 'public');
+            $file = $request->file('image');
+            $path = 'images/promotion/' . $file->getClientOriginalName();
+            $file->move(public_path('images/promotion'), $file->getClientOriginalName());
         } elseif (is_string($image) && str_starts_with($image, 'temp/promotion/')) {
-
             $filename = basename($image);
-            $finalPath = "images/promotion/{$filename}";
+            $from = public_path($image);
+            $to = 'images/promotion/' . $filename;
+            $toPath = public_path($to);
 
-            if (Storage::disk('public')->exists($image)) {
-                Storage::disk('public')->move($image, $finalPath);
-                $path = $finalPath;
+            if (file_exists($from)) {
+                rename($from, $toPath);
+                $path = $to;
             } else {
                 return back()->withErrors(['image' => 'Temporary cover image not found.']);
             }
@@ -100,8 +111,8 @@ class PromotionController extends Controller
         }
 
         if ($path) {
-            if ($promotion->image && Storage::disk('public')->exists($promotion->image)) {
-                Storage::disk('public')->delete($promotion->image);
+            if ($promotion->image && file_exists(public_path($promotion->image))) {
+                unlink(public_path($promotion->image));
             }
 
             $promotion->update(['image' => $path]);

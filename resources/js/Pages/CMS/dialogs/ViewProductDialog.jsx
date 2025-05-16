@@ -14,7 +14,6 @@ const ViewProductDialog = ({ open, close, selected }) => {
             axios
                 .get(route('products.show', { id: selected }))
                 .then((response) => {
-                    console.log(response.data);
                     setData(response.data);
                     setLoading(false);
                 })
@@ -44,7 +43,7 @@ const ViewProductDialog = ({ open, close, selected }) => {
 
                         <div className="relative flex h-fit w-full items-center justify-center rounded bg-gray-200">
                             <img
-                                src={`/storage/${data?.thumbnail}`}
+                                src={`/public/${data?.thumbnail}`}
                                 className="h-min text-gray-400"
                             />
                             <div className="absolute bottom-4 right-8">

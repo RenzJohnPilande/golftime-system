@@ -15,7 +15,7 @@ const BannerCard = ({ banner, onEdit, onDelete, onUploadImage }) => {
             {/* Banner Background Image */}
             <div className="relative h-48 w-full overflow-hidden">
                 <img
-                    src={`/storage/${banner.background}`}
+                    src={`/public/${banner.background}`}
                     alt={`${banner.title} background`}
                     className="h-full w-full object-cover"
                 />
@@ -24,7 +24,7 @@ const BannerCard = ({ banner, onEdit, onDelete, onUploadImage }) => {
                 {banner.image && (
                     <div className="absolute left-1/2 top-1/2 h-36 w-36 -translate-x-1/2 -translate-y-1/2 transform">
                         <img
-                            src={`/storage/${banner.image}`}
+                            src={`/public/${banner.image}`}
                             alt={`${banner.title} overlay`}
                             className="aspect-square w-auto max-w-full object-contain"
                         />

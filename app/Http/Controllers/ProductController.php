@@ -5,10 +5,9 @@ namespace App\Http\Controllers;
 use App\Helpers\LogHelper;
 use App\Models\Constant;
 use App\Models\Product;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 
 class ProductController extends Controller
 {
@@ -23,7 +22,7 @@ class ProductController extends Controller
             });
         }
 
-        $products = $query->latest()->paginate(9)->withQueryString();
+        $products = $query->latest()->paginate(10)->withQueryString();
         return Inertia::render('CMS/Product', [
             'products' => $products,
             'categories' => Constant::where('type', 'Category')->orderBy('description')->get(),
@@ -47,20 +46,20 @@ class ProductController extends Controller
 
         $thumbnailPath = null;
         if ($request->hasFile('thumbnail')) {
-            $thumbnailPath = $request->file('thumbnail')->store('/images/thumbnail', 'public');
+            $file = $request->file('thumbnail');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $thumbnailPath = 'images/thumbnail/' . $filename;
+            $file->move(public_path('images/thumbnail'), $filename);
         }
 
         $imagePaths = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
-                $imagePaths[] = $image->store('/images/products', 'public');
+                $filename = time() . '_' . $image->getClientOriginalName();
+                $image->move(public_path('images/products'), $filename);
+                $imagePaths[] = 'images/products/' . $filename;
             }
         }
-
-        $categories = $request->input('categories') ?? [];
-        $materials = $request->input('materials') ?? [];
-        $sizes = $request->input('sizes') ?? [];
-        $colors = $request->input('colors') ?? [];
 
         $product = Product::create([
             'name' => $request->input('name'),
@@ -68,10 +67,10 @@ class ProductController extends Controller
             'description' => $request->input('description'),
             'thumbnail' => $thumbnailPath,
             'images' => $imagePaths,
-            'categories' => $categories,
-            'materials' => $materials,
-            'sizes' => $sizes,
-            'colors' => $colors,
+            'categories' => $request->input('categories') ?? [],
+            'materials' => $request->input('materials') ?? [],
+            'sizes' => $request->input('sizes') ?? [],
+            'colors' => $request->input('colors') ?? [],
             'price' => $request->input('price'),
         ]);
 
@@ -114,15 +113,18 @@ class ProductController extends Controller
         $path = null;
 
         if ($request->hasFile('thumbnail')) {
-            $path = $request->file('thumbnail')->store('images/thumbnail', 'public');
+            $file = $request->file('thumbnail');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $file->move(public_path('images/thumbnail'), $filename);
+            $path = 'images/thumbnail/' . $filename;
         } elseif (is_string($thumbnail) && str_starts_with($thumbnail, 'temp/thumbnail/')) {
-
             $filename = basename($thumbnail);
-            $finalPath = "images/thumbnail/{$filename}";
+            $tempPath = public_path($thumbnail);
+            $finalPath = public_path("images/thumbnail/{$filename}");
 
-            if (Storage::disk('public')->exists($thumbnail)) {
-                Storage::disk('public')->move($thumbnail, $finalPath);
-                $path = $finalPath;
+            if (file_exists($tempPath)) {
+                rename($tempPath, $finalPath);
+                $path = "images/thumbnail/{$filename}";
             } else {
                 return back()->withErrors(['thumbnail' => 'Temporary thumbnail not found.']);
             }
@@ -131,18 +133,17 @@ class ProductController extends Controller
         }
 
         if ($path) {
-            if ($product->thumbnail && Storage::disk('public')->exists($product->thumbnail)) {
-                Storage::disk('public')->delete($product->thumbnail);
+            if ($product->thumbnail && file_exists(public_path($product->thumbnail))) {
+                unlink(public_path($product->thumbnail));
             }
 
             $product->update(['thumbnail' => $path]);
-
             LogHelper::logAction('Product Updated', "Product thumbnail has been updated");
             return back()->with('success', 'Thumbnail updated successfully!');
         }
+
         return back()->withErrors(['thumbnail' => 'Thumbnail upload failed.']);
     }
-
 
     public function updateImages(Request $request, Product $product)
     {
@@ -159,39 +160,34 @@ class ProductController extends Controller
         foreach ($newImages as $imagePath) {
             if (str_starts_with($imagePath, 'temp/products/')) {
                 $filename = basename($imagePath);
-                $finalPath = "images/products/{$filename}";
+                $tempPath = public_path($imagePath);
+                $finalPath = public_path("images/products/{$filename}");
 
-                if (Storage::disk('public')->exists($imagePath)) {
-                    Storage::disk('public')->move($imagePath, $finalPath);
+                if (file_exists($tempPath)) {
+                    rename($tempPath, $finalPath);
                 }
 
-                $finalPaths[] = $finalPath;
+                $finalPaths[] = "images/products/{$filename}";
 
-                // Optional double check: delete any leftover temp (shouldn't exist if move succeeded)
-                if (Storage::disk('public')->exists($imagePath)) {
-                    Storage::disk('public')->delete($imagePath);
+                if (file_exists($tempPath)) {
+                    unlink($tempPath);
                 }
             } else {
                 $finalPaths[] = $imagePath;
             }
         }
 
-        // Delete removed images from storage
         $removedImages = array_diff($oldImages, $finalPaths);
         foreach ($removedImages as $removed) {
-            if (Storage::disk('public')->exists($removed)) {
-                Storage::disk('public')->delete($removed);
+            if (file_exists(public_path($removed))) {
+                unlink(public_path($removed));
             }
         }
 
-        // Save updated image paths to DB
-        $product->images = $finalPaths;
-        $product->save();
+        $product->update(['images' => $finalPaths]);
         LogHelper::logAction('Product Updated', "Product images has been updated");
         return back()->with('success', 'Product images updated successfully!');
     }
-
-
 
     public function tempThumbnailUpload(Request $request)
     {
@@ -199,9 +195,11 @@ class ProductController extends Controller
             'thumbnail' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $path = $request->file('thumbnail')->store('temp/thumbnail', 'public');
+        $file = $request->file('thumbnail');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('temp/thumbnail'), $filename);
 
-        return response()->json(['path' => $path]);
+        return response()->json(['path' => 'temp/thumbnail/' . $filename]);
     }
 
     public function tempUpload(Request $request)
@@ -212,17 +210,14 @@ class ProductController extends Controller
         ]);
 
         $paths = [];
-
         foreach ($request->file('images') as $image) {
-            $path = $image->store('temp/products', 'public');
-            $paths[] = $path;
+            $filename = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('temp/products'), $filename);
+            $paths[] = 'temp/products/' . $filename;
         }
 
         return response()->json(['paths' => $paths]);
     }
-
-
-
 
     public function destroy($id)
     {

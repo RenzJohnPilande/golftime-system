@@ -31,7 +31,6 @@ const ProductDialog = ({
             axios
                 .get(route('products.show', { id: selected }))
                 .then((response) => {
-                    console.log(response.data);
                     setData({
                         name: response.data.name ?? '',
                         code: response.data.code ?? '',

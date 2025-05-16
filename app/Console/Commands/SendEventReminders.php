@@ -48,6 +48,10 @@ class SendEventReminders extends Command
         $tasks = Task::whereDate('deadline', $tomorrow)->get();
 
         foreach ($tasks as $task) {
+            if ($task->status === 'complete') {
+                $this->info("Skipped completed task ID: " . $task->id);
+                continue;
+            }
             $user = null;
 
             if ($task->event_id) {
@@ -68,6 +72,5 @@ class SendEventReminders extends Command
                 $this->warn("User not found for task ID: " . $task->id);
             }
         }
-
     }
 }

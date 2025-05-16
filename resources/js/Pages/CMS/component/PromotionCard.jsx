@@ -11,7 +11,7 @@ const PromotionCard = ({ promotion, onEdit, onUploadThumbnail }) => {
                     <div className="flex w-full flex-wrap content-center gap-4">
                         <div className="relative w-full">
                             <img
-                                src={`/storage/${promotion.image}`}
+                                src={`/public/${promotion.image}`}
                                 alt={promotion.title}
                                 className="aspect-video transition-transform duration-500 hover:scale-105"
                             />

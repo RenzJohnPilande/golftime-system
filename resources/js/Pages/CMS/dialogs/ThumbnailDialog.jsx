@@ -101,7 +101,7 @@ const ThumbnailDialog = ({
                             {addthumbnail ? (
                                 <div className="flex flex-col items-center gap-1">
                                     <img
-                                        src={`storage/${data.thumbnail}`}
+                                        src={`/public/${data.thumbnail}`}
                                         alt="Thumbnail"
                                         className="w-full rounded-md border object-cover p-2"
                                     />

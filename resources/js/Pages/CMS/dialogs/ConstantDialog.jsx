@@ -1,4 +1,5 @@
 import CheckBoxInput from '@/components/CheckBoxInput';
+import SelectInput from '@/components/SelectInput';
 import {
     Dialog,
     DialogContent,
@@ -78,11 +79,25 @@ const ConstantDialog = ({
                             {/*Type */}
                             <div className="w-full">
                                 <InputLabel htmlFor="type" value="Type" />
-                                <TextInput
+                                <SelectInput
                                     id="type"
                                     name="type"
                                     className="mt-1 block w-full border px-2 py-2 text-sm shadow"
-                                    value={data.type}
+                                    options={[
+                                        {
+                                            label: 'Category',
+                                            value: 'Category',
+                                        },
+                                        {
+                                            label: 'Product Column',
+                                            value: 'Product Column',
+                                        },
+                                        {
+                                            label: 'About Column',
+                                            value: 'About Column',
+                                        },
+                                    ]}
+                                    value={data.type || ''}
                                     onChange={(e) =>
                                         setData('type', e.target.value)
                                     }

@@ -1,29 +1,15 @@
-import TableComponent from '@/components/datatable/TableComponent';
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
 import EventDetailsDialog from '@/components/dialogs/EventDetailsDialog';
 import EventDialog from '@/components/dialogs/EventDialog';
 import Pagination from '@/components/Pagination';
 import PrimaryButton from '@/components/PrimaryButton';
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { Search } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-import {
-    MdMoreHoriz,
-    MdOutlineDelete,
-    MdOutlineEdit,
-    MdOutlineRemoveRedEye,
-} from 'react-icons/md';
+import { useEffect, useState } from 'react';
 import AuthenticatedLayout from '../Layouts/AuthenticatedLayout';
+import EventCard from './components/EventCard';
 
 const Events = ({ events, employees }) => {
     const [open, setOpen] = useState(false);
@@ -120,253 +106,6 @@ const Events = ({ events, employees }) => {
         }
     };
 
-    const columns = useMemo(() => {
-        if (isMobile) {
-            return [
-                {
-                    accessorKey: 'event',
-                    header: 'Event',
-                    cell: (row) => {
-                        return (
-                            <div className="flex w-full flex-wrap gap-1 px-2 py-3">
-                                <div className="flex w-full">
-                                    <h1 className="text-base font-medium">
-                                        {row.name}
-                                    </h1>
-                                </div>
-                            </div>
-                        );
-                    },
-                },
-                {
-                    id: 'actions',
-                    header: () => {
-                        return <p className="text-center">Actions</p>;
-                    },
-                    cell: (row) => (
-                        <div className="flex justify-center">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                    <MdMoreHoriz />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuLabel>
-                                        Actions
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem>
-                                        <PrimaryButton
-                                            icon={<MdOutlineRemoveRedEye />}
-                                            text={'View'}
-                                            style={{
-                                                wrapper:
-                                                    'flex w-full gap-3 bg-green-500 text-white',
-                                            }}
-                                            onClick={() => {
-                                                setSelected(row.id);
-                                                setViewOpen(true);
-                                            }}
-                                        />
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <PrimaryButton
-                                            icon={<MdOutlineEdit />}
-                                            text={'Edit'}
-                                            style={{
-                                                wrapper:
-                                                    'flex w-full gap-3 bg-blue-500 text-white',
-                                            }}
-                                            onClick={() => {
-                                                setDialogConfig({
-                                                    title: 'Update Event',
-                                                    message:
-                                                        'Are you sure you want to save? The details can be modified again later',
-                                                    formAction: 'update',
-                                                });
-                                                setSelected(row.id);
-                                                setOpen(true);
-                                            }}
-                                        />
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>
-                                        <PrimaryButton
-                                            icon={<MdOutlineDelete />}
-                                            text={'Delete'}
-                                            style={{
-                                                wrapper:
-                                                    'flex w-full gap-3 bg-red-500 text-white',
-                                            }}
-                                            onClick={() => {
-                                                setDialogConfig({
-                                                    title: 'Delete Event',
-                                                    message:
-                                                        'Are you sure you want to delete this event? This action cannot be undone.',
-                                                    formAction: 'delete',
-                                                });
-                                                setSelected(row.id);
-                                                setConfirmationDialogOpen(true);
-                                            }}
-                                        />
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                    ),
-                },
-            ];
-        }
-
-        return [
-            {
-                accessorKey: 'event',
-                header: 'Event',
-                cell: (row) => {
-                    return (
-                        <div className="flex w-full flex-wrap gap-1 px-2 py-3">
-                            <div className="flex w-full">
-                                <h1 className="text-base font-medium">
-                                    {row.name}
-                                </h1>
-                            </div>
-                        </div>
-                    );
-                },
-            },
-            {
-                accessorKey: 'location',
-                header: 'Location',
-                cell: (row) => {
-                    return (
-                        <div className="flex w-full flex-wrap gap-1 px-2 py-3">
-                            <div className="flex w-full gap-2 text-xs capitalize text-zinc-600">
-                                <p className="capitalize">{row.location}</p>
-                            </div>
-                        </div>
-                    );
-                },
-            },
-            {
-                accessorKey: 'date',
-                header: 'Date',
-                cell: (row) => {
-                    const formattedDate = new Date(row.date).toLocaleDateString(
-                        'en-US',
-                        {
-                            year: 'numeric',
-                            month: 'short',
-                            day: 'numeric',
-                        },
-                    );
-                    return (
-                        <div className="flex w-full flex-wrap gap-1 px-2 py-3">
-                            <div className="flex w-full gap-2 text-xs capitalize text-zinc-600">
-                                <p className="capitalize">{formattedDate}</p>
-                            </div>
-                        </div>
-                    );
-                },
-            },
-            {
-                accessorKey: 'status',
-                header: 'Status',
-                cell: (row) => {
-                    return (
-                        <div className="flex w-full flex-wrap gap-1 px-2 py-3">
-                            <div className="flex w-full gap-2 text-xs capitalize text-zinc-600">
-                                <p
-                                    className={`w-[80px] rounded px-2 py-1 text-center font-semibold capitalize text-white ${
-                                        {
-                                            pending: 'bg-yellow-400',
-                                            preparation: 'bg-blue-400',
-                                            ongoing: 'bg-purple-400',
-                                            completed: 'bg-green-400',
-                                            cancelled: 'bg-red-400',
-                                        }[row.status] || ''
-                                    }`}
-                                >
-                                    {row.status}
-                                </p>
-                            </div>
-                        </div>
-                    );
-                },
-            },
-            {
-                id: 'actions',
-                header: () => {
-                    return <p className="text-center">Actions</p>;
-                },
-                cell: (row) => (
-                    <div className="flex justify-center">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                <MdMoreHoriz />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>
-                                    <PrimaryButton
-                                        icon={<MdOutlineRemoveRedEye />}
-                                        text={'View'}
-                                        style={{
-                                            wrapper:
-                                                'flex w-full gap-3 bg-green-500 text-white',
-                                        }}
-                                        onClick={() => {
-                                            setSelected(row.id);
-                                            setViewOpen(true);
-                                        }}
-                                    />
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <PrimaryButton
-                                        icon={<MdOutlineEdit />}
-                                        text={'Edit'}
-                                        style={{
-                                            wrapper:
-                                                'flex w-full gap-3 bg-blue-500 text-white',
-                                        }}
-                                        onClick={() => {
-                                            setDialogConfig({
-                                                title: 'Update Event',
-                                                message:
-                                                    'Are you sure you want to save? The details can be modified again later',
-                                                formAction: 'update',
-                                            });
-                                            setSelected(row.id);
-                                            setOpen(true);
-                                        }}
-                                    />
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <PrimaryButton
-                                        icon={<MdOutlineDelete />}
-                                        text={'Delete'}
-                                        style={{
-                                            wrapper:
-                                                'flex w-full gap-3 bg-red-500 text-white',
-                                        }}
-                                        onClick={() => {
-                                            setDialogConfig({
-                                                title: 'Delete Event',
-                                                message:
-                                                    'Are you sure you want to delete this event? This action cannot be undone.',
-                                                formAction: 'delete',
-                                            });
-                                            setSelected(row.id);
-                                            setConfirmationDialogOpen(true);
-                                        }}
-                                    />
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-                ),
-            },
-        ];
-    }, [isMobile]);
-
     //Pagination
     const { url } = usePage();
     const handlePageChange = (page) => {
@@ -387,6 +126,11 @@ const Events = ({ events, employees }) => {
                     preserveState: true,
                 },
             );
+        } else {
+            router.get(route('events.index'), {
+                preserveScroll: true,
+                preserveState: true,
+            });
         }
     };
 
@@ -424,39 +168,65 @@ const Events = ({ events, employees }) => {
                         />
                     </div>
                 </div>
-                <div className="flex w-full flex-wrap">
-                    <div className="flex w-full flex-wrap items-end justify-between gap-2 md:flex-nowrap">
-                        <h1 className="w-full text-lg font-bold capitalize">
-                            Event List
-                        </h1>
-                        <form
-                            onSubmit={handleSearchSubmit}
-                            className="flex w-full items-center justify-end gap-2 pb-2"
+                <div className="flex w-full flex-wrap items-end justify-between gap-2 md:flex-nowrap">
+                    <form
+                        onSubmit={handleSearchSubmit}
+                        className="flex w-full items-center justify-end gap-2 pb-2"
+                    >
+                        <Input
+                            type="search"
+                            placeholder="Search"
+                            className="w-full md:max-w-[200px]"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            autoFocus
+                        />
+                        <Button
+                            variant="outline"
+                            type="submit"
+                            className="bg-gray-700 text-white hover:bg-gray-600 hover:text-white"
                         >
-                            <Input
-                                type="search"
-                                placeholder="Search"
-                                className="w-full md:max-w-[200px]"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                autoFocus
-                            />
-                            <Button
-                                variant="outline"
-                                type="submit"
-                                className="bg-gray-700 text-white hover:bg-gray-600 hover:text-white"
-                            >
-                                <Search />
-                            </Button>
-                        </form>
-                    </div>
-                    <TableComponent columns={columns} data={events.data} />
-                    <Pagination
-                        currentPage={events.current_page}
-                        totalPages={events.last_page}
-                        onPageChange={handlePageChange}
-                    />
+                            <Search />
+                        </Button>
+                    </form>
                 </div>
+                {events.data.length > 0 ? (
+                    <div className="grid w-full grow grid-cols-1 flex-wrap content-start gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                        {events.data.map((event) => (
+                            <EventCard
+                                key={event.id}
+                                event={event}
+                                onView={() => {
+                                    setSelected(event.id);
+                                    setViewOpen(true);
+                                }}
+                                onEdit={() => {
+                                    setSelected(event.id);
+                                    setOpen(true);
+                                }}
+                                onDelete={() => {
+                                    setDialogConfig({
+                                        title: 'Delete Event',
+                                        message:
+                                            'Are you sure you want to delete this event? This action cannot be undone.',
+                                        formAction: 'delete event',
+                                    });
+                                    setSelected(event.id);
+                                    setConfirmationDialogOpen(true);
+                                }}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex w-full grow flex-wrap content-center items-center justify-center">
+                        No event data found.
+                    </div>
+                )}
+                <Pagination
+                    currentPage={events.current_page}
+                    totalPages={events.last_page}
+                    onPageChange={handlePageChange}
+                />
                 <EventDialog
                     open={open}
                     close={onClose}

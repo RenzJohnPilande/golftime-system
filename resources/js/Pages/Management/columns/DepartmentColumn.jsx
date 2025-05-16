@@ -160,7 +160,6 @@ const DepartmentColumns = (
                                                       'update department',
                                               });
                                               setSelected(row.id);
-                                              console.log('update');
                                               setOpen(true);
                                           }}
                                       />
@@ -184,7 +183,6 @@ const DepartmentColumns = (
                                               });
                                               setSelected(row.id);
                                               setConfirmationDialogOpen(true);
-                                              console.log('delete');
                                           }}
                                       />
                                   </DropdownMenuItem>

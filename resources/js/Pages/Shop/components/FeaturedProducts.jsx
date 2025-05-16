@@ -15,7 +15,7 @@ const FeaturedProducts = ({ products }) => {
                     >
                         <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-md bg-gray-100">
                             <img
-                                src={`storage/${product.thumbnail}`}
+                                src={`/public/${product.thumbnail}`}
                                 alt={product.name}
                                 className="h-full w-full object-cover"
                             />
@@ -31,7 +31,7 @@ const FeaturedProducts = ({ products }) => {
                                 ).toLocaleString()}
                             </p>
                             <Link
-                                href={`/products/${product.id}`}
+                                href={`/shop/item/${product.id}`}
                                 className="mt-1 inline-flex items-center text-xs text-zinc-600 hover:text-zinc-800"
                             >
                                 <ShoppingBagIcon className="mr-1 h-3 w-3" />

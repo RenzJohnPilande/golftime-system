@@ -12,7 +12,6 @@ import { Head, Link } from '@inertiajs/react';
 import { Sparkles, Target, Users } from 'lucide-react';
 
 const Mission = ({ content, alerts, columns }) => {
-    console.log(content);
     return (
         <ShopLayout alerts={alerts} columns={columns}>
             <Head title="GolfTime Corp - Our Mission" />
@@ -50,7 +49,7 @@ const Mission = ({ content, alerts, columns }) => {
 
                             <div className="relative mb-16 h-[400px] overflow-hidden rounded-lg">
                                 <img
-                                    src="/storage/resources/golfcourse.jpg"
+                                    src="/public/images/golfcourse.jpg"
                                     alt="Golf Course Panorama"
                                     className="object-cover"
                                 />

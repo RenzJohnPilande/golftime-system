@@ -1,5 +1,3 @@
-'use client';
-
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 import {
@@ -7,6 +5,7 @@ import {
     CalendarDays,
     CalendarRange,
     ClipboardCheck,
+    ClipboardList,
     GalleryThumbnails,
     Newspaper,
     Plus,
@@ -14,8 +13,7 @@ import {
 } from 'lucide-react';
 import { MdBusiness, MdPeople, MdWork } from 'react-icons/md';
 
-const Dashboard = ({ permissions, logs, data }) => {
-    console.log(data);
+const Dashboard = ({ permissions, data }) => {
     return (
         <AuthenticatedLayout>
             <Head title="Dashboard" />
@@ -119,7 +117,7 @@ const Dashboard = ({ permissions, logs, data }) => {
                                                     <CalendarRange className="h-8 w-8 text-violet-600" />
                                                 </div>
                                                 <p className="text-zinc-500">
-                                                    This month's total events{' '}
+                                                    This month's total events:{' '}
                                                     {
                                                         data.events
                                                             .event_month_total
@@ -161,54 +159,61 @@ const Dashboard = ({ permissions, logs, data }) => {
                                             </span>
                                         </div>
                                         <div className="flex min-h-[150px] flex-1 flex-col items-center justify-start gap-2 px-4 py-2 text-center">
-                                            <div className="flex w-full flex-wrap justify-between capitalize">
-                                                <p className="text-xs text-zinc-400">
-                                                    task
-                                                </p>
-                                                <p className="text-xs text-zinc-400">
-                                                    deadline
-                                                </p>
-                                            </div>
                                             {data.tasks.current > 0 ? (
-                                                [...data.tasks.current_data]
-                                                    .sort(
-                                                        (a, b) =>
-                                                            new Date(
-                                                                a.deadline,
-                                                            ) -
-                                                            new Date(
-                                                                b.deadline,
-                                                            ),
-                                                    )
-                                                    .slice(0, 4)
-                                                    .map((task) => (
-                                                        <div
-                                                            key={task.id}
-                                                            className="flex w-full flex-wrap justify-between pb-1"
-                                                        >
-                                                            <p className="gap-1 text-sm font-medium text-zinc-800">
-                                                                {task.task_name}
-                                                            </p>
-                                                            <p className="text-sm text-zinc-800">
-                                                                {new Date(
-                                                                    task.deadline,
-                                                                ).toLocaleDateString(
-                                                                    'en-PH',
+                                                <>
+                                                    <div className="flex w-full flex-wrap justify-between capitalize">
+                                                        <p className="text-xs text-zinc-400">
+                                                            task
+                                                        </p>
+                                                        <p className="text-xs text-zinc-400">
+                                                            deadline
+                                                        </p>
+                                                    </div>
+                                                    {[
+                                                        ...data.tasks
+                                                            .current_data,
+                                                    ]
+                                                        .sort(
+                                                            (a, b) =>
+                                                                new Date(
+                                                                    a.deadline,
+                                                                ) -
+                                                                new Date(
+                                                                    b.deadline,
+                                                                ),
+                                                        )
+                                                        .slice(0, 4)
+                                                        .map((task) => (
+                                                            <div
+                                                                key={task.id}
+                                                                className="flex w-full flex-wrap justify-between pb-1"
+                                                            >
+                                                                <p className="gap-1 text-sm font-medium text-zinc-800">
                                                                     {
-                                                                        year: 'numeric',
-                                                                        month: '2-digit',
-                                                                        day: '2-digit',
-                                                                    },
-                                                                )}
-                                                            </p>
-                                                        </div>
-                                                    ))
+                                                                        task.task_name
+                                                                    }
+                                                                </p>
+                                                                <p className="text-sm text-zinc-800">
+                                                                    {new Date(
+                                                                        task.deadline,
+                                                                    ).toLocaleDateString(
+                                                                        'en-PH',
+                                                                        {
+                                                                            year: 'numeric',
+                                                                            month: '2-digit',
+                                                                            day: '2-digit',
+                                                                        },
+                                                                    )}
+                                                                </p>
+                                                            </div>
+                                                        ))}
+                                                </>
                                             ) : (
                                                 <div className="flex w-full flex-wrap justify-center">
                                                     <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-lime-100">
-                                                        <ClipboardItem className="h-8 w-8 text-lime-600" />
+                                                        <ClipboardList className="h-8 w-8 text-lime-600" />
                                                     </div>
-                                                    <p className="text-zinc-500">
+                                                    <p className="w-full text-zinc-500">
                                                         No pending tasks
                                                     </p>
                                                 </div>
@@ -217,7 +222,7 @@ const Dashboard = ({ permissions, logs, data }) => {
 
                                         <div className="border-t p-4">
                                             <Link
-                                                href="/task"
+                                                href="/tasks"
                                                 className="flex w-full items-center justify-center rounded-md bg-amber-50 px-4 py-2 text-sm font-medium capitalize text-amber-600 hover:bg-amber-100"
                                             >
                                                 view all Task
@@ -235,40 +240,47 @@ const Dashboard = ({ permissions, logs, data }) => {
                                             </span>
                                         </div>
                                         <div className="flex min-h-[150px] flex-1 flex-col items-center justify-start gap-2 px-4 py-2 text-center">
-                                            <div className="flex w-full capitalize">
-                                                <p className="text-xs text-zinc-400">
-                                                    task
-                                                </p>
-                                            </div>
                                             {data.tasks.complete > 0 ? (
-                                                [...data.tasks.complete_data]
-                                                    .sort(
-                                                        (a, b) =>
-                                                            new Date(
-                                                                a.deadline,
-                                                            ) -
-                                                            new Date(
-                                                                b.deadline,
-                                                            ),
-                                                    )
-                                                    .slice(0, 4)
-                                                    .map((task) => (
-                                                        <div
-                                                            key={task.id}
-                                                            className="flex w-full flex-wrap pb-1"
-                                                        >
-                                                            <p className="text-sm font-medium text-zinc-800">
-                                                                {task.task_name}
-                                                            </p>
-                                                        </div>
-                                                    ))
+                                                <>
+                                                    <div className="flex w-full capitalize">
+                                                        <p className="text-xs text-zinc-400">
+                                                            task
+                                                        </p>
+                                                    </div>
+                                                    {[
+                                                        ...data.tasks
+                                                            .complete_data,
+                                                    ]
+                                                        .sort(
+                                                            (a, b) =>
+                                                                new Date(
+                                                                    a.deadline,
+                                                                ) -
+                                                                new Date(
+                                                                    b.deadline,
+                                                                ),
+                                                        )
+                                                        .slice(0, 4)
+                                                        .map((task) => (
+                                                            <div
+                                                                key={task.id}
+                                                                className="flex w-full flex-wrap pb-1"
+                                                            >
+                                                                <p className="text-sm font-medium text-zinc-800">
+                                                                    {
+                                                                        task.task_name
+                                                                    }
+                                                                </p>
+                                                            </div>
+                                                        ))}
+                                                </>
                                             ) : (
                                                 <div className="flex w-full flex-wrap justify-center">
                                                     <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-lime-100">
                                                         <ClipboardCheck className="h-8 w-8 text-lime-600" />
                                                     </div>
-                                                    <p className="text-zinc-500">
-                                                        No pending tasks
+                                                    <p className="w-full text-zinc-500">
+                                                        No completed tasks
                                                     </p>
                                                 </div>
                                             )}

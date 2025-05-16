@@ -1,28 +1,15 @@
-import TableComponent from '@/components/datatable/TableComponent';
 import ConfirmationDialog from '@/components/dialogs/ConfirmationDialog';
 import TaskDetailsDialog from '@/components/dialogs/TaskDetailsDialog';
 import TaskDialog from '@/components/dialogs/TaskDialog';
 import Pagination from '@/components/Pagination';
 import PrimaryButton from '@/components/PrimaryButton';
 import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Input } from '@/components/ui/input';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, router, useForm, usePage } from '@inertiajs/react';
 import { Search } from 'lucide-react';
-import { useEffect, useMemo, useState } from 'react';
-import {
-    MdMoreHoriz,
-    MdOutlineDelete,
-    MdOutlineRemoveRedEye,
-} from 'react-icons/md';
+import { useEffect, useState } from 'react';
+import TaskCard from './components/TaskCard';
 
 const Tasks = ({ tasks, employees, events }) => {
     const [open, setOpen] = useState(false);
@@ -72,229 +59,6 @@ const Tasks = ({ tasks, employees, events }) => {
         event_id: '',
         assigned_to: '',
     });
-
-    const columns = useMemo(() => {
-        if (isMobile) {
-            return [
-                {
-                    accessorKey: 'task_name',
-                    header: 'Task Name',
-                    cell: (row) => (
-                        <div className="flex w-full flex-wrap gap-1 p-2">
-                            <div className="flex w-full">
-                                <h1 className="text-sm font-medium capitalize">
-                                    {row.task_name}
-                                </h1>
-                            </div>
-                        </div>
-                    ),
-                },
-                {
-                    id: 'actions',
-                    header: () => <p className="text-center">Actions</p>,
-                    cell: (row) => (
-                        <div className="flex justify-center">
-                            <DropdownMenu>
-                                <DropdownMenuTrigger>
-                                    <MdMoreHoriz />
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent>
-                                    <DropdownMenuLabel>
-                                        Actions
-                                    </DropdownMenuLabel>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem>
-                                        <PrimaryButton
-                                            icon={<MdOutlineRemoveRedEye />}
-                                            text={'View'}
-                                            style={{
-                                                wrapper:
-                                                    'flex w-full gap-3 bg-green-500 text-white',
-                                            }}
-                                            onClick={() => {
-                                                setSelected(row.id);
-                                                setViewOpen(true);
-                                            }}
-                                        />
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </div>
-                    ),
-                },
-            ];
-        }
-
-        return [
-            {
-                accessorKey: 'task_name',
-                header: 'Task Name',
-                cell: (row) => (
-                    <div className="flex w-full flex-wrap gap-1 p-2">
-                        <div className="flex w-full">
-                            <h1 className="text-sm font-medium capitalize">
-                                {row.task_name}
-                            </h1>
-                        </div>
-                    </div>
-                ),
-            },
-            {
-                accessorKey: 'task_description',
-                header: 'Task Overview',
-                cell: (row) => (
-                    <div className="flex w-full flex-wrap gap-1 p-2">
-                        <div className="flex w-full">
-                            <h1 className="text-pretty text-sm capitalize">
-                                {row.task_description}
-                            </h1>
-                        </div>
-                    </div>
-                ),
-            },
-            {
-                accessorKey: 'deadline',
-                header: 'Deadline',
-                cell: (row) => {
-                    const formattedDate = row.deadline
-                        ? new Date(row.deadline).toLocaleDateString('en-US', {
-                              year: 'numeric',
-                              month: 'short',
-                              day: 'numeric',
-                          })
-                        : 'N/A';
-                    return (
-                        <div className="flex w-full flex-wrap gap-1 p-2">
-                            <div className="flex w-full">
-                                <h1 className="text-sm font-medium capitalize">
-                                    {formattedDate}
-                                </h1>
-                            </div>
-                        </div>
-                    );
-                },
-            },
-            {
-                accessorKey: 'type',
-                header: 'Type',
-                cell: (row) => (
-                    <div className="flex w-full flex-wrap gap-1 p-2">
-                        <div className="flex w-full">
-                            <h1 className="text-sm font-medium capitalize">
-                                {row.type}
-                            </h1>
-                        </div>
-                    </div>
-                ),
-            },
-            {
-                accessorKey: 'event',
-                header: 'Event',
-                cell: (row) => {
-                    const event = events.find(
-                        (event) => event.id === row.event_id,
-                    );
-                    return (
-                        <div className="flex w-full flex-wrap gap-1 p-2">
-                            <div className="flex w-full">
-                                <h1 className="text-sm font-medium capitalize">
-                                    {event ? event.name : 'N/A'}
-                                </h1>
-                            </div>
-                        </div>
-                    );
-                },
-            },
-            {
-                accessorKey: 'status',
-                header: 'Status',
-                cell: (row) => (
-                    <div className="flex w-full flex-wrap gap-1 p-2">
-                        <div className="flex w-full">
-                            <p
-                                className={`w-fit rounded px-2 py-1 text-center text-xs capitalize text-white ${
-                                    row.status === 'pending'
-                                        ? 'bg-yellow-500'
-                                        : row.status === 'ongoing'
-                                          ? 'bg-blue-500'
-                                          : row.status === 'complete'
-                                            ? 'bg-green-500'
-                                            : 'bg-gray-500'
-                                }`}
-                            >
-                                {row.status}
-                            </p>
-                        </div>
-                    </div>
-                ),
-            },
-            {
-                id: 'actions',
-                header: () => <p className="text-center">Actions</p>,
-                cell: (row) => (
-                    <div className="flex justify-center">
-                        <DropdownMenu>
-                            <DropdownMenuTrigger>
-                                <MdMoreHoriz />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>
-                                    <PrimaryButton
-                                        icon={<MdOutlineRemoveRedEye />}
-                                        text={'View'}
-                                        style={{
-                                            wrapper:
-                                                'flex w-full gap-3 bg-green-500 text-white',
-                                        }}
-                                        onClick={() => {
-                                            setSelected(row.id);
-                                            setViewOpen(true);
-                                        }}
-                                    />
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <PrimaryButton
-                                        icon={<MdOutlineRemoveRedEye />}
-                                        text={'Edit'}
-                                        style={{
-                                            wrapper:
-                                                'flex w-full gap-3 bg-blue-500 text-white',
-                                        }}
-                                        onClick={() => {
-                                            setSelected(row.id);
-                                            setOpen(true);
-                                        }}
-                                    />
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                    <PrimaryButton
-                                        icon={<MdOutlineDelete />}
-                                        text={'Delete'}
-                                        style={{
-                                            wrapper:
-                                                'flex w-full gap-3 bg-red-500 text-white',
-                                        }}
-                                        onClick={() => {
-                                            setDialogConfig({
-                                                title: 'Delete Task',
-                                                message:
-                                                    'Are you sure you want to delete this task? This action cannot be undone.',
-                                                formAction: 'delete task',
-                                            });
-                                            setSelected(row.id);
-                                            setConfirmationDialogOpen(true);
-                                        }}
-                                    />
-                                </DropdownMenuItem>
-                            </DropdownMenuContent>
-                        </DropdownMenu>
-                    </div>
-                ),
-            },
-        ];
-    }, [isMobile]);
 
     const onClose = () => {
         setOpen(false);
@@ -356,6 +120,11 @@ const Tasks = ({ tasks, employees, events }) => {
                     preserveState: true,
                 },
             );
+        } else {
+            router.get(route('tasks.index'), {
+                preserveScroll: true,
+                preserveState: true,
+            });
         }
     };
 
@@ -393,39 +162,65 @@ const Tasks = ({ tasks, employees, events }) => {
                         />
                     </div>
                 </div>
-                <div className="flex w-full flex-wrap">
-                    <div className="flex w-full flex-wrap items-end justify-between gap-2 md:flex-nowrap">
-                        <h1 className="w-full text-lg font-bold capitalize">
-                            Task List
-                        </h1>
-                        <form
-                            onSubmit={handleSearchSubmit}
-                            className="flex w-full items-center justify-end gap-2 pb-2"
+                <div className="flex w-full flex-wrap items-end justify-end gap-2 md:flex-nowrap">
+                    <form
+                        onSubmit={handleSearchSubmit}
+                        className="flex w-full items-center justify-end gap-2 pb-2"
+                    >
+                        <Input
+                            type="search"
+                            placeholder="Search"
+                            className="w-full md:max-w-[200px]"
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            autoFocus
+                        />
+                        <Button
+                            variant="outline"
+                            type="submit"
+                            className="bg-gray-700 text-white hover:bg-gray-600 hover:text-white"
                         >
-                            <Input
-                                type="search"
-                                placeholder="Search"
-                                className="w-full md:max-w-[200px]"
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                autoFocus
-                            />
-                            <Button
-                                variant="outline"
-                                type="submit"
-                                className="bg-gray-700 text-white hover:bg-gray-600 hover:text-white"
-                            >
-                                <Search />
-                            </Button>
-                        </form>
-                    </div>
-                    <TableComponent columns={columns} data={tasks.data} />
-                    <Pagination
-                        currentPage={tasks.current_page}
-                        totalPages={tasks.last_page}
-                        onPageChange={handlePageChange}
-                    />
+                            <Search />
+                        </Button>
+                    </form>
                 </div>
+                {tasks.data.length > 0 ? (
+                    <div className="grid w-full grow grid-cols-1 flex-wrap content-start gap-4 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                        {tasks.data.map((task) => (
+                            <TaskCard
+                                key={task.id}
+                                task={task}
+                                onView={() => {
+                                    setSelected(task.id);
+                                    setViewOpen(true);
+                                }}
+                                onEdit={() => {
+                                    setSelected(task.id);
+                                    setOpen(true);
+                                }}
+                                onDelete={() => {
+                                    setDialogConfig({
+                                        title: 'Delete Task',
+                                        message:
+                                            'Are you sure you want to delete this task? This action cannot be undone.',
+                                        formAction: 'delete task',
+                                    });
+                                    setSelected(task.id);
+                                    setConfirmationDialogOpen(true);
+                                }}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="flex w-full grow flex-wrap content-center items-center justify-center">
+                        No task data found.
+                    </div>
+                )}
+                <Pagination
+                    currentPage={tasks.current_page}
+                    totalPages={tasks.last_page}
+                    onPageChange={handlePageChange}
+                />
                 <TaskDialog
                     open={open}
                     close={onClose}

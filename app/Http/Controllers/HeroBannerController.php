@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Helpers\LogHelper;
 use App\Models\HeroBanner;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class HeroBannerController extends Controller
@@ -33,11 +32,17 @@ class HeroBannerController extends Controller
         ]);
 
         if ($request->hasFile('background')) {
-            $validated['background'] = $request->file('background')->store('images/banners/background', 'public');
+            $file = $request->file('background');
+            $path = 'images/banners/background/' . $file->getClientOriginalName();
+            $file->move(public_path('images/banners/background'), $file->getClientOriginalName());
+            $validated['background'] = $path;
         }
 
         if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('images/banners/image', 'public');
+            $file = $request->file('image');
+            $path = 'images/banners/image/' . $file->getClientOriginalName();
+            $file->move(public_path('images/banners/image'), $file->getClientOriginalName());
+            $validated['image'] = $path;
         }
 
         $banner = HeroBanner::create($validated);
@@ -64,6 +69,13 @@ class HeroBannerController extends Controller
     {
         $banner = HeroBanner::findOrFail($id);
 
+        // Optional: delete associated images
+        foreach (['image', 'background'] as $type) {
+            if ($banner->$type && file_exists(public_path($banner->$type))) {
+                unlink(public_path($banner->$type));
+            }
+        }
+
         $banner->delete();
         LogHelper::logAction('Banner Deleted', "Banner {$banner->title} has been deleted");
         return redirect()->back()->with('success', 'Banner deleted successfully.');
@@ -79,11 +91,17 @@ class HeroBannerController extends Controller
         $response = [];
 
         if ($request->hasFile('image')) {
-            $response['image'] = $request->file('image')->store('temp/banner/image', 'public');
+            $file = $request->file('image');
+            $path = 'temp/banner/image/' . $file->getClientOriginalName();
+            $file->move(public_path('temp/banner/image'), $file->getClientOriginalName());
+            $response['image'] = $path;
         }
 
         if ($request->hasFile('background')) {
-            $response['background'] = $request->file('background')->store('temp/banner/background', 'public');
+            $file = $request->file('background');
+            $path = 'temp/banner/background/' . $file->getClientOriginalName();
+            $file->move(public_path('temp/banner/background'), $file->getClientOriginalName());
+            $response['background'] = $path;
         }
 
         return response()->json($response);
@@ -103,15 +121,16 @@ class HeroBannerController extends Controller
 
             if (is_string($value) && str_starts_with($value, "temp/banner/$type/")) {
                 $filename = basename($value);
-                $finalPath = "images/banners/$type/{$filename}";
+                $from = public_path($value);
+                $to = "images/banners/$type/$filename";
+                $toPath = public_path($to);
 
-                if (Storage::disk('public')->exists($value)) {
-                    Storage::disk('public')->move($value, $finalPath);
-                    $updates[$type] = $finalPath;
+                if (file_exists($from)) {
+                    rename($from, $toPath);
+                    $updates[$type] = $to;
 
-                    // Delete old image if it exists
-                    if ($banner->$type && Storage::disk('public')->exists($banner->$type)) {
-                        Storage::disk('public')->delete($banner->$type);
+                    if ($banner->$type && file_exists(public_path($banner->$type))) {
+                        unlink(public_path($banner->$type));
                     }
                 } else {
                     return back()->withErrors([$type => "Temporary $type image not found."]);

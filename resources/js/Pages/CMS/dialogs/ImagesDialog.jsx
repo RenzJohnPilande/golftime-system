@@ -106,52 +106,56 @@ const ImagesDialog = ({
                 ) : (
                     <form onSubmit={submit}>
                         <div className="flex w-full flex-wrap gap-4">
-                            {Array.isArray(data?.images) &&
-                                data?.images.length > 0 && (
-                                    <div className="flex w-full flex-wrap gap-4">
+                            {Array.isArray(data?.images) && (
+                                <div className="flex w-full flex-wrap gap-4">
+                                    {data.images.length > 0 ? (
                                         <div className="grid grid-cols-3 gap-4">
-                                            {data?.images.map(
-                                                (image, index) => (
-                                                    <div
-                                                        key={index}
-                                                        className="flex flex-col items-center gap-1"
-                                                    >
-                                                        <img
-                                                            src={`storage/${image}`}
-                                                            alt={`Existing Image ${index + 1}`}
-                                                            className="w-full rounded-md border object-cover p-2"
-                                                        />
-                                                        <div className="flex w-full flex-wrap">
-                                                            <button
-                                                                type="button"
-                                                                className="w-full rounded border border-red-600 p-1 text-xs font-semibold capitalize text-red-600"
-                                                                title="Remove image"
-                                                                onClick={() =>
-                                                                    removeImage(
-                                                                        image,
-                                                                    )
-                                                                }
-                                                            >
-                                                                remove
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                ),
-                                            )}
-                                        </div>
-                                        {changesAreMade && (
-                                            <div className="flex w-full flex-wrap">
-                                                <button
-                                                    type="submit"
-                                                    className="w-full rounded border bg-zinc-900 py-2 text-xs capitalize text-white"
-                                                    title="Save Changes"
+                                            {data.images.map((image, index) => (
+                                                <div
+                                                    key={index}
+                                                    className="flex flex-col items-center gap-1"
                                                 >
-                                                    Save Changes
-                                                </button>
-                                            </div>
-                                        )}
-                                    </div>
-                                )}
+                                                    <img
+                                                        src={`/public/${image}`}
+                                                        alt={`Existing Image ${index + 1}`}
+                                                        className="w-full rounded-md border object-cover p-2"
+                                                    />
+                                                    <div className="flex w-full flex-wrap">
+                                                        <button
+                                                            type="button"
+                                                            className="w-full rounded border border-red-600 p-1 text-xs font-semibold capitalize text-red-600"
+                                                            title="Remove image"
+                                                            onClick={() =>
+                                                                removeImage(
+                                                                    image,
+                                                                )
+                                                            }
+                                                        >
+                                                            remove
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="w-full py-4 text-center text-sm text-gray-500">
+                                            You need to add an image to save.
+                                        </div>
+                                    )}
+
+                                    {changesAreMade && (
+                                        <div className="flex w-full flex-wrap">
+                                            <button
+                                                type="submit"
+                                                className="w-full rounded border bg-zinc-900 py-2 text-xs capitalize text-white"
+                                                title="Save Changes"
+                                            >
+                                                Save Changes
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </form>
                 )}

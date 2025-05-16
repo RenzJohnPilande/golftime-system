@@ -3,6 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { MdClose, MdOutlineAdd } from 'react-icons/md';
+import InputLabel from '../InputLabel';
 import TextInput from '../TextInput';
 import { Button } from '../ui/button';
 import { Separator } from '../ui/separator';
@@ -58,9 +59,6 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
         axios
             .get(route('tasks.show', { eventId: selected }))
             .then((response) => {
-                if (response.data.length === 0) {
-                    console.log('No tasks found.');
-                }
                 setTodoList(response.data);
                 setEmptyToDoList(false);
             })
@@ -167,9 +165,17 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                         </div>
                     </div>
                     <Tabs defaultValue="todo">
-                        <TabsList className="flex w-full justify-start">
-                            <TabsTrigger value="todo">Todo</TabsTrigger>
-                            <TabsTrigger value="personnel">
+                        <TabsList className="grid w-full grid-cols-2 bg-transparent">
+                            <TabsTrigger
+                                value="todo"
+                                className="border border-zinc-900 text-zinc-900 data-[state=active]:bg-zinc-900 data-[state=active]:text-white"
+                            >
+                                Todo
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="personnel"
+                                className="border border-zinc-900 text-zinc-900 data-[state=active]:bg-zinc-900 data-[state=active]:text-white"
+                            >
                                 Personnel
                             </TabsTrigger>
                         </TabsList>
@@ -191,7 +197,6 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                                             <div className="text-sm font-semibold text-white">
                                                 Status
                                             </div>
-                                            <div className="text-sm font-semibold text-white"></div>
                                         </div>
 
                                         <div className="max-h-[200px] w-full overflow-y-auto">
@@ -214,17 +219,18 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                                                             )}
                                                         </div>
                                                         <div
-                                                            className={`capitalize ${
-                                                                task.status ===
-                                                                'pending'
-                                                                    ? 'text-yellow-500'
-                                                                    : task.status ===
-                                                                        'ongoing'
-                                                                      ? 'text-blue-500'
-                                                                      : task.status ===
-                                                                          'complete'
-                                                                        ? 'text-green-500'
-                                                                        : 'text-gray-500'
+                                                            className={`w-[80px] rounded px-2 py-1 text-center font-semibold capitalize text-white ${
+                                                                {
+                                                                    pending:
+                                                                        'bg-yellow-400',
+                                                                    ongoing:
+                                                                        'bg-blue-400',
+                                                                    complete:
+                                                                        'bg-green-400',
+                                                                }[
+                                                                    task.status
+                                                                ] ||
+                                                                'bg-gray-400'
                                                             }`}
                                                         >
                                                             {task.status}
@@ -285,14 +291,20 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                                                 <MdOutlineAdd /> Add Personnel
                                             </Button>
                                         )}
+                                        <Separator />
+
                                         {showForm.personnel && (
                                             <form
                                                 onSubmit={handleAddPersonnel}
-                                                className="w-full"
+                                                className="w-full rounded border px-2 py-2"
                                             >
-                                                <div className="flex w-full gap-2">
+                                                <div className="flex w-full flex-wrap gap-2 py-1">
+                                                    <InputLabel
+                                                        htmlFor="personnel"
+                                                        value="Name"
+                                                        className="text-xs font-semibold"
+                                                    />
                                                     <TextInput
-                                                        label="Name"
                                                         name="personnel"
                                                         className="w-full border border-zinc-300 p-1 text-sm shadow"
                                                         value={personnel}
@@ -324,6 +336,8 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                                                 </div>
                                             </form>
                                         )}
+                                        <Separator />
+
                                         <div className="grid w-full grid-cols-2 gap-2">
                                             <Button
                                                 type="button"
@@ -350,13 +364,13 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
                                     </>
                                 ) : (
                                     <div className="flex w-full flex-wrap gap-2">
-                                        <div className="flex w-full flex-wrap rounded border p-2">
+                                        <div className="flex w-full flex-wrap gap-1 rounded border p-2">
                                             {eventData.personnel.length > 0 ? (
                                                 eventData.personnel.map(
                                                     (person, index) => (
                                                         <div
                                                             key={index}
-                                                            className="flex w-full gap-2"
+                                                            className="flex w-full text-sm"
                                                         >
                                                             <p>{person}</p>
                                                         </div>
@@ -392,7 +406,7 @@ const EventDetailsDialog = ({ open, close, selected, formData }) => {
             <ConfirmationDialog
                 open={isConfirmationDialogOpen}
                 onClose={() => {
-                    fetchEventDetails(selected, setEventData, setTaskData);
+                    fetchEventDetails(selected, setEventData);
                     setShowForm(false);
                     setConfirmationDialogOpen(false);
                 }}

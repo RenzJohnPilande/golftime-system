@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 const ViewEmployeeDialog = ({ open, close, selected }) => {
     const [employee, setEmployee] = useState({});
+    const [permissions, setPermissions] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -26,6 +27,7 @@ const ViewEmployeeDialog = ({ open, close, selected }) => {
                         position: response.data.employee.position,
                         status: response.data.employee.status,
                     }));
+                    setPermissions(response.data.permissions);
                     return axios.get(
                         route('users.show', {
                             id: response.data.employee.user_id,
@@ -78,25 +80,25 @@ const ViewEmployeeDialog = ({ open, close, selected }) => {
                 <div className="flex w-full flex-wrap py-2 text-sm capitalize">
                     <h1 className="font-semibold">Job Details</h1>
                     <div className="grid w-full grid-cols-2 gap-2 py-2">
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap content-start gap-2">
                             <p className="w-full text-xs text-zinc-700">
                                 Position
                             </p>
                             <p className="w-full">{employee.position}</p>
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap content-start gap-2">
                             <p className="w-full text-xs text-zinc-700">
                                 Department
                             </p>
                             <p className="w-full">{employee.department}</p>
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap content-start gap-2">
                             <p className="w-full text-xs text-zinc-700">
                                 Hire Date
                             </p>
                             <p className="w-full">{employee.hire_date}</p>
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap content-start gap-2">
                             <p className="w-full text-xs text-zinc-700">
                                 Salary
                             </p>
@@ -112,11 +114,17 @@ const ViewEmployeeDialog = ({ open, close, selected }) => {
                 <div className="flex w-full flex-wrap py-2 text-sm capitalize">
                     <h1 className="font-semibold">Permissions</h1>
                     <div className="grid w-full grid-cols-2 gap-2 py-2">
-                        <div className="flex flex-wrap gap-2">
-                            <p className="w-full text-xs text-zinc-700">Role</p>
-                            <p className="w-full">{employee.role}</p>
+                        <div className="flex flex-wrap content-start gap-2">
+                            <p className="w-full text-xs text-zinc-700">
+                                Access
+                            </p>
+                            {permissions.map((permission) => (
+                                <p key={permission.id} className="text-xs">
+                                    {permission.description}
+                                </p>
+                            ))}
                         </div>
-                        <div className="flex flex-wrap gap-2">
+                        <div className="flex flex-wrap content-start gap-2">
                             <p className="w-full text-xs text-zinc-700">
                                 Status
                             </p>

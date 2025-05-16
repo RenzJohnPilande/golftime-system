@@ -59,7 +59,7 @@ class ShopController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        return Inertia::render('Shop/pages/ProductShow', [
+        return Inertia::render('Shop/pages/ProductDetail', [
             'product' => $product,
             'alerts' => TopbarAlert::all(),
             'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
@@ -82,6 +82,23 @@ class ShopController extends Controller
         return Inertia::render('Shop/pages/News', [
             'products' => Product::latest()->take(4)->get(),
             'articles' => Article::paginate(6),
+            'alerts' => TopbarAlert::all(),
+            'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
+        ]);
+    }
+
+    public function show_article($id)
+    {
+        $article = Article::findOrFail($id);
+        $relatedArticles = Article::where('id', '!=', $id)
+            ->orderBy('date', 'desc')
+            ->take(3)
+            ->get();
+
+        return Inertia::render('Shop/pages/NewsDetail', [
+            'products' => Product::latest()->take(4)->get(),
+            'article' => $article,
+            'relatedArticles' => $relatedArticles,
             'alerts' => TopbarAlert::all(),
             'columns' => Constant::whereIn('type', ["Product Column", "About Column"])->get(),
         ]);

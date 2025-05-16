@@ -14,7 +14,9 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // Run the event reminder command every day at 8 AM
-        $schedule->command('events:send-reminders')->dailyAt('08:00');
+        // $schedule->command('events:send-reminders')->dailyAt('08:00');
+        // $schedule->command('events:send-reminders')->everyMinute();
+        $schedule->command('inspire')->everyMinute();
     }
 
     /**
@@ -22,9 +24,8 @@ class Kernel extends ConsoleKernel
      */
     protected function commands(): void
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
-      
 }

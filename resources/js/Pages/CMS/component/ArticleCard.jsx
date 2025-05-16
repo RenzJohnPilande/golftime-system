@@ -28,7 +28,7 @@ const ArticleCard = ({
                 <div className="relative w-full">
                     <div className="absolute inset-0 z-10 bg-gradient-to-t from-black/60 to-transparent"></div>
                     <img
-                        src={`storage/${article.image}`}
+                        src={`/public/${article.image}`}
                         alt={article.title}
                         className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                     />

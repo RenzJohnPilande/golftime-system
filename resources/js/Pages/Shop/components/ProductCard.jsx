@@ -19,7 +19,7 @@ export default function ProductCard({ product }) {
     };
 
     return (
-        <Link href={`/products/${product.id}`} key={product.id}>
+        <Link href={`/shop/item/${product.id}`} key={product.id}>
             <Card className="h-full overflow-hidden transition-all duration-300 hover:shadow-lg">
                 <div className="relative overflow-hidden bg-gray-100 py-2">
                     <div className="absolute bottom-2 left-2 z-10 flex gap-2">
@@ -34,7 +34,7 @@ export default function ProductCard({ product }) {
                         ))}
                     </div>
                     <img
-                        src={`/storage/${product.thumbnail}`}
+                        src={`/public/${product.thumbnail}`}
                         alt={product.name}
                         className="object-cover transition-transform duration-300 hover:scale-105"
                     />
@@ -50,17 +50,22 @@ export default function ProductCard({ product }) {
                         </span>
 
                         <div className="flex -space-x-1">
-                            {product.colors.slice(0, 3).map((color) => (
-                                <div
-                                    key={color}
-                                    className="h-5 w-5 rounded-full border border-gray-200"
-                                    style={{
-                                        backgroundColor: color.toLowerCase(),
-                                        boxShadow: '0 0 0 2px white',
-                                    }}
-                                    title={color}
-                                />
-                            ))}
+                            {product.colors.slice(0, 3).map((color) => {
+                                const normalizedColor = color
+                                    .toLowerCase()
+                                    .replace(/\s+/g, '');
+                                return (
+                                    <div
+                                        key={color}
+                                        className="h-5 w-5 rounded-full border border-gray-200"
+                                        style={{
+                                            backgroundColor: normalizedColor,
+                                            boxShadow: '0 0 0 2px white',
+                                        }}
+                                        title={color}
+                                    />
+                                );
+                            })}
                             {product.colors.length > 3 && (
                                 <div
                                     className="flex h-5 w-5 items-center justify-center rounded-full border border-gray-200 bg-gray-100 text-xs"

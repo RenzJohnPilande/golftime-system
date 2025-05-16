@@ -40,7 +40,7 @@ export default forwardRef(function FileInput(
                 multiple={multiple}
                 accept={accept}
                 className={
-                    'block h-min w-full rounded-md border-gray-300 py-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 ' +
+                    'block h-min w-full cursor-pointer rounded-md border-gray-300 py-2 shadow-sm outline-none ' +
                     (error ? 'border-red-500' : '') +
                     ' ' +
                     className

@@ -101,7 +101,7 @@ class RegisterController extends Controller
             'lastname' => $request->lastname,
             'middlename' => $request->middlename,
             'email' => $request->email,
-            'password' => $request->password ? Hash::make($request->password) : $user->password, 
+            'password' => $request->password ? Hash::make($request->password) : $user->password,
         ]);
 
         // Update Employee
@@ -130,5 +130,4 @@ class RegisterController extends Controller
 
         return redirect()->route('employees.index')->with('success', 'User updated successfully.');
     }
-
 }

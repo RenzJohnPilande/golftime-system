@@ -6,7 +6,7 @@ export default function GuestLayout({ children }) {
                     {children}
                     <div className="flex w-full justify-end">
                         <img
-                            src="/images/GolfTimeLogo.png"
+                            src="/public/images/GolfTimeLogo.png"
                             className="max-w-[50px]"
                             alt="Golftime Logo"
                         />

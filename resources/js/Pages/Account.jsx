@@ -143,7 +143,6 @@ const Account = ({ user }) => {
                 },
             );
         } else if (formAction === 'update password') {
-            console.log('updating password');
             putPassword(route('password.update'), {
                 onSuccess: () => {
                     setEditPassword(false);
